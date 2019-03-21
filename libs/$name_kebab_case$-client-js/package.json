@@ -1,0 +1,9 @@
+{
+  "name": "$name_snake_case$-client-js",
+  "version": "1.0.0",
+  "description": "$name_shout_snake_case$ Javascript Driver",
+  "main": "index.js",
+  "author": "$param.author_name$",
+  "license": "ISC",
+  "private": true
+}

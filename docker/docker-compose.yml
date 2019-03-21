@@ -1,0 +1,16 @@
+version: '3'
+services:
+  postgre_server:
+    environment:
+      - POSTGRES_DB=$name_kebab_case$
+#    image: "postgres:alpine"
+    build: ./postgre_server
+  $name_snake_case$_server:
+    #build: .
+    environment:
+      - $name_shout_snake_case$_PUBLIC_LISTENING=0.0.0.0:8080
+      - $name_shout_snake_case$_PRIVATE_LISTENING=0.0.0.0:9090
+    image: "$name_snake_case$_server:latest"
+    ports:
+     - "8080:8080"
+     - "9090:9090"

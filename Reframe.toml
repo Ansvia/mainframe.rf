@@ -1,0 +1,62 @@
+[reframe]
+name = "Mainframe"
+author = "r@nosql.asia"
+min_version = "0.1.8"
+
+[project]
+name = "Mainframe"
+version = "0.1.0"
+ignore_dirs = [
+  "target",
+  "build",
+  ".gradle"
+]
+ignore_files = [
+  ".flutter-plugins",
+  ".packages",
+  "*.iml"
+]
+finish_text = """Usage:
+
+    $ cd $name_kebab_case$
+
+To test:
+
+    $ make test-env
+    $ make test
+
+To run:
+
+    $ make reset-db
+    $ cargo run --bin $name_snake_case$_server
+
+"""
+
+[[param]]
+desc = { ask = "Description ?", default="My Mainframe project" }
+
+[[param]]
+service_name = { ask = "Service name?", default="account" }
+
+[[param]]
+author_name = { ask = "Author name?", default="Robin" }
+
+[[param]]
+author_email = { ask = "Author email?", default="robin@mail.com" }
+
+[[param]]
+password_crypt_algo = { ask = "Password crypto algo?", default="bcrypt", options=["bcrypt", "sha256"] }
+
+[[param]]
+with_webapp = { ask = "With web app frontends?", default="true" }
+
+[[param]]
+with_flutter = { ask = "With mobile Flutter frontends?", default="false" }
+
+[[present]]
+path = "frontends/admin-vue"
+if = "with_webapp"
+
+[[present]]
+path = "frontends/mobile-flutter"
+if = "with_flutter"

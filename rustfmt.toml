@@ -1,0 +1,5 @@
+indent_style = "Block"
+format_strings = true
+merge_imports = false
+max_width = 110
+
