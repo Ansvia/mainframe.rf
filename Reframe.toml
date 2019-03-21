@@ -27,6 +27,7 @@ To test:
 
 To run:
 
+    $ cp .env.example .env
     $ make reset-db
     $ cargo run --bin $name_snake_case$_server
 
