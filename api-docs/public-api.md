@@ -16,7 +16,7 @@ aktifasi menggunakan endpoint `/account/activate`.
 
         {
           "full_name": "Robin",
-          "email": "robin@gmail.com",
+          "email": "robin@example.com",
           "phone_num": "123"
         }
 
