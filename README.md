@@ -1,4 +1,4 @@
-Mainframe Reframe Source
+Mainframe
 ============================
 
 ![Mainframe Reframe Demo](img/mainframe-rf-demo.gif?raw=true)
