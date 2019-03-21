@@ -1,7 +1,7 @@
 Mainframe Reframe Source
 ============================
 
-This is Reframe source for Mainframe (a full-stack framework).
+![Mainframe Reframe Demo](img/mainframe-rf-demo.gif?raw=true)
 
 What is Mainframe
 --------------------
