@@ -5,7 +5,7 @@ import 'package:$name$/data/api_client.dart';
 import 'package:$name$/data/res_api.dart';
 import 'package:$name$/utils/auth.dart';
 import 'package:$name$/screens/home/fragments/frag_dashboard.dart';
-import 'package:$name$/screens/home/fragments/frag_accounts.dart';
+import 'package:$name$/screens/home/fragments/frag_$param.service_name_snake_case$s.dart';
 
 class DrawerItem {
   String title;
@@ -16,7 +16,7 @@ class DrawerItem {
 class HomeScreen extends StatefulWidget {
   final drawerItems = [
     new DrawerItem("Dashboard", Icons.home),
-    new DrawerItem("Accounts", Icons.account_circle),
+    new DrawerItem("$param.service_name_camel_case$s", Icons.$param.service_name_snake_case$_circle),
     new DrawerItem("Logout", Icons.exit_to_app)
   ];
 
@@ -38,7 +38,7 @@ class HomeScreenState extends State<HomeScreen> {
       case 0:
         return new DashboardFragment();
       case 1:
-        return new AccountsFragment(_ctx);
+        return new $param.service_name_camel_case$sFragment(_ctx);
       case 2:
         return new Center(
           child: new RaisedButton(
@@ -90,8 +90,8 @@ class HomeScreenState extends State<HomeScreen> {
         var decoded = snapshot.data;
         return new Column(
           children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text(
+            new User$param.service_name_camel_case$sDrawerHeader(
+              $param.service_name_snake_case$Name: new Text(
                 snapshot.hasData ? decoded['full_name'] : "",
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
@@ -99,14 +99,14 @@ class HomeScreenState extends State<HomeScreen> {
                     color: Colors.white
                 ),
               ),
-              accountEmail: new Text(
+              $param.service_name_snake_case$Email: new Text(
                 snapshot.hasData ? decoded['email'] : "",
                 style: TextStyle(
                   color: Colors.white,
                   fontStyle: FontStyle.italic
                 ),
               ),
-              currentAccountPicture: CircleAvatar(
+              current$param.service_name_camel_case$Picture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text(
                   snapshot.hasData ? _capitalize(decoded['full_name']) : "",

@@ -4,13 +4,13 @@ FORMAT: 1A
 
 Dokumentasi rest API public untuk $name$.
 
-## Group Account
+## Group $param.service_name_camel_case$
 
-### Register Account [POST /account/v1/account/register]
+### Register $param.service_name_camel_case$ [POST /$param.service_name_snake_case$/v1/$param.service_name_snake_case$/register]
 
 Rest API endpoint untuk mendaftarkan akun baru.
 Setelah register akun tidak langsung aktif, perlu melakukan
-aktifasi menggunakan endpoint `/account/activate`.
+aktifasi menggunakan endpoint `/$param.service_name_snake_case$/activate`.
 
 + Request JSON (application/json)
 

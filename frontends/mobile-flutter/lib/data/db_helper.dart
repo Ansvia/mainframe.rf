@@ -32,7 +32,7 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
-    "CREATE TABLE User(id INTEGER PRIMARY KEY, token TEXT, account_id INTEGER)");
+    "CREATE TABLE User(id INTEGER PRIMARY KEY, token TEXT, $param.service_name_snake_case$_id INTEGER)");
     print("Created tables");
   }
 

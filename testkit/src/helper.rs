@@ -1,6 +1,6 @@
 use $name_snake_case$::api::$param.service_name_snake_case$::models::*;
 use $name_snake_case$::api::{
-    $param.service_name_snake_case$::{ActivateAccount, RegisterAccount, TxQuery},
+    $param.service_name_snake_case$::{Activate$param.service_name_camel_case$, Register$param.service_name_camel_case$, TxQuery},
     ApiResult,
 };
 use $name_snake_case$::auth;
@@ -22,16 +22,16 @@ use std::{
     sync::{Arc, Mutex, MutexGuard},
 };
 
-pub struct AccountWithKey {
-    pub account: Account,
+pub struct $param.service_name_camel_case$WithKey {
+    pub $param.service_name_snake_case$: $param.service_name_camel_case$,
     pub public_key: PublicKey,
     pub secret_key: SecretKey,
 }
 
-impl AccountWithKey {
-    pub fn new(account: Account, public_key: PublicKey, secret_key: SecretKey) -> Self {
+impl $param.service_name_camel_case$WithKey {
+    pub fn new($param.service_name_snake_case$: $param.service_name_camel_case$, public_key: PublicKey, secret_key: SecretKey) -> Self {
         Self {
-            account,
+            $param.service_name_snake_case$,
             public_key,
             secret_key,
         }
@@ -60,10 +60,10 @@ impl TestHelper {
         PG_CONN_FOR_TEST.lock().unwrap()
     }
 
-    pub fn get_account_by_id(&self, id: ID) -> Result<models::Account> {
+    pub fn get_$param.service_name_snake_case$_by_id(&self, id: ID) -> Result<models::$param.service_name_camel_case$> {
         let db = Self::get_db();
         let schema = Schema::new(&db);
-        schema.get_account(id)
+        schema.get_$param.service_name_snake_case$(id)
     }
 
     /// Menggenerasikan akses token langsung dari database,
@@ -74,10 +74,10 @@ impl TestHelper {
         schema.generate_access_token(id).map_err(From::from)
     }
 
-    pub fn cleanup_registered_account(&self, token: &str) {
+    pub fn cleanup_registered_$param.service_name_snake_case$(&self, token: &str) {
         let db = Self::get_db();
         let schema = Schema::new(&db);
-        let _ = schema.cleanup_registered_account(token);
+        let _ = schema.cleanup_registered_$param.service_name_snake_case$(token);
     }
 
     pub fn generate_full_name(&self) -> String {
@@ -100,43 +100,43 @@ impl TestHelper {
 
     /// Menggenerasikan beberapa akun sekaligus,
     /// ini tidak via rest API, tapi langsung ke database.
-    pub fn generate_accounts(&self, count: usize) -> Vec<AccountWithKey> {
+    pub fn generate_$param.service_name_snake_case$s(&self, count: usize) -> Vec<$param.service_name_camel_case$WithKey> {
         let db = Self::get_db();
         let schema = Schema::new(&db);
         let mut rv = vec![];
         for _ in 0..count {
-            let new_account = NewAccount {
+            let new_$param.service_name_snake_case$ = New$param.service_name_camel_case$ {
                 full_name: &self.generate_full_name(),
                 email: &self.generate_email(),
                 phone_num: &self.generate_phone_num(),
                 active: true,
                 register_time: util::now(),
             };
-            let (account, (public_key, secret_key)) = schema
-                .create_account(&new_account)
-                .expect("cannot create account");
-            rv.push(AccountWithKey::new(account.into(), public_key, secret_key));
+            let ($param.service_name_snake_case$, (public_key, secret_key)) = schema
+                .create_$param.service_name_snake_case$(&new_$param.service_name_snake_case$)
+                .expect("cannot create $param.service_name_snake_case$");
+            rv.push($param.service_name_camel_case$WithKey::new($param.service_name_snake_case$.into(), public_key, secret_key));
         }
         rv
     }
 
     /// Menghapus akun berdasarkan ID.
-    pub fn cleanup_account_by_id(&self, account_id: ID) {
+    pub fn cleanup_$param.service_name_snake_case$_by_id(&self, $param.service_name_snake_case$_id: ID) {
         let db = Self::get_db();
         let schema = TestSchema::new(&db);
-        let _ = schema.delete_account_by_id(account_id);
+        let _ = schema.delete_$param.service_name_snake_case$_by_id($param.service_name_snake_case$_id);
     }
 
     /// Menghapus akun
-    pub fn cleanup_account(&self, account: Account) {
-        self.cleanup_account_by_id(account.id);
+    pub fn cleanup_$param.service_name_snake_case$(&self, $param.service_name_snake_case$: $param.service_name_camel_case$) {
+        self.cleanup_$param.service_name_snake_case$_by_id($param.service_name_snake_case$.id);
     }
 
     /// Bersihkan data akun berdasarkan list dari ID-nya.
-    pub fn cleanup_accounts(&self, account_ids: Vec<ID>) {
+    pub fn cleanup_$param.service_name_snake_case$s(&self, $param.service_name_snake_case$_ids: Vec<ID>) {
         let db = Self::get_db();
         let schema = TestSchema::new(&db);
-        schema.cleanup_accounts(account_ids);
+        schema.cleanup_$param.service_name_snake_case$s($param.service_name_snake_case$_ids);
     }
 }
 
@@ -149,35 +149,35 @@ impl<'a> ApiHelper<'a> {
         Self { testkit }
     }
 
-    /// Register account
+    /// Register $param.service_name_snake_case$
     /// Mengembalikan token untuk aktivasi.
-    pub fn register_account(&self, account_name: &str, email: &str, phone_number: &str) -> ApiResult<String> {
+    pub fn register_$param.service_name_snake_case$(&self, $param.service_name_snake_case$_name: &str, email: &str, phone_number: &str) -> ApiResult<String> {
         let api = self.testkit.api();
 
-        let data = RegisterAccount {
-            full_name: account_name.to_owned(),
+        let data = Register$param.service_name_camel_case$ {
+            full_name: $param.service_name_snake_case$_name.to_owned(),
             email: email.to_owned(),
             phone_num: phone_number.to_owned(),
         };
 
         api.public(ApiKind::$param.service_name_camel_case$)
             .query(&data)
-            .post("v1/account/register")
-            .expect("create account")
+            .post("v1/$param.service_name_snake_case$/register")
+            .expect("create $param.service_name_snake_case$")
     }
 
     /// Aktivasi akun menggunakan token yang telah didapat dari hasil register.
-    pub fn activate_account(&self, token: String, password: &str) -> ApiResult<Account> {
+    pub fn activate_$param.service_name_snake_case$(&self, token: String, password: &str) -> ApiResult<$param.service_name_camel_case$> {
         let api = self.testkit.api();
 
-        let data = ActivateAccount {
+        let data = Activate$param.service_name_camel_case$ {
             token,
             password: password.to_owned(),
         };
 
         api.public(ApiKind::$param.service_name_camel_case$)
             .query(&data)
-            .post::<ApiResult<Account>>("v1/account/activate")
-            .expect("activate account")
+            .post::<ApiResult<$param.service_name_camel_case$>>("v1/$param.service_name_snake_case$/activate")
+            .expect("activate $param.service_name_snake_case$")
     }
 }

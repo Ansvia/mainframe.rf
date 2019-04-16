@@ -63,7 +63,7 @@ export default class $name_camel_case$ {
             if (resp.data.code == 0) {
               session().set("token", resp.data.result.token);
               updateSession(resp.data.result.token);
-              this.loadAccountKey();
+              this.load$param.service_name_camel_case$Key();
             }
             return resp;
           });
@@ -87,11 +87,11 @@ export default class $name_camel_case$ {
         return api.publicApi.get("/$param.service_name_snake_case$/v1/me/info");
       },
 
-      // Fetch current account key-pair.
-      loadAccountKey() {
+      // Fetch current $param.service_name_snake_case$ key-pair.
+      load$param.service_name_camel_case$Key() {
         return api.publicApi.get("/auth/v1/get_key")
           .then((resp) => {
-            console.log("account key loaded.");
+            console.log("$param.service_name_snake_case$ key loaded.");
             session().set("pk", resp.data.result.pub_key);
             session().set("sk", resp.data.result.secret_key);
           }).catch(_e => {
@@ -113,9 +113,9 @@ export default class $name_camel_case$ {
           secretKey: Buffer.from(sk, 'hex'),
         }
       },
-      creditAccountBalance(accountId, amount) {
+      credit$param.service_name_camel_case$Balance($param.service_name_snake_case$Id, amount) {
         var credit = new protos.$param.service_name_snake_case$.Credit({
-          account: accountId,
+          $param.service_name_snake_case$: $param.service_name_snake_case$Id,
           amount: parseFloat(amount),
           timestamp: this.now(),
           seed: this.generateSeed()

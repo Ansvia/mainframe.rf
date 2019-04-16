@@ -118,15 +118,15 @@ impl TestKitApi {
         )
     }
 
-    /// Cara pintas untuk meng-otorisasi account,
+    /// Cara pintas untuk meng-otorisasi $param.service_name_camel_case$,
     /// atau dengan kata lain me-login-kan sehingga
     /// nanti http client akan meng-embed X-Access-Token secara otomatis.
-    pub fn authorize(&mut self, account_id: ID) {
+    pub fn authorize(&mut self, $param.service_name_snake_case$_id: ID) {
         let mut headers = HeaderMap::new();
         let token = self
             .testkit
             .helper()
-            .gen_access_token_for(account_id)
+            .gen_access_token_for($param.service_name_snake_case$_id)
             .expect("Cannot generate access token");
         headers.insert("X-Access-Token", HeaderValue::from_str(&token.token).unwrap());
         self.test_client = Client::builder()

@@ -1,5 +1,5 @@
 
-CREATE TABLE accounts (
+CREATE TABLE $param.service_name_snake_case$s (
     id BIGSERIAL PRIMARY KEY,
     full_name VARCHAR NOT NULL,
     email VARCHAR NOT NULL, -- bisa digunakan untuk login
@@ -8,24 +8,24 @@ CREATE TABLE accounts (
     register_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- create nobody account
-INSERT INTO accounts (id, full_name, email, phone_num, active)
+-- create nobody $param.service_name_snake_case$
+INSERT INTO $param.service_name_snake_case$s (id, full_name, email, phone_num, active)
 VALUES
 (0, 'nobody', 'nobody@nowhere.net', '', TRUE);
 
 
-CREATE UNIQUE INDEX accounts_email ON accounts (
+CREATE UNIQUE INDEX $param.service_name_snake_case$s_email ON $param.service_name_snake_case$s (
     (lower(email))
 );
-CREATE UNIQUE INDEX accounts_phone_num ON accounts (
+CREATE UNIQUE INDEX $param.service_name_snake_case$s_phone_num ON $param.service_name_snake_case$s (
     (lower(phone_num))
 );
 
 
 -- Berisi koleksi passhash dari akun
 -- dibuat one-to-many agar ada history-nya setiap user merubah password.
-CREATE TABLE account_passhash (
-    account_id BIGINT PRIMARY KEY REFERENCES accounts(id) ON DELETE CASCADE,
+CREATE TABLE $param.service_name_snake_case$_passhash (
+    $param.service_name_snake_case$_id BIGINT PRIMARY KEY REFERENCES $param.service_name_snake_case$s(id) ON DELETE CASCADE,
     passhash VARCHAR NOT NULL,
     deprecated BOOLEAN NOT NULL,
     ver INT NOT NULL, -- passhash versioning, dibutuhkan apabila ingin merubah algo passhash ketika sudah jalan.
@@ -33,7 +33,7 @@ CREATE TABLE account_passhash (
 );
 
 -- Tabel untuk menampung user-user yang baru mendaftar tapi belum melakukan aktifasi
-CREATE TABLE register_accounts (
+CREATE TABLE register_$param.service_name_snake_case$s (
     -- id BIGSERIAL PRIMARY KEY,
     token VARCHAR(100) PRIMARY KEY,
     full_name VARCHAR NOT NULL,
@@ -43,17 +43,17 @@ CREATE TABLE register_accounts (
     code VARCHAR(10) NOT NULL -- activation code bisa digunakan untuk aktivasi via SMS misalnya.
 );
 
-CREATE UNIQUE INDEX register_accounts_email ON register_accounts (
+CREATE UNIQUE INDEX register_$param.service_name_snake_case$s_email ON register_$param.service_name_snake_case$s (
     (lower(email))
 );
-CREATE UNIQUE INDEX register_accounts_phone_num ON register_accounts (
+CREATE UNIQUE INDEX register_$param.service_name_snake_case$s_phone_num ON register_$param.service_name_snake_case$s (
     (lower(phone_num))
 );
 
 -- Tabel untuk alamat akun
 CREATE TABLE addresses (
     id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL DEFAULT 0 REFERENCES accounts (id) ON DELETE SET DEFAULT,
+    $param.service_name_snake_case$_id BIGINT NOT NULL DEFAULT 0 REFERENCES $param.service_name_snake_case$s (id) ON DELETE SET DEFAULT,
     kind INT NOT NULL DEFAULT 0, -- 0=Domisili, 1=Asli
     "address" TEXT NOT NULL,
     regency VARCHAR NOT NULL,
@@ -65,9 +65,9 @@ CREATE TABLE addresses (
 );
 
 -- Koleksi key pair untuk akun.
-CREATE TABLE account_keys (
+CREATE TABLE $param.service_name_snake_case$_keys (
     id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL DEFAULT 0 REFERENCES accounts (id) ON DELETE CASCADE,
+    $param.service_name_snake_case$_id BIGINT NOT NULL DEFAULT 0 REFERENCES $param.service_name_snake_case$s (id) ON DELETE CASCADE,
     pub_key TEXT NOT NULL,
     secret_key TEXT NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

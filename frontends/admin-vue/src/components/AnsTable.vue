@@ -54,7 +54,7 @@ export default {
         });
     },
     showDetail(item){
-      this.$router.push("/dashboard/accounts/" + item.id);
+      this.$router.push("/dashboard/$param.service_name_snake_case$s/" + item.id);
     }
   },
   created() {

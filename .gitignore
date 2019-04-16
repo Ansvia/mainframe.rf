@@ -9,3 +9,4 @@ GIT_MSG
 $name_snake_case$_server
 *.pyc
 *.raw.txt
+.DS_Store

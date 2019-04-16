@@ -29,14 +29,14 @@ fn test_get_info() {
 
 
 #[test]
-fn test_register_account() {
+fn test_register_$param.service_name_snake_case$() {
     let testkit = create_testkit();
     let h = testkit.helper();
     let ah = testkit.api_helper();
 
-    let rv = ah.register_account("Akmal", "akmal@gmail.com", "+62857898122");
+    let rv = ah.register_$param.service_name_snake_case$("Akmal", "akmal@gmail.com", "+62857898122");
     assert!(rv.code == ErrorCode::NoError as i32);
     let token = rv.result.unwrap();
-    h.cleanup_registered_account(&token);
+    h.cleanup_registered_$param.service_name_snake_case$(&token);
     assert!(token.len() > 0);
 }

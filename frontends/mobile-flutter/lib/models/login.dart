@@ -1,21 +1,21 @@
 class Login {
 
   String _token;
-  int _account_id;
-  Login(this._token, this._account_id);
+  int _$param.service_name_snake_case$_id;
+  Login(this._token, this._$param.service_name_snake_case$_id);
 
   Login.map(dynamic obj) {
     this._token = obj["token"];
-    this._account_id = obj["account_id"];
+    this._$param.service_name_snake_case$_id = obj["$param.service_name_snake_case$_id"];
   }
 
   String get token => _token;
-  int get account_id => _account_id;
+  int get $param.service_name_snake_case$_id => _$param.service_name_snake_case$_id;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["token"] = _token;
-    map["account_id"] = _account_id;
+    map["$param.service_name_snake_case$_id"] = _$param.service_name_snake_case$_id;
 
     return map;
   }

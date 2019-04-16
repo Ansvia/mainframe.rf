@@ -20,13 +20,13 @@ export default new Router({
       component: Dashboard
     },
     {
-      path: '/dashboard/accounts',
-      name: 'Accounts',
+      path: '/dashboard/$param.service_name_snake_case$s',
+      name: '$param.service_name$',
       component: Dashboard
     },
     {
-      path: '/dashboard/accounts/:id',
-      name: 'Account',
+      path: '/dashboard/$param.service_name_snake_case$s/:id',
+      name: '$param.service_name$',
       component: Dashboard
     }
   ]

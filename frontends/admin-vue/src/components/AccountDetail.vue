@@ -1,5 +1,5 @@
 <template>
-  <div id="AccountDetail">
+  <div id="$param.service_name_camel_case$Detail">
     <AnsTab>
       <div class="ui grid">
         <div class="six wide column">
@@ -37,12 +37,12 @@
 import AnsTab from "@/components/AnsTab";
 
 export default {
-  name: "AccountDetail",
+  name: "$param.service_name_camel_case$Detail",
   components: {
     AnsTab
   },
   props: {
-    accountId: String
+    $param.service_name_snake_case$Id: String
   },
   data() {
     return {
@@ -50,10 +50,10 @@ export default {
     };
   },
   created() {
-    if (!this.accountId) return;
+    if (!this.$param.service_name_snake_case$Id) return;
     this.$$name_snake_case$
       .api()
-      .privateApi.get(`/$param.service_name_snake_case$/v1/account/info?id=${this.accountId}`)
+      .privateApi.get(`/$param.service_name_snake_case$/v1/$param.service_name_snake_case$/info?id=${this.$param.service_name_snake_case$Id}`)
       .then(resp => {
         this.d = resp.data.result;
       });

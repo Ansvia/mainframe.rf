@@ -9,7 +9,7 @@ import $name_snake_case$
 
 def main():
 
-    target_accounts = [
+    target_$param.service_name_snake_case$s = [
         ["Zufar", "zufar@mail.com", "+628123123"],
         ["Akmal", "akmal@mail.com", "+628123124"],
         ["Anto", "anto@mail.com", "+628123125"],
@@ -19,15 +19,15 @@ def main():
     ]
 
     tokens = []
-    for acc in target_accounts:
-        tokens.append($name_snake_case$.register_account(acc[0], acc[1], acc[2]))
+    for acc in target_$param.service_name_snake_case$s:
+        tokens.append($name_snake_case$.register_$param.service_name_snake_case$(acc[0], acc[1], acc[2]))
 
     print(tokens)
 
     for token in tokens:
         if type(token) == unicode:
-            if $name_snake_case$.activate_account(token, "123").status_code != 200:
-                print("cannot activate account with token %s", token)
+            if $name_snake_case$.activate_$param.service_name_snake_case$(token, "123").status_code != 200:
+                print("cannot activate $param.service_name$ with token %s", token)
         
 
 if __name__ == "__main__":

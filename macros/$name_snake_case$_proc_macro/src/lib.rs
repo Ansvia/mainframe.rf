@@ -499,7 +499,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
     // dbg!((in_path, in_auth, auth_str, is_mutable));
 
     // println!("========= PATH: {} ============", path);
-    // debug = path == "/account/register";
+    // debug = path == "/$param.service_name_snake_case$/register";
     // debug = path == "/transfer";
     // debug = false;
 
@@ -716,14 +716,14 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                         // selain `none`
                         let access_token_guard: TokenStream = quote! {
                             use crate::valid::Expirable;
-                            let current_account = req.headers().get("X-Access-Token")
+                            let current_$param.service_name_snake_case$ = req.headers().get("X-Access-Token")
                                 .map(|at| {
                                     let schema = crate::auth::Schema::new(state.db());
                                     schema.get_access_token(at.to_str().unwrap())
                                         .map(|at|{
                                             if !at.expired(){
-                                                let account_schema = crate::schema_op::Schema::new(state.db());
-                                                account_schema.get_account(at.account_id)
+                                                let $param.service_name_snake_case$_schema = crate::schema_op::Schema::new(state.db());
+                                                $param.service_name_snake_case$_schema.get_$param.service_name_snake_case$(at.$param.service_name_snake_case$_id)
                                                     .map_err(api::Error::from)
                                             }else{
                                                 Err(api::Error::Expired("access token"))
@@ -740,7 +740,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                         2 => {
                             // required
                             let access_token_unwraper = quote! {
-                                let current_account = match current_account {
+                                let current_$param.service_name_snake_case$ = match current_$param.service_name_snake_case$ {
                                     Some(r) => r??,
                                     None => Err(api::Error::Unauthorized)?
                                 };
@@ -750,7 +750,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                         1 => {
                             // optional
                             let access_token_unwraper = quote! {
-                                let current_account = match current_account {
+                                let current_$param.service_name_snake_case$ = match current_$param.service_name_snake_case$ {
                                     Some(Ok(Ok(a))) => Some(a),
                                     _ => None
                                 };

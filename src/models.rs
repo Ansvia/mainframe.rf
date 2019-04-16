@@ -9,7 +9,7 @@ use crate::schema_op::ID;
 
 /// Bentuk model akun di dalam database.
 #[derive(Queryable, Clone, Serialize, PartialEq)]
-pub struct Account {
+pub struct $param.service_name_camel_case$ {
     /// ID dari akun.
     pub id: i64,
 
@@ -37,7 +37,7 @@ pub struct Address {
     pub id: i64,
 
     /// ID dari akun yang memiliki alamat ini.
-    pub account_id: i64,
+    pub $param.service_name_snake_case$_id: i64,
 
     /// Jenis alamat, 0: Domisili, 1: Kelahiran
     pub kind: i64,
@@ -66,7 +66,7 @@ pub struct Address {
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct RegisterAccount {
+pub struct Register$param.service_name_camel_case$ {
     // pub id: i64,
     pub token: String,
     pub full_name: String,
@@ -80,15 +80,15 @@ pub struct RegisterAccount {
 #[derive(Queryable, Serialize, PartialEq, Debug)]
 pub struct AccessToken {
     pub token: String,
-    pub account_id: i64,
+    pub $param.service_name_snake_case$_id: i64,
     pub created: NaiveDateTime,
     pub valid_thru: NaiveDateTime,
 }
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct AccountPashash {
-    pub account_id: i64,
+pub struct $param.service_name_camel_case$Pashash {
+    pub $param.service_name_snake_case$_id: i64,
     pub passhash: String,
     pub deperecated: bool,
     pub ver: i32,
@@ -100,8 +100,8 @@ pub struct AccountPashash {
 pub struct Invoice {
     pub id: ID,
     pub id_ref: String,
-    pub issuer_account: ID,
-    pub to_account: ID,
+    pub issuer_$param.service_name_snake_case$: ID,
+    pub to_$param.service_name_snake_case$: ID,
     pub discount: f64,
     pub amount: f64,
     pub notes: String,
@@ -132,9 +132,9 @@ pub struct PaymentHistory {
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct AccountKey {
+pub struct $param.service_name_camel_case$Key {
     pub id: ID,
-    pub account_id: ID,
+    pub $param.service_name_snake_case$_id: ID,
     pub pub_key: String,
     pub secret_key: String,
     pub created: NaiveDateTime,
@@ -153,19 +153,19 @@ pub struct Transaction {
     pub created: NaiveDateTime,
     pub last_updated: NaiveDateTime,
     pub invoice_id: Option<ID>,
-    pub from_account: Option<ID>,
-    pub to_account: Option<ID>,
+    pub from_$param.service_name_snake_case$: Option<ID>,
+    pub to_$param.service_name_snake_case$: Option<ID>,
     pub merchant_id: Option<ID>,
     pub notes: Option<String>,
 }
 
-impl fmt::Display for Account {
+impl fmt::Display for $param.service_name_camel_case$ {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Account({}, {})", self.id, self.full_name)
+        write!(f, "$param.service_name_camel_case$({}, {})", self.id, self.full_name)
     }
 }
 
-impl fmt::Display for AccountKey {
+impl fmt::Display for $param.service_name_camel_case$Key {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Key({})", &self.pub_key[..8])
     }

@@ -31,8 +31,8 @@ def api_get(path, scope=Scope.PUBLIC):
     global HEADERS
     return requests.get(api_url(path, scope), headers=HEADERS)
 
-def register_account(full_name, email, phone_num):
-    rv = api_post("$param.service_name_snake_case$/v1/account/register", {
+def register_$param.service_name_snake_case$(full_name, email, phone_num):
+    rv = api_post("$param.service_name_snake_case$/v1/$param.service_name_snake_case$/register", {
         "full_name": full_name,
         "email": email,
         "phone_num": phone_num
@@ -44,8 +44,8 @@ def register_account(full_name, email, phone_num):
         return {}
     return rv["result"]
 
-def activate_account(token, password):
-    rv = api_post("$param.service_name_snake_case$/v1/account/activate", {
+def activate_$param.service_name_snake_case$(token, password):
+    rv = api_post("$param.service_name_snake_case$/v1/$param.service_name_snake_case$/activate", {
         "token": token,
         "password": password
     })

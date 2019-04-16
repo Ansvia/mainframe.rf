@@ -76,12 +76,12 @@ impl PublicApi {
     /// User bisa melakukan otorisasi menggunakan email / nomor telp.
     #[api_endpoint(path = "/authorize", auth = "none", mutable)]
     pub fn authorize(state: &mut AppState, query: Authorize) -> ApiResult<AccessToken> {
-        let account = {
+        let $param.service_name_snake_case$ = {
             let schema = Schema::new(state.db());
             if let Some(email) = query.email {
-                schema.get_account_by_email(&email)?
+                schema.get_$param.service_name_snake_case$_by_email(&email)?
             } else if let Some(phone) = query.phone {
-                schema.get_account_by_phone_num(&phone)?
+                schema.get_$param.service_name_snake_case$_by_phone_num(&phone)?
             } else {
                 Err(ApiError::InvalidParameter(
                     ErrorCode::NoLoginInfo as i32,
@@ -93,35 +93,35 @@ impl PublicApi {
         let schema = auth::Schema::new(state.db());
 
         // <% if param.password_crypt_algo == "sha256" %>
-        if !schema.valid_passhash(account.id, &query.passhash) {
-            warn!("account `{}` try to authorize using wrong password", &account.id);
+        if !schema.valid_passhash($param.service_name_snake_case$.id, &query.passhash) {
+            warn!("$param.service_name_snake_case$ `{}` try to authorize using wrong password", &$param.service_name_snake_case$.id);
             Err(ApiError::Unauthorized)?
         }        
         // <% endif %>
 
         // <% if param.password_crypt_algo == "bcrypt" %>
-        let account_passhash = schema.get_passhash(account.id)?;
-        if !crypto::password_match(&query.password, &account_passhash){
-            warn!("account `{}` try to authorize using wrong password", &account.id);
+        let $param.service_name_snake_case$_passhash = schema.get_passhash($param.service_name_snake_case$.id)?;
+        if !crypto::password_match(&query.password, &$param.service_name_snake_case$_passhash){
+            warn!("$param.service_name_snake_case$ `{}` try to authorize using wrong password", &$param.service_name_snake_case$.id);
             Err(ApiError::Unauthorized)?
         }
         // <% endif %>
 
         schema
-                .generate_access_token(account.id)
-                .map_err(From::from)
-                .map(ApiResult::success)
+            .generate_access_token($param.service_name_snake_case$.id)
+            .map_err(From::from)
+            .map(ApiResult::success)
 
     }
 
-    /// Mendapatkan keypair dari account.
+    /// Mendapatkan keypair dari $param.service_name_snake_case$.
     #[api_endpoint(path = "/get_key", auth = "required")]
-    fn account_get_key(query: ()) -> ApiResult<JsonValue> {
+    fn $param.service_name_snake_case$_get_key(query: ()) -> ApiResult<JsonValue> {
         let schema = Schema::new(state.db());
-        let account_key = schema.get_account_key(current_account.id)?;
+        let $param.service_name_snake_case$_key = schema.get_$param.service_name_snake_case$_key(current_$param.service_name_snake_case$.id)?;
 
         Ok(ApiResult::success(
-            json!({"pub_key": account_key.pub_key, "secret_key": account_key.secret_key}),
+            json!({"pub_key": $param.service_name_snake_case$_key.pub_key, "secret_key": $param.service_name_snake_case$_key.secret_key}),
         ))
     }
 }

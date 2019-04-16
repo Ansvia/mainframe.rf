@@ -41,7 +41,7 @@ mod tests {
     fn test_access_token_valid() {
         let access_token = AccessToken {
             token: "".to_owned(),
-            account_id: 1,
+            $param.service_name_snake_case$_id: 1,
             created: Utc::now().naive_utc(),
             valid_thru: Utc::now().naive_utc().add(Duration::days(1)),
         };
@@ -53,7 +53,7 @@ mod tests {
     fn test_access_token_expire() {
         let access_token = AccessToken {
             token: "".to_owned(),
-            account_id: 1,
+            $param.service_name_snake_case$_id: 1,
             created: Utc::now().naive_utc(),
             valid_thru: Utc::now().naive_utc().add(Duration::milliseconds(50)),
         };
