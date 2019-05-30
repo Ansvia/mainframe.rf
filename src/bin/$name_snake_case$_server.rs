@@ -38,7 +38,7 @@ ____________    __      ____________,
     trace!("starting up...");
 
     let auth_service = AuthService::new();
-    let payment_service = $param.service_name_camel_case$Service::new();
+    let $param.service_name_snake_case$_service = $param.service_name_camel_case$Service::new();
 
     let public_listening_address =
         env::var("$name_shout_snake_case$_PUBLIC_LISTENING").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
@@ -50,5 +50,5 @@ ____________    __      ____________,
         ApiServer::new(ApiAccess::Private, private_listening_address),
     ]);
 
-    api::start(ApiAggregator::new(vec![auth_service, payment_service]), config);
+    api::start(ApiAggregator::new(vec![auth_service, $param.service_name_snake_case$_service]), config);
 }
