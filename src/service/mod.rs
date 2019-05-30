@@ -25,7 +25,7 @@ pub struct ExampleService;
 
 impl Service for ExampleService {
     fn name(&self) -> &'static str {
-        "doi"
+        "example"
     }
     fn wire_api(&self, builder: &mut ServiceApiBuilder) {
         PublicApi::wire(builder);
