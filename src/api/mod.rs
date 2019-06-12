@@ -764,6 +764,10 @@ pub fn start(agg: ApiAggregator, config: ServiceApiConfig) {
         .recv()
         .map_err(|_| format_err!("Unable to receive actix system handle"));
 
+    if let Err(e) = &system {
+        error!("{}", e);
+    }
+
     // // stop all server gracefully
     // for api_server in api_servers {
     //     let handler = api_runtime_rx.recv();
@@ -774,7 +778,10 @@ pub fn start(agg: ApiAggregator, config: ServiceApiConfig) {
     // }
 
     // system.unwrap().stop();
-    let _ = system_thread.join().unwrap();
+
+    if let Err(er) = system_thread.join().unwrap() {
+        eprintln!("ERROR: Cannot start server. {}", er);
+    }
 
     println!("done.");
 }
