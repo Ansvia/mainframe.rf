@@ -143,7 +143,11 @@ def load_doc(scope, in_path):
                                 if in_api_endpoint_response:
                                     docs[-1]['response_ok'] = (docs[-1]['response_ok'] + '\n' + line).strip()
                             else:
-                                docs[-1]['desc'] = (docs[-1]['desc'] + '\n' + line).strip()
+                                docs[-1]['desc'] = (docs[-1]['desc'] + line)
+
+    for doc in docs:
+        if doc.has_key('desc'):
+            doc['desc'] = doc['desc'].strip()
                                 
     return docs
 
