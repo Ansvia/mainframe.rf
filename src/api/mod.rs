@@ -17,7 +17,7 @@ mod with;
 
 use self::with::{Immutable, ImmutableReq, Mutable, MutableReq, NamedWith, With};
 pub use self::{error::Error, with::Result};
-pub use crate::{auth, error::ErrorCode, schema_op};
+pub use crate::{auth, error::ErrorCode, schema_$param.service_name_snake_case$};
 
 use crate::{db, service::Service};
 

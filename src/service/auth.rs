@@ -11,7 +11,7 @@ use crate::{
     api::{ApiResult, Error as ApiError, ErrorCode},
     auth, models,
     prelude::*,
-    schema_op,
+    schema_$param.service_name_snake_case$,
 };
 
 /// Core basis service untuk authentikasi.

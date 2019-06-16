@@ -29,7 +29,7 @@ use std::{env, fmt};
 
 use $name_snake_case$::{
     api::{self, ApiAccess, ApiAggregator},
-    schema_op::ID,
+    ID,
     service,
 };
 

@@ -10,7 +10,7 @@ use crate::{
     api::{Error as ApiError, HttpRequest as ApiHttpRequest, Result as ApiResult},
     auth, models,
     prelude::*,
-    schema_op,
+    schema_$param.service_name_snake_case$,
 };
 
 use crate::api::$param.service_name_snake_case$::{PrivateApi, PublicApi};

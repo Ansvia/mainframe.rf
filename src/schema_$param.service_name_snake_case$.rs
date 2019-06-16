@@ -13,6 +13,7 @@ use crate::{
     result::Result,
     schema::*,
     token,
+    ID
 };
 
 use std::sync::Arc;
@@ -59,9 +60,6 @@ pub struct New$param.service_name_camel_case$Key {
     pub secret_key: String,
     pub active: bool,
 }
-
-/// Type alias for ID in integer
-pub type ID = i64;
 
 /// Untuk mengoperasikan skema data di database
 pub struct Schema<'a> {
@@ -306,7 +304,6 @@ impl<'a> Schema<'a> {
             .load(self.db)
             .map_err(From::from)
     }
-
 
     /// Mendapatkan jumlah akun keseluruhan di dalam database.
     pub fn get_$param.service_name_snake_case$_count(&self) -> Result<i64> {

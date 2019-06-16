@@ -56,12 +56,15 @@ pub mod models;
 mod protos;
 mod result;
 mod schema;
-pub mod schema_op;
+pub mod schema_$param.service_name_snake_case$;
 pub mod service;
 pub mod token;
 pub mod util;
 mod valid;
 pub mod web;
+
+/// Type alias for ID in integer
+pub type ID = i64;
 
 /// Common use (prelude) exports.
 #[doc(hidden)]
@@ -72,7 +75,7 @@ pub mod prelude {
             ServiceApiConfig, ServiceApiScope,
         },
         result::Result,
-        schema_op::{Schema, ID},
+        schema_$param.service_name_snake_case$::Schema,
         service::{$param.service_name_camel_case$Service, Service},
         valid::{Expirable, Validable},
     };

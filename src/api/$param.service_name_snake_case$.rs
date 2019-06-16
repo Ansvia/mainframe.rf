@@ -16,7 +16,8 @@ use crate::{
     auth,
     error::{Error, ErrorCode},
     prelude::*,
-    schema_op,
+    schema_$param.service_name_snake_case$,
+    ID
 };
 
 #[derive(Serialize)]

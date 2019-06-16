@@ -7,7 +7,7 @@ use $name_snake_case$::auth;
 use $name_snake_case$::crypto::*;
 use $name_snake_case$::models;
 use $name_snake_case$::prelude::*;
-use $name_snake_case$::schema_op::*;
+use $name_snake_case$::schema_$param.service_name_snake_case$::*;
 use $name_snake_case$::{
     api::$param.service_name_snake_case$::IdQuery,
     util,

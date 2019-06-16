@@ -5,7 +5,7 @@ use serde::Serialize;
 
 use std::fmt;
 
-use crate::schema_op::ID;
+use crate::ID;
 
 /// Bentuk model akun di dalam database.
 #[derive(Queryable, Clone, Serialize, PartialEq)]
@@ -96,41 +96,6 @@ pub struct $param.service_name_camel_case$Pashash {
 }
 
 #[doc(hidden)]
-#[derive(Queryable, Serialize, Deserialize)]
-pub struct Invoice {
-    pub id: ID,
-    pub id_ref: String,
-    pub issuer_$param.service_name_snake_case$: ID,
-    pub to_$param.service_name_snake_case$: ID,
-    pub discount: f64,
-    pub amount: f64,
-    pub notes: String,
-    pub created: NaiveDateTime,
-    pub paid: bool,
-    pub paid_by: ID,
-    pub paid_at: Option<NaiveDateTime>,
-}
-
-#[doc(hidden)]
-#[derive(Queryable)]
-pub struct InvoiceItem {
-    pub id: ID,
-    pub invoice_id: String,
-    pub name: String,
-    pub price: f64,
-}
-
-#[doc(hidden)]
-#[derive(Queryable)]
-pub struct PaymentHistory {
-    pub id: ID,
-    pub invoice_id: ID,
-    pub payer: ID,
-    pub via: String,
-    pub ts: NaiveDateTime,
-}
-
-#[doc(hidden)]
 #[derive(Queryable)]
 pub struct $param.service_name_camel_case$Key {
     pub id: ID,
@@ -139,24 +104,6 @@ pub struct $param.service_name_camel_case$Key {
     pub secret_key: String,
     pub created: NaiveDateTime,
     pub active: bool,
-}
-
-#[doc(hidden)]
-#[derive(Queryable, Serialize)]
-pub struct Transaction {
-    pub id: ID,
-    pub dbcr_flag: i32,
-    pub ttype: i32,
-    // pub subtype: i32,
-    pub amount: f64,
-    pub status: i32,
-    pub created: NaiveDateTime,
-    pub last_updated: NaiveDateTime,
-    pub invoice_id: Option<ID>,
-    pub from_$param.service_name_snake_case$: Option<ID>,
-    pub to_$param.service_name_snake_case$: Option<ID>,
-    pub merchant_id: Option<ID>,
-    pub notes: Option<String>,
 }
 
 impl fmt::Display for $param.service_name_camel_case$ {
