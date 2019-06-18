@@ -7,7 +7,7 @@ use failure;
 
 use crate::{
     crypto::{self, PublicKey, SecretKey},
-    error::Error as PaymentError,
+    error::Error as DetaxError,
     error::ErrorCode,
     models::*,
     result::Result,
@@ -139,18 +139,18 @@ impl<'a> Schema<'a> {
         };
 
         if full_name == "" {
-            Err(PaymentError::InvalidParameter(
+            Err(DetaxError::InvalidParameter(
                 "full name cannot be empty".to_string(),
             ))?
         }
         if email == "" {
-            Err(PaymentError::InvalidParameter(
+            Err(DetaxError::InvalidParameter(
                 "email cannot be empty".to_string(),
             ))?
         }
         // @TODO(robin): lakukan validasi format nomor telp
         if phone_num == "" {
-            Err(PaymentError::InvalidParameter(
+            Err(DetaxError::InvalidParameter(
                 "phone_num cannot be empty".to_string(),
             ))?
         }
@@ -159,7 +159,7 @@ impl<'a> Schema<'a> {
         // @TODO(robin): buat konfigurable
         if full_name == "nobody" {
             warn!("Name exception to register: `{}`", full_name);
-            Err(PaymentError::Unauthorized)?
+            Err(DetaxError::Unauthorized)?
         }
 
         // apabila sudah exists di registered_$param.service_name_snake_case$s table
@@ -183,7 +183,7 @@ impl<'a> Schema<'a> {
             .is_ok();
 
         if exists {
-            Err(PaymentError::AlreadyExists)?
+            Err(DetaxError::AlreadyExists)?
         }
 
         let new_reg_$param.service_name_snake_case$ = NewRegister$param.service_name_camel_case$ {

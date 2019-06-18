@@ -7,7 +7,7 @@
 use actix_web::http::StatusCode;
 use serde::Serialize;
 
-use crate::{api::ApiResult, error::Error as PaymentError, error::ErrorCode};
+use crate::{api::ApiResult, error::Error as DetaxError, error::ErrorCode};
 
 use failure;
 use std::io;
@@ -84,10 +84,10 @@ impl From<hex::FromHexError> for Error {
 
 use diesel::result::DatabaseErrorKind;
 
-impl From<PaymentError> for Error {
-    fn from(e: PaymentError) -> Self {
+impl From<DetaxError> for Error {
+    fn from(e: DetaxError) -> Self {
         match &e {
-            PaymentError::Storage(diesel::result::Error::DatabaseError(kind, msg)) => {
+            DetaxError::Storage(diesel::result::Error::DatabaseError(kind, msg)) => {
                 error!("error: {:?}", &msg);
                 match kind {
                     DatabaseErrorKind::UniqueViolation | DatabaseErrorKind::ForeignKeyViolation => {
@@ -96,15 +96,15 @@ impl From<PaymentError> for Error {
                     _ => Error::CustomError(ErrorCode::DatabaseError as i32, "Internal error".to_owned()),
                 }
             }
-            PaymentError::Storage(diesel::result::Error::NotFound) => Error::NotFound(
+            DetaxError::Storage(diesel::result::Error::NotFound) => Error::NotFound(
                 ErrorCode::DatabaseRecordNotFoundError as i32,
                 "Not found".to_owned(),
             ),
-            PaymentError::Unauthorized => Error::Unauthorized,
-            PaymentError::InvalidParameter(msg) => {
+            DetaxError::Unauthorized => Error::Unauthorized,
+            DetaxError::InvalidParameter(msg) => {
                 Error::InvalidParameter(ErrorCode::InvalidParameter as i32, e.to_string())
             }
-            PaymentError::BadRequest(code, msg) => Error::BadRequest(*code, e.to_string()),
+            DetaxError::BadRequest(code, msg) => Error::BadRequest(*code, e.to_string()),
             _ => Error::InternalError(ErrorCode::DatabaseError as i32, failure::Error::from(e)),
         }
     }
