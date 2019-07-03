@@ -7,7 +7,7 @@
 use actix_web::http::StatusCode;
 use serde::Serialize;
 
-use crate::{api::ApiResult, error::Error as DetaxError, error::ErrorCode};
+use crate::{api::ApiResult, error::Error as $name_camel_case$Error, error::ErrorCode};
 
 use failure;
 use std::io;
@@ -84,10 +84,10 @@ impl From<hex::FromHexError> for Error {
 
 use diesel::result::DatabaseErrorKind;
 
-impl From<DetaxError> for Error {
-    fn from(e: DetaxError) -> Self {
+impl From<$name_camel_case$Error> for Error {
+    fn from(e: $name_camel_case$Error) -> Self {
         match &e {
-            DetaxError::Storage(diesel::result::Error::DatabaseError(kind, msg)) => {
+            $name_camel_case$Error::Storage(diesel::result::Error::DatabaseError(kind, msg)) => {
                 error!("error: {:?}", &msg);
                 match kind {
                     DatabaseErrorKind::UniqueViolation | DatabaseErrorKind::ForeignKeyViolation => {
@@ -96,15 +96,15 @@ impl From<DetaxError> for Error {
                     _ => Error::CustomError(ErrorCode::DatabaseError as i32, "Internal error".to_owned()),
                 }
             }
-            DetaxError::Storage(diesel::result::Error::NotFound) => Error::NotFound(
+            $name_camel_case$Error::Storage(diesel::result::Error::NotFound) => Error::NotFound(
                 ErrorCode::DatabaseRecordNotFoundError as i32,
                 "Not found".to_owned(),
             ),
-            DetaxError::Unauthorized => Error::Unauthorized,
-            DetaxError::InvalidParameter(msg) => {
+            $name_camel_case$Error::Unauthorized => Error::Unauthorized,
+            $name_camel_case$Error::InvalidParameter(msg) => {
                 Error::InvalidParameter(ErrorCode::InvalidParameter as i32, e.to_string())
             }
-            DetaxError::BadRequest(code, msg) => Error::BadRequest(*code, e.to_string()),
+            $name_camel_case$Error::BadRequest(code, msg) => Error::BadRequest(*code, e.to_string()),
             _ => Error::InternalError(ErrorCode::DatabaseError as i32, failure::Error::from(e)),
         }
     }
