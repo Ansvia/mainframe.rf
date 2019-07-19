@@ -376,7 +376,9 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
                                 }
                             }
                             TokenTree::Ident(ident) => {
-                                if !tb.is_empty() && tb[tb.len() - 1].to_string() == "fn" {
+                                if api_endpoint_info.last().map(|a| a.method_name.is_empty()) == Some(true) 
+                                   && !tb.is_empty() 
+                                   && tb[tb.len() - 1].to_string() == "fn" {
                                     api_endpoint_info.last_mut().map(|info| {
                                         info.method_name = ident.to_string();
                                         // dbg!(&info);
