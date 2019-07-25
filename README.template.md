@@ -67,8 +67,9 @@ Untuk melakukan test ketikkan:
 Menjalankan
 -------------
 
-Untuk menjalankan service $name_snake_case$ perlu dipastikan service PostgreSQL sudah jalan terlebih dahulu, dan telah disetup database-nya,, 
-untuk men-setup database bisa menggunakan perintah:
+Untuk menjalankan service $name_snake_case$ perlu dipastikan service PostgreSQL sudah jalan terlebih dahulu, dan telah disetup database-nya.
+
+Untuk men-setup database bisa menggunakan perintah:
 
     $ make reset-db
 
