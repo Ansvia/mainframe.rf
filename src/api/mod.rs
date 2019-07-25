@@ -1,4 +1,5 @@
 //! Module inti yang berkaitan dengan kebutuhan pembuatan rest API.
+//! 
 
 use actix_web::{
     actix::System,
@@ -20,6 +21,9 @@ pub use self::{error::Error, with::Result};
 pub use crate::{auth, error::ErrorCode, schema_$param.service_name_snake_case$};
 
 use crate::{db, service::Service};
+// <% if param.with_event_stream %>
+use crate::eventstream::{self, Event};
+// <% endif %>
 
 use std::{
     collections::BTreeMap,
@@ -646,28 +650,30 @@ impl ApiAggregator {
     }
 }
 
+use db::{DbConn, DbConnMan};
+
 /// State/context yang akan selalu bisa diakses dari handler
 /// state ini berisi beberapa object yang mungkin sering digunakan
 /// seperti DB connection.
 #[derive(Clone)]
 pub struct AppState {
-    db: Arc<PgConnection>,
+    db: DbConnMan,
 }
 
 impl AppState {
     #[doc(hidden)]
     pub fn new() -> AppState {
-        let db_url = env::var("DATABASE_URL").expect("no DATABASE_URL env var");
-        AppState {
-            db: Arc::new(db::connect(&db_url)),
-        }
+        AppState { db: db::clone() }
     }
 
     /// Get Backend DB connection
-    pub fn db(&self) -> &PgConnection {
-        &*self.db
+    pub fn db(&self) -> DbConn {
+        self.db
+            .get()
+            .expect("cannot get DB connection from the r2d2 pool")
     }
 }
+
 
 #[doc(hidden)]
 pub fn create_app(agg: &ApiAggregator, access: ApiAccess) -> App {
@@ -744,6 +750,10 @@ pub fn start(agg: ApiAggregator, config: ServiceApiConfig) {
 
         println!("\nSystem Ready.");
 
+// <% if param.with_event_stream %>
+        eventstream::emit(Event::Startup());
+// <% endif %>
+
         // Starts actix-web runtime.
         let code = system.run();
 
@@ -767,17 +777,6 @@ pub fn start(agg: ApiAggregator, config: ServiceApiConfig) {
     if let Err(e) = &system {
         error!("{}", e);
     }
-
-    // // stop all server gracefully
-    // for api_server in api_servers {
-    //     let handler = api_runtime_rx.recv();
-    //     handler.unwrap()
-    //         .send(server::StopServer { graceful: true })
-    //         .wait()
-    //         .expect("Cannot stop server").unwrap();
-    // }
-
-    // system.unwrap().stop();
 
     if let Err(er) = system_thread.join().unwrap() {
         eprintln!("ERROR: Cannot start server. {}", er);

@@ -76,8 +76,9 @@ impl PublicApi {
     /// User bisa melakukan otorisasi menggunakan email / nomor telp.
     #[api_endpoint(path = "/authorize", auth = "none", mutable)]
     pub fn authorize(state: &mut AppState, query: Authorize) -> ApiResult<AccessToken> {
+        let conn = state.db();
         let $param.service_name_snake_case$ = {
-            let schema = Schema::new(state.db());
+            let schema = Schema::new(&conn);
             if let Some(email) = query.email {
                 schema.get_$param.service_name_snake_case$_by_email(&email)?
             } else if let Some(phone) = query.phone {
@@ -90,7 +91,7 @@ impl PublicApi {
             }
         };
 
-        let schema = auth::Schema::new(state.db());
+        let schema = auth::Schema::new(&conn);
 
         // <% if param.password_crypt_algo == "sha256" %>
         if !schema.valid_passhash($param.service_name_snake_case$.id, &query.passhash) {
@@ -117,7 +118,8 @@ impl PublicApi {
     /// Mendapatkan keypair dari $param.service_name_snake_case$.
     #[api_endpoint(path = "/get_key", auth = "required")]
     fn $param.service_name_snake_case$_get_key(query: ()) -> ApiResult<JsonValue> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
         let $param.service_name_snake_case$_key = schema.get_$param.service_name_snake_case$_key(current_$param.service_name_snake_case$.id)?;
 
         Ok(ApiResult::success(

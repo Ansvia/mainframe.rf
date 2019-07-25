@@ -210,7 +210,8 @@ impl PublicApi {
     /// aktifasi menggunakan endpoint `/$param.service_name_snake_case$/activate`.
     #[api_endpoint(path = "/$param.service_name_snake_case$/register", mutable, auth = "none")]
     pub fn register_$param.service_name_snake_case$(query: Register$param.service_name_camel_case$) -> ApiResult<String> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
 
         schema
             .register_$param.service_name_snake_case$(&query.full_name, &query.email, &query.phone_num)
@@ -222,7 +223,8 @@ impl PublicApi {
     /// Ini nantinya dijadikan link yang akan dikirimkan ke email pendaftar.
     #[api_endpoint(path = "/$param.service_name_snake_case$/activate", auth = "none", mutable)]
     pub fn activate_$param.service_name_snake_case$(query: Activate$param.service_name_camel_case$) -> ApiResult<$param.service_name_camel_case$> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
         let $param.service_name_snake_case$ = schema.activate_registered_$param.service_name_snake_case$(query.token)?;
         schema.set_password($param.service_name_snake_case$.id, &query.password)?;
         Ok($param.service_name_snake_case$.into())
@@ -252,7 +254,8 @@ impl PrivateApi {
     /// Listing $param.service_name_snake_case$
     #[api_endpoint(path = "/$param.service_name_snake_case$s", auth = "none")]
     pub fn list_$param.service_name_snake_case$(query: List$param.service_name_camel_case$) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
 
         let offset = query.page * query.limit;
 
@@ -265,7 +268,8 @@ impl PrivateApi {
     /// Mencari akun berdasarkan kata kunci.
     #[api_endpoint(path = "/$param.service_name_snake_case$/search", auth = "none")]
     pub fn search_$param.service_name_snake_case$s(query: List$param.service_name_camel_case$) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
 
         let offset = query.page * query.limit;
 
@@ -283,7 +287,8 @@ impl PrivateApi {
     /// Mendapatkan jumlah akun secara keseluruhan.
     #[api_endpoint(path = "/$param.service_name_snake_case$/count")]
     pub fn $param.service_name_snake_case$_count(state: &AppState, query: ()) -> ApiResult<i64> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
 
         schema
             .get_$param.service_name_snake_case$_count()
@@ -294,7 +299,8 @@ impl PrivateApi {
     /// Mendapatkan data akun.
     #[api_endpoint(path = "/$param.service_name_snake_case$/info", auth = "required")]
     pub fn $param.service_name_snake_case$_info(query: IdQuery) -> ApiResult<db::$param.service_name_camel_case$> {
-        let schema = Schema::new(state.db());
+        let conn = state.db();
+        let schema = Schema::new(&conn);
 
         schema
             .get_$param.service_name_snake_case$(query.id)

@@ -20,6 +20,10 @@ env_logger = "0.6"
 lazy_static = "1.2"
 rsnowflake = "0.1"
 
+# <% if param.with_event_stream %>
+event-stream = "0.1.0"
+# <% endif %>
+
 # <% if param.password_crypt_algo == "bcrypt" %>
 bcrypt = "0.3"
 # <% endif %>
@@ -40,7 +44,8 @@ serde_json = "1.0.19"
 
 protobuf = { version = "2.2.5", features = ["with-serde"] }
 
-diesel = { version = "=1.4.1", default-features = false, features = ["32-column-tables", "postgres", "chrono"]}
+diesel = { version = "=1.4.1", default-features = false, features = ["32-column-tables", "postgres", "chrono", "r2d2"]}
+r2d2 = "0.8"
 dotenv = "0.13"
 
 $name_kebab_case$-proc-macro = { path = "./macros/$name_snake_case$_proc_macro" }

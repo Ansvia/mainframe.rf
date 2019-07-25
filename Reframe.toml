@@ -49,6 +49,9 @@ author_email = { ask = "Author email?", default="robin@mail.com" }
 password_crypt_algo = { ask = "Password crypto algo?", default="bcrypt", options=["bcrypt", "sha256"] }
 
 [[param]]
+with_eventstream = { ask = "With Eventstream?", default="true" }
+
+[[param]]
 with_webapp = { ask = "With web app frontends?", default="true" }
 
 [[param]]

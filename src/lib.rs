@@ -13,6 +13,7 @@
 // extern crate actix;
 extern crate actix_web;
 extern crate chrono;
+extern crate r2d2;
 #[macro_use]
 extern crate diesel;
 extern crate futures;
@@ -62,6 +63,10 @@ pub mod token;
 pub mod util;
 mod valid;
 pub mod web;
+
+// <% if param.with_event_stream %>
+pub mod eventstream;
+// <% endif %>
 
 /// Type alias for ID in integer
 pub type ID = i64;

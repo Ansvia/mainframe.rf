@@ -720,11 +720,12 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                             use crate::valid::Expirable;
                             let current_$param.service_name_snake_case$ = req.headers().get("X-Access-Token")
                                 .map(|at| {
-                                    let schema = crate::auth::Schema::new(state.db());
+                                    let conn = state.db();
+                                    let schema = crate::auth::Schema::new(&conn);
                                     schema.get_access_token(at.to_str().unwrap())
                                         .map(|at|{
                                             if !at.expired(){
-                                                let $param.service_name_snake_case$_schema = crate::schema_$param.service_name_snake_case$::Schema::new(state.db());
+                                                let $param.service_name_snake_case$_schema = crate::schema_$param.service_name_snake_case$::Schema::new(&conn);
                                                 $param.service_name_snake_case$_schema.get_$param.service_name_snake_case$(at.$param.service_name_snake_case$_id)
                                                     .map_err(api::Error::from)
                                             }else{

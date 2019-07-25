@@ -135,3 +135,22 @@ macro_rules! api_endpoint {
         }
     };
 }
+
+// <% if param.with_event_stream %>
+macro_rules! impl_event_listener {
+    ($name:ident) => {
+        impl $name {
+            pub fn new() -> Arc<Self> {
+                Arc::new(Self { db: db::clone() })
+            }
+
+            fn db(&self) -> db::DbConn {
+                self.db.get().expect(concat!(
+                    "Cannot get db connection from poll in ",
+                    stringify!($name)
+                ))
+            }
+        }
+    };
+}
+// <% endif %>
