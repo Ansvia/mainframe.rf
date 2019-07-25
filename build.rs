@@ -23,8 +23,9 @@ fn main() {
     let content = fs::read_to_string(&path).expect("cannot read autogen protobuf $name_snake_case$.rs");
     let mut new_content = vec![];
 
+    // remove unwanted line of code
     for line in content.split("\n") {
-        if line.starts_with("#![") {
+        if line.starts_with("#![") || line.starts_with("//!") {
             continue;
         }
         new_content.push(line);
