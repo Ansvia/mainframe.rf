@@ -1,6 +1,6 @@
 {
-  "name": "admin-vue",
-  "short_name": "admin-vue",
+  "name": "$name$",
+  "short_name": "$name$",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
