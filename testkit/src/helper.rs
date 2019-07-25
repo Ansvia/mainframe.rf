@@ -15,7 +15,7 @@ use $name_snake_case$::{
 use diesel::{connection::Connection, pg::PgConnection};
 use serde_json::Value as JsonValue;
 
-use crate::{ApiKind, TestKit, TestKitApi};
+use crate::{ApiKind, ID, TestKit, TestKitApi};
 
 use std::{
     env,
