@@ -1,22 +1,25 @@
 {
-  "name": "admin-vue",
+  "name": "$name$",
   "version": "0.1.0",
   "private": true,
-  "lincese": "SEE LICENSE IN LICENSE",
   "scripts": {
-    "proto": "pbjs --keep-case -t static-module -w es6 ../../src/protos/$name_snake_case$.proto -o ./src/proto/stubs.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "proto": "pbjs --keep-case -t static-module -w es6 ../../src/protos/$name_snake_case$.proto -o ./src/proto/stubs.js",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "axios": "^0.18.1",
     "crypto": "^1.0.1",
+    "date-fns": "^1.30.1",
+    "lodash": "^4.17.15",
     "protobufjs": "^6.8.8",
     "register-service-worker": "^1.5.2",
     "supercop.js": "^2.0.1",
+    "v-tooltip": "^2.0.2",
     "vue": "^2.6.10",
+    "vue-js-modal": "^1.3.31",
     "vue-notification": "^1.3.16",
     "vue-router": "^3.0.1",
     "vue-session": "^1.0.0",
@@ -37,6 +40,9 @@
     "eslint-plugin-vue": "^5.0.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
+    "style-resources-loader": "^1.2.1",
+    "vue-cli-plugin-style-resources-loader": "^0.1.3",
     "vue-template-compiler": "^2.5.21"
-  }
+  },
+  "lincese": "SEE LICENSE IN LICENSE"
 }

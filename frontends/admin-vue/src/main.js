@@ -20,6 +20,12 @@ import 'vuejs-dialog/dist/vuejs-dialog.min.css'
 Vue.use(VuejsDialog)
 // ------- end of Vuejs Dialog Stuff ---------
 
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+
+import vmodal from 'vue-js-modal'
+Vue.use(vmodal)
+
 import './registerServiceWorker'
 
 
@@ -32,12 +38,30 @@ Vue.config.prodApiEndpoint = "http://api.$name_kebab_case$.com";
 // * `prod` - Apabila ingin menggunakan API dari server production.
 // * `dev` - Apabila ingin menggunakan API dari server local atau docker (untuk development).
 // * `mock` - Apabila ingin menggunakan API dari server mocking Apiary (untuk development).
-Vue.config.runMode = "dev";
+
+if (!process.env.VUE_APP_RUN_MODE) {
+  throw new Error('cannot find .env file or "VUE_APP_RUN_MODE" not set in .env file')
+}
+Vue.config.runMode = process.env.VUE_APP_RUN_MODE;
 
 Vue.use(VueSession)
 Vue.use(Notifications)
 Vue.use($name_camel_case$)
 Vue.use(VueSidebarMenu)
+
+
+// Add utils option in components
+Vue.mixin({
+  beforeCreate() {
+    const utils = this.$options.utils
+    if (utils) {
+      const keys = Object.keys(utils)
+       for (let i = 0; i < keys.length; i++) {
+         this[keys[i]] = utils[keys[i]]
+       }
+    }
+  }
+})
 
 new Vue({
   router,

@@ -7,15 +7,17 @@ export default class $name_camel_case$ {
 
     var api;
 
+    const env = process.env
+
     if (Vue.config.runMode == "prod") {
-      api = new ApiClient(Vue.config.prodApiEndpoint,
-        "http://localhost:9090/api");
+      api = new ApiClient(env.VUE_APP_PROD_PUBLIC_URL,
+        env.VUE_APP_PROD_PRIVATE_URL);
     } else if (Vue.config.runMode == "dev") {
-      api = new ApiClient("http://localhost:8080/api",
-        "http://localhost:9090/api");
+      api = new ApiClient(env.VUE_APP_DEV_PUBLIC_URL,
+        env.VUE_APP_DEV_PRIVATE_URL);
     } else if (Vue.config.runMode == "mock") {
-      api = new ApiClient("http://private-b1a4a4-anvie.apiary-mock.com/api",
-        "http://private-b1a4a4-anvie.apiary-mock.com/api");
+      api = new ApiClient(env.VUE_APP_MOCK_URL,
+        env.VUE_APP_MOCK_URL);
     } else {
       throw "Unknown mode: " + Vue.config.runMode
     }
