@@ -14,7 +14,7 @@
             <h1>ADMINISTRATOR LOGIN</h1>
           </div>
           <div class="ui divider"></div>
-          <form class="ui form" method="POST">
+          <form class="ui form" method="POST" @submit="doLogin($event)">
             <div class="field">
               <label>Email/No telp:</label>
               <input type="text" name="email" placeholder="User Name" ref="inputEmail">
@@ -29,7 +29,7 @@
                 <label>Remember me</label>
               </div>
             </div>
-            <button v-on:click="doLogin($event)" class="ui button" type="submit">Masuk</button>
+            <button class="ui button" type="submit">Masuk</button>
           </form>
         </div>
       </div>

@@ -5,6 +5,10 @@ export class ApiClient {
   constructor(publicApiBaseUrl, privateApiBaseUrl) {
     this.headers = {'Content-Type':'application/json'};
 
+    this.publicApiBaseUrl = publicApiBaseUrl
+    
+    this.privateApiBaseUrl = privateApiBaseUrl
+
     this.publicApi = _axios.create({
         baseURL: publicApiBaseUrl,
         timeout: 10000,
