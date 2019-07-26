@@ -15,10 +15,6 @@ use std::io;
 /// List of possible API errors.
 #[derive(Fail, Debug)]
 pub enum Error {
-    // /// Storage error. This type includes errors related to the database, caused
-    // /// by, for example, serialization issues.
-    // #[fail(display = "Storage error: {}", _0)]
-    // Storage(#[cause] storage::Error),
     /// Input/output error. This type includes errors related to files that are not
     /// a part of the Exonum storage.
     #[fail(display = "IO error: {}", _0)]

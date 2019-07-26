@@ -87,22 +87,6 @@ impl<Q, I, R, F, K> NamedWith<Q, I, R, F, K> {
     }
 }
 
-// Implementations for `Result` and `query` parameters.
-
-// impl<Q, I, F> From<F> for With<Q, I, Result<I>, F>
-// where
-//     F: for<'r> Fn(&'r AppState, Q) -> Result<I>,
-// {
-//     fn from(handler: F) -> Self {
-//         Self {
-//             handler,
-//             _query_type: PhantomData,
-//             _item_type: PhantomData,
-//             _result_type: PhantomData,
-//         }
-//     }
-// }
-
 impl<Q, I, F> From<F> for With<Q, I, Result<I>, F>
 where
     Q: DeserializeOwned + 'static, // F: Into<FuncHandler<X>>
