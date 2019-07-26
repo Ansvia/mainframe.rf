@@ -13,8 +13,10 @@ use futures::future::{Future, IntoFuture};
 use regex::Regex;
 
 mod error;
-pub mod $param.service_name_snake_case$;
 mod with;
+
+pub mod $param.service_name_snake_case$;
+mod types;
 
 use self::with::{Immutable, ImmutableReq, Mutable, MutableReq, NamedWith, With};
 pub use self::{error::Error, with::Result};

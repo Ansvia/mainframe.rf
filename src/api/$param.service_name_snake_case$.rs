@@ -12,6 +12,7 @@ use crate::crypto::{self, PublicKey, SecretKey, Signature};
 use crate::{
     api,
     api::$param.service_name_snake_case$::models::*,
+    api::types::*,
     api::{ApiResult, Error as ApiError, HttpRequest as ApiHttpRequest},
     auth,
     error::{Error, ErrorCode},
@@ -19,31 +20,6 @@ use crate::{
     schema_$param.service_name_snake_case$,
     ID
 };
-
-#[derive(Serialize)]
-pub struct EntriesResult<T> {
-    pub entries: Vec<T>,
-    pub count: i64,
-}
-
-#[derive(Deserialize)]
-pub struct List$param.service_name_camel_case$ {
-    pub query: Option<String>,
-    pub page: i64,
-    pub limit: i64,
-}
-
-#[derive(Deserialize)]
-pub struct QueryEntries {
-    pub query: Option<String>,
-    pub page: i64,
-    pub limit: i64,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct IdQuery {
-    pub id: ID,
-}
 
 /// Definisi query untuk mendaftarkan akun baru via rest API.
 #[derive(Debug, Serialize, Deserialize)]
@@ -253,13 +229,11 @@ impl PrivateApi {
 
     /// Listing $param.service_name_snake_case$
     #[api_endpoint(path = "/$param.service_name_snake_case$s", auth = "none")]
-    pub fn list_$param.service_name_snake_case$(query: List$param.service_name_camel_case$) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
+    pub fn list_$param.service_name_snake_case$(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
         let conn = state.db();
         let schema = Schema::new(&conn);
 
-        let offset = query.page * query.limit;
-
-        let entries = schema.get_$param.service_name_snake_case$s(offset, query.limit)?;
+        let entries = schema.get_$param.service_name_snake_case$s(query.offset, query.limit)?;
 
         let count = schema.get_$param.service_name_snake_case$_count()?;
         Ok(ApiResult::success(EntriesResult { count, entries }))
@@ -267,11 +241,9 @@ impl PrivateApi {
 
     /// Mencari akun berdasarkan kata kunci.
     #[api_endpoint(path = "/$param.service_name_snake_case$/search", auth = "none")]
-    pub fn search_$param.service_name_snake_case$s(query: List$param.service_name_camel_case$) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
+    pub fn search_$param.service_name_snake_case$s(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
         let conn = state.db();
         let schema = Schema::new(&conn);
-
-        let offset = query.page * query.limit;
 
         if query.query.is_none() {
             return Self::list_$param.service_name_snake_case$(&state, query, req);
@@ -279,7 +251,7 @@ impl PrivateApi {
 
         let keyword = query.query.unwrap();
 
-        let (entries, count) = schema.search_$param.service_name_snake_case$s(&keyword, offset, query.limit)?;
+        let (entries, count) = schema.search_$param.service_name_snake_case$s(&keyword, query.offset, query.limit)?;
 
         Ok(ApiResult::success(EntriesResult { count, entries }))
     }
