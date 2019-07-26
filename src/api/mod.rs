@@ -111,20 +111,6 @@ impl ApiResult<()> {
     }
 }
 
-// /// Bentuk standar API respon apabila operasi sukses.
-// #[derive(Debug, Serialize, Deserialize, PartialEq)]
-// pub struct SuccessReturn<T> {
-//     #[doc(hidden)]
-//     pub result: T,
-// }
-
-// impl<T: Serialize> SuccessReturn<T> {
-//     #[doc(hidden)]
-//     pub fn new(result: T) -> Self {
-//         Self { result }
-//     }
-// }
-
 /// Defines an object that could be used as an API backend.
 ///
 /// This trait is used to implement an API backend for Exonum.
@@ -140,8 +126,6 @@ pub trait ServiceApiBackend: Sized {
         N: Into<String>,
         Q: DeserializeOwned + 'static,
         I: Serialize + 'static,
-        // F: for<'r> Fn(&'r AppState, Q) -> R + 'static + Clone,
-        // F: Into<FuncHandler<Func2<Q, R>>>,
         E: Into<With<Q, I, R, F>>,
         Self::Handler: From<NamedWith<Q, I, R, F, K>>,
     {
@@ -155,7 +139,6 @@ pub trait ServiceApiBackend: Sized {
         N: Into<String>,
         Q: DeserializeOwned + 'static,
         I: Serialize + 'static,
-        // F: for<'r> Fn(&'r AppState, Q) -> R + 'static + Clone,
         E: Into<With<Q, I, R, F>>,
         Self::Handler: From<NamedWith<Q, I, R, F, K>>,
     {
@@ -239,12 +222,10 @@ impl ServiceApiBackend for ApiBuilder {
 impl<Q, I, F> From<NamedWith<Q, I, Result<I>, F, Immutable>> for RequestHandler
 where
     F: for<'r> Fn(&'r AppState, Q) -> Result<I> + 'static + Send + Sync + Clone,
-    // F: Into<FuncHandler<Func2<Q, Result<I>>>>,
     Q: DeserializeOwned + 'static,
     I: Serialize + 'static,
 {
     fn from(f: NamedWith<Q, I, Result<I>, F, Immutable>) -> Self {
-        // let handler = f.inner.handler.into().inner;
         let handler = f.inner.handler;
         let index = move |request: HttpRequest| -> FutureResponse {
             let context = request.state();
@@ -252,7 +233,6 @@ where
                 .map(|query: Query<Q>| query.into_inner())
                 .or_else(map_error)
                 .and_then(|query| handler(context, query).map_err(From::from))
-                // .and_then(|value| Ok(HttpResponse::Ok().json(value)))
                 .and_then(|value| Ok(map_ok(value, &request)))
                 .into_future();
             Box::new(future)
@@ -269,12 +249,10 @@ where
 impl<Q, I, F> From<NamedWith<Q, I, Result<I>, F, ImmutableReq>> for RequestHandler
 where
     F: for<'r> Fn(&'r AppState, Q, &HttpRequest) -> Result<I> + 'static + Send + Sync + Clone,
-    // F: Into<FuncHandler<Func2<Q, Result<I>>>>,
     Q: DeserializeOwned + 'static,
     I: Serialize + 'static,
 {
     fn from(f: NamedWith<Q, I, Result<I>, F, ImmutableReq>) -> Self {
-        // let handler = f.inner.handler.into().inner;
         let handler = f.inner.handler;
         let index = move |request: HttpRequest| -> FutureResponse {
             let context = request.state();
@@ -282,7 +260,6 @@ where
                 .map(|query: Query<Q>| query.into_inner())
                 .or_else(map_error)
                 .and_then(|query| handler(context, query, &request).map_err(From::from))
-                // .and_then(|value| Ok(HttpResponse::Ok().json(value)))
                 .and_then(|value| Ok(map_ok(value, &request)))
                 .into_future();
             Box::new(future)
@@ -411,12 +388,6 @@ where
 
 /// Just type alias for complex type
 pub type ResourceFunc = Arc<Box<Fn(Scope) -> Scope + Sync + Send + 'static>>;
-
-// /// Trait untuk di-add-kan ke setiap struct API endpoint holder.
-// pub trait ApiEndpointDef {
-//     /// Wiring API.
-//     fn wire(&self, sas: &mut ServiceApiScope) {}
-// }
 
 /// Scope API
 #[derive(Default, Clone)]
@@ -673,7 +644,6 @@ impl AppState {
             .expect("cannot get DB connection from the r2d2 pool")
     }
 }
-
 
 #[doc(hidden)]
 pub fn create_app(agg: &ApiAggregator, access: ApiAccess) -> App {
