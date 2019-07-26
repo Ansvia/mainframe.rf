@@ -9,7 +9,7 @@ use $name_snake_case$::models;
 use $name_snake_case$::prelude::*;
 use $name_snake_case$::schema_$param.service_name_snake_case$::*;
 use $name_snake_case$::{
-    api::$param.service_name_snake_case$::IdQuery,
+    api::types::IdQuery,
     util,
 };
 use diesel::{connection::Connection, pg::PgConnection};
