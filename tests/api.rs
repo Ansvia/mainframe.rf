@@ -22,8 +22,9 @@ fn test_get_info() {
     let api = testkit.api();
 
     assert_eq!(
-        api.public(ApiKind::$param.service_name_camel_case$).get::<JsonValue>("v1/info").unwrap(),
-        json!({ "version": env!("CARGO_PKG_VERSION") })
+        api.public(ApiKind::System).get::<JsonValue>("v1/info").unwrap(),
+        json!({ "version": env!("CARGO_PKG_VERSION"),
+                "build": env!("BUILD_INFO"), "git": env!("GIT_REV") })
     );
 }
 

@@ -1,6 +1,6 @@
 //! API message types
 //! 
-+#![doc(hidden)]
+#![doc(hidden)]
 
 use crate::ID;
 

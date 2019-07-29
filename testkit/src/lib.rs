@@ -307,8 +307,9 @@ pub fn create_test_server() -> TestServer {
     setup();
 
     let service = service::$param.service_name_camel_case$Service::new();
+    let system_service = service::SystemService::new();
 
-    let agg = ApiAggregator::new(vec![service]);
+    let agg = ApiAggregator::new(vec![service, system_service]);
 
     let server = TestServer::with_factory(move || {
         let state = api::AppState::new();

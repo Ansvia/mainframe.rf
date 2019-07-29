@@ -11,7 +11,6 @@ use crate::crypto::{self, PublicKey, SecretKey, Signature};
 
 use crate::{
     api,
-    api::$param.service_name_snake_case$::models::*,
     api::types::*,
     api::{ApiResult, Error as ApiError, HttpRequest as ApiHttpRequest},
     auth,
@@ -102,7 +101,7 @@ where
 
 /// Model untuk keperluan tukar menukar data API
 /// bukan yang di database (crate::models).
-pub mod models {
+pub mod types {
 
     use chrono::NaiveDateTime;
 
@@ -198,7 +197,7 @@ impl PublicApi {
     /// Mengaktifkan user yang telah teregister.
     /// Ini nantinya dijadikan link yang akan dikirimkan ke email pendaftar.
     #[api_endpoint(path = "/$param.service_name_snake_case$/activate", auth = "none", mutable)]
-    pub fn activate_$param.service_name_snake_case$(query: Activate$param.service_name_camel_case$) -> ApiResult<$param.service_name_camel_case$> {
+    pub fn activate_$param.service_name_snake_case$(query: Activate$param.service_name_camel_case$) -> ApiResult<types::$param.service_name_camel_case$> {
         let conn = state.db();
         let schema = Schema::new(&conn);
         let $param.service_name_snake_case$ = schema.activate_registered_$param.service_name_snake_case$(query.token)?;
@@ -206,15 +205,9 @@ impl PublicApi {
         Ok($param.service_name_snake_case$.into())
     }
 
-    /// Hanya digunakan untuk testing sahaja.
-    #[api_endpoint(path = "/info", auth = "optional")]
-    pub fn info(query: ()) -> JsonValue {
-        Ok(json!({ "version": env!("CARGO_PKG_VERSION") }))
-    }
-
     /// Mendapatkan informasi current $param.service_name_snake_case$.
     #[api_endpoint(path = "/me/info", auth = "required")]
-    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> $param.service_name_camel_case$ {
+    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> types::$param.service_name_camel_case$ {
         Ok(current_$param.service_name_snake_case$.into())
     }
 }

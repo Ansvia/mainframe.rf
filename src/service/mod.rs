@@ -2,8 +2,13 @@
 
 mod auth;
 mod $param.service_name_snake_case$;
+mod system;
 
-pub use self::{auth::AuthService, $param.service_name_snake_case$::$param.service_name_camel_case$Service};
+pub use self::{
+    auth::AuthService,
+    $param.service_name_snake_case$::$param.service_name_camel_case$Service,
+    system::SystemService
+};
 
 use crate::api;
 use crate::api::*;
@@ -36,10 +41,6 @@ impl Service for ExampleService {
 struct PublicApi {}
 
 impl PublicApi {
-    #[api_endpoint(path = "/info")]
-    pub fn info(state: &AppState, query: ()) -> String {
-        Ok(concat!("version: ", env!("CARGO_PKG_VERSION")).to_owned())
-    }
 
     pub fn info_req(state: &AppState, query: (), req: &api::HttpRequest) -> api::Result<String> {
         Ok(concat!("version: ", env!("CARGO_PKG_VERSION")).to_owned())
@@ -61,7 +62,7 @@ impl PublicApi {
         trace!("wiring API...");
         builder
             .public_scope()
-            .endpoint("v1/info", Self::info)
+            // .endpoint("v1/info", Self::info)
             .endpoint("v1/info_req", Self::info_req)
             .endpoint_mut("v1/update", Self::update)
             .with_scope(|scope| {

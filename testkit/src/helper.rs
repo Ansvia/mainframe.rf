@@ -1,4 +1,4 @@
-use $name_snake_case$::api::$param.service_name_snake_case$::models::*;
+use $name_snake_case$::api::$param.service_name_snake_case$::types;
 use $name_snake_case$::api::{
     $param.service_name_snake_case$::{Activate$param.service_name_camel_case$, Register$param.service_name_camel_case$, TxQuery},
     ApiResult,
@@ -23,13 +23,13 @@ use std::{
 };
 
 pub struct $param.service_name_camel_case$WithKey {
-    pub $param.service_name_snake_case$: $param.service_name_camel_case$,
+    pub $param.service_name_snake_case$: types::$param.service_name_camel_case$,
     pub public_key: PublicKey,
     pub secret_key: SecretKey,
 }
 
 impl $param.service_name_camel_case$WithKey {
-    pub fn new($param.service_name_snake_case$: $param.service_name_camel_case$, public_key: PublicKey, secret_key: SecretKey) -> Self {
+    pub fn new($param.service_name_snake_case$: types::$param.service_name_camel_case$, public_key: PublicKey, secret_key: SecretKey) -> Self {
         Self {
             $param.service_name_snake_case$,
             public_key,
@@ -128,7 +128,7 @@ impl TestHelper {
     }
 
     /// Menghapus akun
-    pub fn cleanup_$param.service_name_snake_case$(&self, $param.service_name_snake_case$: $param.service_name_camel_case$) {
+    pub fn cleanup_$param.service_name_snake_case$(&self, $param.service_name_snake_case$: types::$param.service_name_camel_case$) {
         self.cleanup_$param.service_name_snake_case$_by_id($param.service_name_snake_case$.id);
     }
 
@@ -167,7 +167,7 @@ impl<'a> ApiHelper<'a> {
     }
 
     /// Aktivasi akun menggunakan token yang telah didapat dari hasil register.
-    pub fn activate_$param.service_name_snake_case$(&self, token: String, password: &str) -> ApiResult<$param.service_name_camel_case$> {
+    pub fn activate_$param.service_name_snake_case$(&self, token: String, password: &str) -> ApiResult<types::$param.service_name_camel_case$> {
         let api = self.testkit.api();
 
         let data = Activate$param.service_name_camel_case$ {
@@ -177,7 +177,7 @@ impl<'a> ApiHelper<'a> {
 
         api.public(ApiKind::$param.service_name_camel_case$)
             .query(&data)
-            .post::<ApiResult<$param.service_name_camel_case$>>("v1/$param.service_name_snake_case$/activate")
+            .post::<ApiResult<types::$param.service_name_camel_case$>>("v1/$param.service_name_snake_case$/activate")
             .expect("activate $param.service_name_snake_case$")
     }
 }

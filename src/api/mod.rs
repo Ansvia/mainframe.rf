@@ -16,7 +16,7 @@ mod error;
 mod with;
 
 pub mod $param.service_name_snake_case$;
-mod types;
+pub mod types;
 
 use self::with::{Immutable, ImmutableReq, Mutable, MutableReq, NamedWith, With};
 pub use self::{error::Error, with::Result};
