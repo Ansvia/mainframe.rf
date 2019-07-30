@@ -53,7 +53,8 @@ impl TestHelper {
     fn get_db<'a>() -> MutexGuard<'a, PgConnection> {
         lazy_static! {
             static ref PG_CONN_FOR_TEST: Arc<Mutex<PgConnection>> = Arc::new(Mutex::new(
-                PgConnection::establish(&env::var("DATABASE_URL").unwrap()).expect("Cannot connect to db")
+                PgConnection::establish(&env::var("DATABASE_TEST_URL")
+                    .expect("No DATABASE_TEST_URL env var")).expect("Cannot connect to db")
             ));
         }
 
