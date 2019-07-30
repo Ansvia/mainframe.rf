@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     }));
 
     return MaterialApp(
-      title: 'Flutter App',
+      title: '$name$',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue
       ),
