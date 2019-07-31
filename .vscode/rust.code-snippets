@@ -30,5 +30,43 @@
 			"#[derive(Deserialize)]"
 		],
 		"description": "Create derive decorator"
+	},
+	"Implement API endpoint": {
+		"scope": "rust",
+		"prefix": "apiendpoint",
+		"body": [
+			"/// ${4:Documentation}",
+			"#[api_endpoint(path = \"/${1:path}\", auth = \"required\")]",
+			"pub fn ${2:name}(query: ()) -> ApiResult<${3:type}> {",
+			"    let conn = state.db();",
+			"    unimplemented!();",
+			"}"
+		]
+	},
+	"Implement API method call for test": {
+		"scope": "rust",
+		"prefix": "apicalltesthelper",
+		"body": [
+			"pub fn ${1:api_name}(&self, ${5:param}) -> ApiResult<${2:models::ReturnType}> {",
+			"    let api = self.testkit.api();",
+			"    api.public(ApiKind::${3:System})",
+			"        .query(${6:Data})",
+			"        .${7:get}::<ApiResult<${2:models::ReturnType}>>(\"v1/${4:endpoint}\")",
+			"        .expect(\"cannot via API call\")",
+			"}"
+		],
+		"description": "Create API method call for test"
+	},
+	"Implement API test": {
+		"scope": "rust",
+		"prefix": "apitest",
+		"body": [
+			"#[test]",
+			"fn test_${1:name}(){",
+			"    testkit!(tk, h, ah);",
+			"    ${2:// code here}",
+			"}"
+		],
+		"description": "Create api test function"
 	}
 }
