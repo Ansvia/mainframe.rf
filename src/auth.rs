@@ -100,4 +100,19 @@ impl<'a> Schema<'a> {
             .get_result::<i64>(self.db)
             .is_ok()
     }
+
+    /// Remove access token from db
+    pub fn remove_access_token(&self, access_token: &str) -> Result<()> {
+        use crate::schema::access_tokens::{self, dsl};
+        diesel::delete(dsl::access_tokens.filter(dsl::token.eq(access_token))).execute(self.db)?;
+        Ok(())
+    }
+
+    /// Clear account's access tokens by account id
+    pub fn clear_access_token_by_account_id(&self, account_id: ID) -> Result<()> {
+        use crate::schema::access_tokens::{self, dsl};
+        diesel::delete(dsl::access_tokens.filter(dsl::account_id.eq(account_id))).execute(self.db)?;
+        Ok(())
+    }
+
 }

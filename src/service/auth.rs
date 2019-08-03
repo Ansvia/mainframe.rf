@@ -8,7 +8,7 @@ use serde_json::Value as JsonValue;
 
 use crate::crypto::{self, SecretKey};
 use crate::{
-    api::{ApiResult, Error as ApiError, ErrorCode},
+    api::{types::IdQuery, ApiResult, Error as ApiError, ErrorCode},
     auth, models,
     prelude::*,
     schema_$param.service_name_snake_case$,
@@ -63,8 +63,23 @@ impl PrivateApi {
     /// Menghapus akses token
     #[api_endpoint(path = "/remove_access_token", auth = "required", mutable)]
     pub fn remove_access_token(query: AccessTokenQuery) -> ApiResult<()> {
-        unimplemented!();
+        let conn = state.db();
+        let schema = auth::Schema::new(&conn);
+        schema.remove_access_token(&query.token)?;
+
+        Ok(ApiResult::success(()))
     }
+
+    /// Unauthorize user, this will invalidate all valid access tokens.
+    #[api_endpoint(path = "/unauthorize", auth = "required", mutable)]
+    pub fn unauthorize(query: IdQuery) -> ApiResult<()> {
+        let conn = state.db();
+        let schema = auth::Schema::new(&conn);
+
+        schema.clear_access_token_by_account_id(query.id)?;
+
+        Ok(ApiResult::success(()))
+     }
 }
 
 struct PublicApi;
@@ -113,6 +128,12 @@ impl PublicApi {
             .map_err(From::from)
             .map(ApiResult::success)
 
+    }
+
+    /// Unauthorize current user session, this will invalidate all valid access tokens.
+    #[api_endpoint(path = "/unauthorize", auth = "required", mutable)]
+    pub fn unauthorize(query: ()) -> ApiResult<()> {
+        PrivateApi::unauthorize(state, IdQuery { id: current_account.id }, req)
     }
 
     /// Mendapatkan keypair dari $param.service_name_snake_case$.
