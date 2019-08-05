@@ -29,21 +29,6 @@ void main() {
     },
     child: $name_camel_case$App(userRepository: userRepository),
   ));
-
-  // runApp(
-  //   MultiBlocProvider(
-  //     providers: [
-  //       BlocProvider<$name_camel_case$Bloc>(
-  //         builder: (context) =>
-  //             $name_camel_case$Bloc(userRepository: userRepository),
-  //       ),
-  //       BlocProvider<AuthenticationBloc>(
-  //           builder: (context) =>
-  //               AuthenticationBloc(userRepository: userRepository)..dispatch(AppStarted())),
-  //     ],
-  //     child: $name_camel_case$App(userRepository: userRepository,),
-  //   )
-  // );
 }
 
 class $name_camel_case$App extends StatelessWidget {
@@ -99,17 +84,6 @@ class $name_camel_case$App extends StatelessWidget {
             userRepository: userRepository,
           ),
         );
-
-        // return MultiBlocProvider(
-        //   providers: [
-        //     BlocProvider<$name_camel_case$Bloc>(
-        //       builder: (context) => $name_camel_case$Bloc(userRepository: userRepository),
-        //     )
-        //   ],
-        //   child: LoginPage(
-        //     userRepository: userRepository,
-        //   ),
-        // );
       },
       "/taskman": (context) {
         return BlocProvider(
