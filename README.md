@@ -17,7 +17,7 @@ Features:
 * Js and Python client library to interact with server.
 * Optional frontends support:
   * Web using Vue.js
-  * Mobile using Flutter
+  * Mobile using Flutter with [BloC Pattern](https://felangel.github.io/bloc).
 * Auto documentation both for lib and API. Write your API endpoint code and get your documentation done automagically in Blueprint API format.
 * Auto build postman collection based on your API code.
 * Testkit & Test helper.
