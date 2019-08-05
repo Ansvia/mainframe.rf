@@ -81,21 +81,39 @@ Selanjutkan jalankan $name$ servernya:
 Frontend
 ------------
 
-Stack frontend web kita bisa menggunakan React.js atau Vue.js, base ada di direktori `/frontends`.
+<!-- <% if param.with_webapp %> -->
+Untuk frontend web menggunakan Vue.js, base ada di direktori `/frontends`.
 
-Apabila ingin mencoba menjalankannya bisa check frontend untuk admin-react:
+Apabila ingin mencoba menjalankannya bisa check frontend web dengan langkah-langkah berikut:
 
-    $ cd frontends/admin-react
+    $ cd frontends/$name_snake_case$_web
     $ npm install
     $ npm start
 
-Buka http://localhost:3000/
+Apabila menggunakan Yarn bisa:
 
-Untuk Vue.js ada di `/frontends/admin-vue`:
-
-    $ cd frontends/admin-vue
+    $ cd frontends/$name_snake_case$_web
     $ yarn install
     $ yarn serve
+
+Buka http://localhost:8080/ atau apabila server juga jalan di lokal bisa port-nya berubah menjadi http://localhost:8081/
+
+Untuk Vue.js ada di `/frontends/$name_snake_case$_web`:
+
+    $ cd frontends/$name_snake_case$_web
+    $ yarn install
+    $ yarn serve
+<!-- <% endif %> -->
+
+<!-- <% if param.with_flutter %> -->
+Untuk frontend mobile menggunakan Flutter, bisa ditemukan di direktori `/frontends/$name_snake_case$_mobile`.
+Contoh cara menjalankan:
+
+    $ cd frontends/$name_snake_case$_mobile
+    $ flutter pub get
+    $ flutter run
+
+<!-- <% endif %> -->
 
 **CATATAN**: Kamu bisa menggunakan npm maupun yarn, tapi direkomendasikan menggunakan yarn.
 
