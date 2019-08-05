@@ -58,9 +58,9 @@ with_webapp = { ask = "With web app frontends?", default="true" }
 with_flutter = { ask = "With mobile Flutter frontends?", default="false" }
 
 [[present]]
-path = "frontends/admin-vue"
+path = "frontends/$name_snake_case$_web"
 if = "with_webapp"
 
 [[present]]
-path = "frontends/mobile-flutter"
+path = "frontends/$name_snake_case$_mobile"
 if = "with_flutter"
