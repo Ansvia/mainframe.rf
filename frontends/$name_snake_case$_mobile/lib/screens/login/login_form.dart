@@ -45,7 +45,7 @@ class _LoginFormState extends State<LoginForm> {
                       child: Image.asset("assets/img/ansvia-logo.png")),
                   Center(
                       child: Text(
-                    "$name$",
+                    "$name_upper_case$",
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
