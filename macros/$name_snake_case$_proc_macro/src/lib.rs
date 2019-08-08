@@ -2,9 +2,18 @@
 #![allow(unused_imports, unused_assignments, unused_mut)]
 
 extern crate proc_macro;
-
+extern crate proc_macro2;
+#[macro_use]
+extern crate quote;
 #[macro_use]
 extern crate syn;
+#[macro_use]
+extern crate lazy_static;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+extern crate serde_json;
 
 use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use quote::quote;
@@ -14,14 +23,6 @@ use std::iter::FromIterator;
 
 use std::sync::{Arc, Mutex};
 
-#[macro_use]
-extern crate lazy_static;
-extern crate serde;
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate serde_json;
-
 use serde_json::Value as JsonValue;
 
 use std::io::prelude::*;
@@ -29,6 +30,13 @@ use std::{
     fs::{self, File, OpenOptions},
     io::LineWriter,
 };
+
+mod dao;
+mod diagnostic_shim;
+mod meta;
+mod resolved_at_shim;
+
+use diagnostic_shim::*;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct ApiGroup {
@@ -783,4 +791,23 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
     }
 
     proc_macro::TokenStream::from(TokenStream::from_iter(tb.into_iter()))
+}
+
+#[proc_macro_derive(Dao, attributes(id_type, record_type, table_name))]
+pub fn derive_dao(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    expand_proc_macro(input, dao::derive)
+}
+
+fn expand_proc_macro<T: syn::parse::Parse>(
+    input: proc_macro::TokenStream,
+    f: fn(T) -> Result<proc_macro2::TokenStream, Diagnostic>,
+) -> proc_macro::TokenStream {
+    let item = syn::parse(input).unwrap();
+    match f(item) {
+        Ok(x) => x.into(),
+        Err(e) => {
+            e.emit();
+            "".parse().unwrap()
+        }
+    }
 }
