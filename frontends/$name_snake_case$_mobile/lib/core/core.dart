@@ -8,7 +8,7 @@ class $name_camel_case$Keys {
 
   // Timeline
   static final timelineLoading = const Key('__timelineLoading__');
-  static final timelineItem = (String id) => Key('TimelineItem__${id}');
+  static final timelineItem = (String id) => Key('TimelineItem__$id');
   static final timelineItemTask = (String id) => Key('TimelineItem__${id}__Task');
   static final timelineItemNote = (String id) => Key('TimelineItem__${id}__Note');
   static final timelineList = Key('__timelineList__');
