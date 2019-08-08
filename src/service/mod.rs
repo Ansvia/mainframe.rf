@@ -1,5 +1,6 @@
 //! Modular & extendable Service interface
 
+mod services;
 mod auth;
 mod $param.service_name_snake_case$;
 mod system;
