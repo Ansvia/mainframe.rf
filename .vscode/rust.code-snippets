@@ -31,18 +31,6 @@
 		],
 		"description": "Create derive decorator"
 	},
-	"Implement API endpoint": {
-		"scope": "rust",
-		"prefix": "apiendpoint",
-		"body": [
-			"/// ${4:Documentation}",
-			"#[api_endpoint(path = \"/${1:path}\", auth = \"required\")]",
-			"pub fn ${2:name}(query: ()) -> ApiResult<${3:type}> {",
-			"    let conn = state.db();",
-			"    unimplemented!();",
-			"}"
-		]
-	},
 	"Implement API method call for test": {
 		"scope": "rust",
 		"prefix": "apicalltesthelper",
@@ -68,5 +56,69 @@
 			"}"
 		],
 		"description": "Create api test function"
+	},
+	"Implement API endpoint": {
+		"scope": "rust",
+		"prefix": "apiendpoint",
+		"body": [
+			"/// ${5:docs}.",
+			"#[api_endpoint(path = \"/${1:path}\", auth = \"${2:required}\")]",
+			"pub fn ${3:method_name}(query: IdQuery) -> ApiResult<${4:Type}> {",
+			"    let conn = state.db();",
+			"    ${6://@TODO(*): code here}",
+			"    unimplemented!();",
+			"}"
+		]
+	},
+	"Implement custom Dao": {
+		"scope": "rust",
+		"prefix": "impldao",
+		"body": [
+			"#[derive(Insertable)]",
+			"#[table_name = \"${2:name}s\"]",
+			"struct New${1:Name}<'a> {",
+			"    pub name: &'a str,",
+			"}",
+			"",
+			"impl<'a> ${1:Name}Dao<'a> {",
+			"    /// Create new ${1:name}",
+			"    pub fn create(",
+			"        &self,",
+			"        name: &str,",
+			"        ) -> Result<${1:Name}> {",
+			"        use crate::schema::${2:name}s::{self, dsl};",
+			"",
+			"        diesel::insert_into(${2:name}s::table)",
+			"            .values(&New${1:Name} {",
+			"                name,",
+			"            })",
+			"            .get_result(self.db)",
+			"            .map_err(From::from)",
+			" }",
+			"}"
+		]
+	},
+	"Generate dao get_by_name method": {
+		"prefix": "daogetbyname",
+		"body": [
+			"/// Mendapatkan ${1:name} berdasarkan nama-nya.",
+			"pub fn get_by_name(&self, name: &str) -> Result<${2:RetType}> {",
+			"  use crate::schema::${1:name}s::{self, dsl};",
+			"  dsl::${1:name}s",
+			"    .filter(dsl::name.eq(name))",
+			"    .first(self.db)",
+			"    .map_err(From::from)",
+			"}"
+		]
+	},
+	"Implement From": {
+		"prefix": "implfrommodeltoapitype",
+		"body": [
+			"impl From<models::${1:Name}> for ${1:Name} {",
+			"    fn from(a: models::${1:Name}) -> Self {",
+			"        ${2:}",
+			"    }",
+			"}"
+		]
 	}
 }

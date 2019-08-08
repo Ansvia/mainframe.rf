@@ -83,6 +83,81 @@
             "  }",
             "}"
         ]
+    },
+    "Create Navigator.pop code": {
+        "prefix": "navigatorpop",
+        "body": "Navigator.pop(context);"
+    },
+    "Create Navigator.pushNamed code": {
+        "prefix": "navigatorpushnamed",
+        "body": "Navigator.of(context).pushNamed(${1:\"\"});"
+    },
+    "Create Navigator.push code": {
+        "prefix": "navigatorpush",
+        "body": "Navigator.of(context).push(${1:});"
+    },
+    "Create router path handler": {
+        "prefix": "routerpath",
+        "body": [
+            "\"/${1:path}\": (context){",
+            "${2://@TODO(*): code here}",
+            "}"
+        ]
+    },
+    "Create BlocBuilder code": {
+        "prefix": "blocbuilder",
+        "body": [
+            "BlocBuilder<${1:Name}Bloc, ${1:Name}State>(",
+            "  builder: (BuildContext context, ${1:Name}State state){",
+            "    //@TODO(*): code here",
+            "    return null;",
+            "  }",
+            ");"
+        ]
+    },
+    "Create BlocProvider code": {
+        "prefix": "blocprovider",
+        "body": [
+            "BlocProvider(",
+            "  builder: (BuildContext context){",
+            "    //@TODO(*): code here",
+            "    return ${1:NameBloc};",
+            "  },",
+            "  child: ${2:}",
+            ");"
+        ]
+    },
+    "Create MultiBlocProvider code": {
+        "prefix": "multiblocprovider",
+        "body": [
+            "MultiBlocProvider(",
+            "  providers:[",
+            "    BlocProvider<${1:BlocName}>(",
+            "      builder: (context) => ${1:BlocName}(),",
+            "    )",
+            "  ],",
+            "child: ${2:Widget}()",
+            ");"
+        ]
+    },
+    "Create Map event to state method in Bloc": {
+        "prefix": "mapeventtostate",
+        "body": [
+            "Stream<${1:Name}State> _map${2:Event}ToState(${3:EventName} event) async* {",
+            "  // yield ",
+            "}"
+        ]
+    },
+    "Create Scaffold code": {
+        "prefix": "scaffold",
+        "body": [
+            "Scaffold(",
+            "  appBar: AppBar(",
+            "    title: Text(${1:title})",
+            "  ),",
+            "  body: ${2:null}",
+            ")"
+        ]
     }
 }
 
