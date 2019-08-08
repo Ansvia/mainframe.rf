@@ -60,6 +60,7 @@ mod protos;
 mod result;
 mod schema;
 pub mod schema_$param.service_name_snake_case$;
+pub mod dao;
 pub mod service;
 pub mod token;
 pub mod util;

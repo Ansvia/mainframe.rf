@@ -156,3 +156,68 @@ macro_rules! impl_event_listener {
     };
 }
 // <% endif %>
+
+macro_rules! impl_dao {
+    ( $(#[$meta:meta])* $name:ident) => {
+
+        $(#[$meta])*
+        #[derive(Dao)]
+        pub struct $name<'a> {
+            db: &'a PgConnection,
+        }
+    };
+    ( $(#[$meta:meta])* $name:ident, $id_type:literal) => {
+
+        $(#[$meta])*
+        #[derive(Dao)]
+        #[id_type = $id_type]
+        pub struct $name<'a> {
+            db: &'a PgConnection,
+        }
+    };
+}
+
+/// Macro to generate Dao implementation.
+///
+/// Example use of this macro:
+///
+/// ```
+/// impl_daos!(
+///     /// DAO for Comment
+///     CommentDao
+/// );
+/// ```
+///
+/// For custom ID type
+///
+/// ```
+/// impl_daos!(
+///     /// DAO for Role
+///     (RoleDao, "i32"),
+/// );
+/// ```
+macro_rules! impl_daos {
+    ( $( $(#[$meta:meta])* $name:ident, )* ) => {
+        $( impl_dao!(
+            $(#[$meta])*
+            $name
+            );
+        )*
+    };
+    ( $( $(#[$meta:meta])* $name:ident ),* ) => {
+        impl_daos!( $( $(#[$meta])* $name, )* );
+    };
+    ( $( $(#[$meta:meta])* ( $name:ident, $id_type:literal) ,)* ) => {
+        $( impl_dao!(
+            $(#[$meta])*
+            $name, $id_type
+            );
+        )*
+    };
+    ( $( $(#[$meta:meta])* ( $name:ident, $id_type:literal)),* ) => {
+        impl_daos!(
+            $( $(#[$meta])* ( $name, $id_type), )*
+        );
+    };
+}
+

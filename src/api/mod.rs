@@ -389,7 +389,7 @@ where
 }
 
 /// Just type alias for complex type
-pub type ResourceFunc = Arc<Box<Fn(Scope) -> Scope + Sync + Send + 'static>>;
+pub type ResourceFunc = Arc<Box<dyn Fn(Scope) -> Scope + Sync + Send + 'static>>;
 
 /// Scope API
 #[derive(Default, Clone)]
