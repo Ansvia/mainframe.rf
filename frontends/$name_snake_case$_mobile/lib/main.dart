@@ -7,11 +7,9 @@ import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_cas
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_state.dart';
 import 'package:$name_snake_case$_mobile/blocs/simple_bloc_delegate.dart';
 import 'package:$name_snake_case$_mobile/blocs/tab/tab_bloc.dart';
-import 'package:$name_snake_case$_mobile/blocs/tasks/tasks.dart';
 import 'package:$name_snake_case$_mobile/screens/home.dart';
 import 'package:$name_snake_case$_mobile/screens/login/login.dart';
 import 'package:$name_snake_case$_mobile/screens/splash/splash_page.dart';
-import 'package:$name_snake_case$_mobile/screens/tasks/tasks.dart';
 import 'package:$name_snake_case$_mobile/user_repository/user_repository.dart';
 import 'blocs/notif/notif.dart';
 
@@ -83,14 +81,6 @@ class $name_camel_case$App extends StatelessWidget {
           child: LoginPage(
             userRepository: userRepository,
           ),
-        );
-      },
-      "/taskman": (context) {
-        return BlocProvider(
-          builder: (context){
-            return TaskManagerBloc();
-          },
-          child: TaskManager(),
         );
       }
     });

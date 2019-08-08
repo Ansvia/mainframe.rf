@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:$name_snake_case$_mobile/core/$name_snake_case$_app_core.dart';
+import 'package:$name_snake_case$_mobile/core/core.dart';
 import 'package:$name_snake_case$_mobile/models/models.dart';
 
 typedef OnSaveCallback = Function(String text);

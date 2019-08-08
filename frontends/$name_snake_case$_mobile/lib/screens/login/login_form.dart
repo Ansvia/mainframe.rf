@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:$name_snake_case$_mobile/core/$name_snake_case$_app_core.dart';
+import 'package:$name_snake_case$_mobile/core/core.dart';
 import 'package:$name_snake_case$_mobile/screens/login/login.dart';
 
 class LoginForm extends StatefulWidget {

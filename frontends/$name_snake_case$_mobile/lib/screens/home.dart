@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:$name_snake_case$_mobile/api/$name_snake_case$_api.dart';
 import 'package:$name_snake_case$_mobile/blocs/blocs.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_bloc.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_event.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_state.dart';
-import 'package:$name_snake_case$_mobile/core/$name_snake_case$_app_core.dart';
+import 'package:$name_snake_case$_mobile/core/core.dart';
 import 'package:$name_snake_case$_mobile/models/models.dart';
 import 'package:$name_snake_case$_mobile/widgets/widgets.dart';
 
@@ -47,16 +46,11 @@ class HomeScreen extends StatelessWidget {
               children: <Widget>[
                 new DrawerHeader(child: new Text("$name_camel_case$ Header")),
                 new ListTile(
-                    title: new Text("Tasks"),
+                    title: new Text("Accounts"),
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.of(context).pushNamed($name_camel_case$Routes.taskMan);
+                      // Navigator.of(context).pushNamed($name_camel_case$Routes.taskMan);
                     }),
-                new ListTile(title: new Text("Projects"), onTap: () {}),
-                new ListTile(title: new Text("Persons"), onTap: () {}),
-                new ListTile(title: new Text("Roles"), onTap: () {}),
-                new Divider(),
-                new ListTile(title: new Text("Top Persons"), onTap: () {}),
                 new ListTile(title: new Text("Analytics"), onTap: () {}),
                 new Divider(),
                 new ListTile(title: new Text("Notification"), onTap: () {}),
@@ -74,16 +68,16 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           body: body,
-          floatingActionButton: activeTab == AppTab.timeline
-              ? FloatingActionButton(
-                  key: $name_camel_case$Keys.updateStatusFab,
-                  onPressed: () {
-                    Navigator.pushNamed(context, $name_camel_case$Routes.updateStatus);
-                  },
-                  child: Icon(Icons.add),
-                  tooltip: "Add comment",
-                )
-              : null,
+          // floatingActionButton: activeTab == AppTab.timeline
+          //     ? FloatingActionButton(
+          //         key: $name_camel_case$Keys.updateStatusFab,
+          //         onPressed: () {
+          //           Navigator.pushNamed(context, $name_camel_case$Routes.updateStatus);
+          //         },
+          //         child: Icon(Icons.add),
+          //         tooltip: "Add comment",
+          //       )
+          //     : null,
           bottomNavigationBar: TabSelector(
             activeTab: activeTab,
             onTabSelected: (tab) => tabBloc.dispatch(UpdateTab(tab)),

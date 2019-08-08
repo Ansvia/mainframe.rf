@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:$name_snake_case$_mobile/core/$name_snake_case$_app_core.dart';
+import 'package:$name_snake_case$_mobile/core/core.dart';
 import 'package:$name_snake_case$_mobile/blocs/notif/notif.dart';
 import 'package:$name_snake_case$_mobile/widgets/notif_item_view.dart';
 import 'package:$name_snake_case$_mobile/widgets/widgets.dart';
