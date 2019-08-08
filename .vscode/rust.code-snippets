@@ -31,6 +31,14 @@
 		],
 		"description": "Create derive decorator"
 	},
+	"Write derive(Serialize, Deserialize)": {
+		"scope": "rust",
+		"prefix": "serdes",
+		"body": [
+			"#[derive(Serialize, Deserialize)]"
+		],
+		"description": "Create derive with Serialize and Deserialize decorator"
+	},
 	"Implement API method call for test": {
 		"scope": "rust",
 		"prefix": "apicalltesthelper",
@@ -119,6 +127,22 @@
 			"        ${2:}",
 			"    }",
 			"}"
+		]
+	},
+	"Create diesel update code": {
+		"prefix": "dieselupdate",
+		"body": [
+			"use crate::schema::${1:name}s::{self, dsl};",
+			"diesel::update(dsl::${1:name}s.filter(dsl::id.eq(id)))",
+			"    .set(dsl::name.eq(&name))",
+			"    .execute(&conn)",
+			"    .map_err(Error::from)?;"
+		]
+	},
+	"Create ApiResult::success": {
+		"prefix": "apiresultsucess",
+		"body": [
+			"Ok(ApiResult::success(${1:()}))"
 		]
 	}
 }
