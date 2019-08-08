@@ -22,6 +22,7 @@ Features:
 * Auto build postman collection based on your API code.
 * Testkit & Test helper.
 * Multi service supports.
+* Protocol Buffer support.
 * Support private and public API scope separated by listening port.
 * Authorization and authentication.
 * Crypto password algo support: Bcrypt, SHA256.

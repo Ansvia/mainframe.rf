@@ -1,6 +1,8 @@
 import { ApiClient, Crypto } from "../../../../libs/$name_kebab_case$-client-js";
 
+// <% if param.with_protobuf %>
 import * as protos from '../proto/stubs';
+// <% endif %>
 
 export default class $name_camel_case$ {
   static install(Vue) {
@@ -115,24 +117,24 @@ export default class $name_camel_case$ {
           secretKey: Buffer.from(sk, 'hex'),
         }
       },
-      credit$param.service_name_camel_case$Balance($param.service_name_snake_case$Id, amount) {
-        var credit = new protos.$param.service_name_snake_case$.Credit({
-          $param.service_name_snake_case$: $param.service_name_snake_case$Id,
-          amount: parseFloat(amount),
-          timestamp: this.now(),
-          seed: this.generateSeed()
-        });
+      // credit$param.service_name_camel_case$Balance($param.service_name_snake_case$Id, amount) {
+      //   var credit = new protos.$param.service_name_snake_case$.Credit({
+      //     $param.service_name_snake_case$: $param.service_name_snake_case$Id,
+      //     amount: parseFloat(amount),
+      //     timestamp: this.now(),
+      //     seed: this.generateSeed()
+      //   });
 
-        var buffer = protos.$param.service_name_snake_case$.Credit.encode(credit).finish();
-        let keys = this.getKeys();
-        var signature = Crypto.sign(buffer, keys.pubKey, keys.secretKey);
+      //   var buffer = protos.$param.service_name_snake_case$.Credit.encode(credit).finish();
+      //   let keys = this.getKeys();
+      //   var signature = Crypto.sign(buffer, keys.pubKey, keys.secretKey);
 
-        var data = {
-          body: protos.$param.service_name_snake_case$.Credit.toObject(credit),
-          signature: signature
-        };
-        return api.privateApi.post("/$param.service_name_snake_case$/v1/credit", data);
-      },
+      //   var data = {
+      //     body: protos.$param.service_name_snake_case$.Credit.toObject(credit),
+      //     signature: signature
+      //   };
+      //   return api.privateApi.post("/$param.service_name_snake_case$/v1/credit", data);
+      // },
       generateSeed() {
         return Math.floor(Math.random() * 1000000000);
       },

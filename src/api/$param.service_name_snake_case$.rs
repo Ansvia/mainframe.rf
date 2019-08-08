@@ -3,7 +3,9 @@
 
 use actix_web::{HttpRequest, HttpResponse};
 use chrono::NaiveDateTime;
+// <% if param.with_protobuf %>
 use protobuf;
+// <% endif %>
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
@@ -37,6 +39,7 @@ pub struct Activate$param.service_name_camel_case$ {
     pub password: String,
 }
 
+// <% if param.with_protobuf %>
 /// Setiap query transaksi harus menggunakan wrapper ini,
 /// masuk pada `body` dan signature dari `body` disimpan pada field `signature`.
 ///
@@ -98,6 +101,7 @@ where
         Ok(())
     }
 }
+// <% endif %>
 
 /// Model untuk keperluan tukar menukar data API
 /// bukan yang di database (crate::models).
@@ -164,6 +168,7 @@ pub struct PublicApi;
 impl PublicApi {
 
 
+    // <% if param.with_protobuf %>
     #[inline]
     fn verify_tx<T>(query: &TxQuery<T>, schema: &Schema, current_$param.service_name_snake_case$: &db::$param.service_name_camel_case$) -> api::Result<()>
     where
@@ -178,6 +183,7 @@ impl PublicApi {
 
         Ok(())
     }
+    // <% endif %>
 
 
     /// Rest API endpoint untuk mendaftarkan akun baru.

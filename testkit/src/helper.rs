@@ -1,8 +1,11 @@
 use $name_snake_case$::api::$param.service_name_snake_case$::types;
 use $name_snake_case$::api::{
-    $param.service_name_snake_case$::{Activate$param.service_name_camel_case$, Register$param.service_name_camel_case$, TxQuery},
+    $param.service_name_snake_case$::{Activate$param.service_name_camel_case$, Register$param.service_name_camel_case$},
     ApiResult,
 };
+// <% if param.with_protobuf %>
+use $name_snake_case$::api::TxQuery;
+// <% endif %>
 use $name_snake_case$::auth;
 use $name_snake_case$::crypto::*;
 use $name_snake_case$::models;

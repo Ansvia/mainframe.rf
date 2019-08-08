@@ -109,6 +109,7 @@ macro_rules! api_endpoint_mut {
     };
 }
 
+// <% if param.with_protobuf %>
 macro_rules! api_tx_endpoint {
     ($name:ident, $qt:ty, $rv:ty, (|$schema:ident, $query:ident| $( $cs:tt )+ ) ) => {
         pub fn $name(state: &AppState, $query: TxQuery<$qt>) -> ApiResult<$rv> {
@@ -118,6 +119,7 @@ macro_rules! api_tx_endpoint {
         }
     };
 }
+// <% endif %>
 
 macro_rules! api_endpoint {
     ( #[authorized_only(user)] fn $name:ident ($state:ident, $query:ident : $query_type:ty, $req: ident) -> $rettype:ty { $($cs:tt)+ } ) => {

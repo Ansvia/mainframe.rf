@@ -54,7 +54,9 @@ pub mod crypto;
 mod db;
 pub mod error;
 pub mod models;
+// <% if param.with_protobuf %>
 mod protos;
+// <% endif %>
 mod result;
 mod schema;
 pub mod schema_$param.service_name_snake_case$;

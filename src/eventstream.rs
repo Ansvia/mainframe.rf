@@ -3,8 +3,8 @@
 extern crate event_stream;
 
 use diesel::prelude::*;
-use event_stream::{EventDispatcher, EventDispatcherBuilder, EventListener};
 
+use self::event_stream::{EventDispatcher, EventDispatcherBuilder, EventListener};
 use crate::{chrono, db};
 
 use std::{env, sync::Arc, thread::sleep, time::Duration};
@@ -28,7 +28,7 @@ impl_event_listener!($name_camel_case$EventListener);
 
 impl EventListener<Event> for $name_camel_case$EventListener {
     fn dispatch(&self, event: &Event) {
-        use Event::*;
+        use self::Event::*;
 
         debug!("{:?} got event: {:?}", self, event);
 

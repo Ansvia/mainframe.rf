@@ -52,6 +52,9 @@ password_crypt_algo = { ask = "Password crypto algo?", default="bcrypt", options
 with_eventstream = { ask = "With Eventstream?", default="true" }
 
 [[param]]
+with_protobuf = { ask = "With Protobuf support?", default="false" }
+
+[[param]]
 with_webapp = { ask = "With web app frontends?", default="true" }
 
 [[param]]
@@ -64,3 +67,7 @@ if = "with_webapp"
 [[present]]
 path = "frontends/$name_snake_case$_mobile"
 if = "with_flutter"
+
+[[present]]
+path = "src/protos"
+if = "with_protobuf"
