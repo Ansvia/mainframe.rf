@@ -4,6 +4,9 @@
 //! this done by using impl_service macro, example:
 //! 
 //!     impl_service!(UserService, user);
+//!
+//! You need to implement api interface for the above service inside `api` module.
+//!
 #![allow(missing_docs)]
 
 use actix_web::{HttpRequest, HttpResponse};
