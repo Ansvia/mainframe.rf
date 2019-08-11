@@ -78,6 +78,44 @@
 			"}"
 		]
 	},
+	"Implement API endpoint for search": {
+		"scope": "rust",
+		"prefix": "apiendpointsearch",
+		"body": [
+			"/// Search for ${1:name}",
+			"#[api_endpoint(path = \"/search\", auth = \"required\")]",
+			"pub fn search_${1:name}(query: QueryEntries) -> ApiResult<EntriesResult<${2:Model}>> {",
+			"    let conn = state.db();",
+			"    let dao = ${2:Model}Dao::new(&conn);",
+			"",
+			"    let entries = dao",
+			"        .search(&query.query.unwrap_or(\"\".to_string()), query.offset, query.limit)?",
+			"        .into_iter()",
+			"        .map(|p| p.into())",
+			"        .collect();",
+			"",
+			"    let count = dao.count()?;",
+			"    Ok(ApiResult::success(EntriesResult { count, entries }))",
+			"}"
+		]
+	},
+	"Implement API endpoint for update": {
+		"scope": "rust",
+		"prefix": "apiendpointupdate",
+		"body": [
+			"/// Update ${1:name}.",
+			"#[api_endpoint(path = \"/update\", auth = \"required\", mutable)]",
+			"pub fn update_${1:name}(query: Update${2:Name}) -> ApiResult<()> {",
+			"    let conn = state.db();",
+			"    use crate::schema::${1:name}s::{self, dsl};",
+			"    diesel::update(dsl::${1:name}s.filter(dsl::id.eq(query.id)))",
+			"        .set(dsl::name.eq(&query.name))",
+			"        .execute(&conn)",
+			"        .map_err(Error::from)?;",
+			"        Ok(ApiResult::success(()))",
+			"}"
+		]
+	},
 	"Implement custom Dao": {
 		"scope": "rust",
 		"prefix": "impldao",
