@@ -21,7 +21,8 @@ abstract class LayeredRepo {
       String storeName, Future<T> Function() dataRetriever,
       {force: bool});
 
-  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath, {force: bool});
+  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath,
+      {force: bool});
 
   void clear();
 }
@@ -32,7 +33,7 @@ class LocalLayeredRepo extends LayeredRepo {
 
   LocalLayeredRepo(this.key) : _storage = LocalStorage(key) {
     var appConfig = LocalStorage("__app_config__");
-    if (appConfig.getItem("resetData") == true){
+    if (appConfig.getItem("resetData") == true) {
       this.clear();
     }
   }
@@ -42,12 +43,9 @@ class LocalLayeredRepo extends LayeredRepo {
       {force: bool}) async {
     T resultData = _storage.getItem(storeName);
 
-    print("resultData: $resultData");
-
     if (resultData == null || force == true) {
       final data = await dataRetriever();
       if (data != null) {
-        print("resp data: $data");
         resultData = data["result"];
       }
     }
@@ -57,7 +55,8 @@ class LocalLayeredRepo extends LayeredRepo {
     return resultData;
   }
 
-  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath, {force: bool}){
+  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath,
+      {force: bool}) {
     return fetch(storeName, () => PublicApi.get(apiPath), force: force);
   }
 
@@ -93,17 +92,11 @@ class PersistentLayeredRepo extends LayeredRepo {
       resultData = null;
     }
 
-    print("resultData: $resultData");
-
     if (resultData == null || force == true) {
       final data = await dataRetriever();
       if (data != null) {
-        print("resp data: $data");
-
-        // await dbClient.insert(
-        //     key, {"t_key": storeName, "t_val": json.encode(data["result"])});
-
-        final tVal = json.encode(data["result"]);
+        
+	final tVal = json.encode(data["result"]);
 
         await dbClient.rawQuery(
             "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
@@ -115,7 +108,39 @@ class PersistentLayeredRepo extends LayeredRepo {
     return resultData;
   }
 
-  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath, {force: bool}){
+  /// Fetch data wich return in stream
+  /// first return will be data from local if any otherwise data from remote.
+  /// second return will be data from remote
+  Stream<T> fetchStream<T extends dynamic>(
+      String storeName, Future<T> Function() dataRetriever,
+      {force: bool}) async* {
+    final dbClient = await DatabaseHelper().db;
+
+    List<Map> result = await dbClient
+        .rawQuery('SELECT * FROM $key WHERE t_key=\'$storeName\' LIMIT 1');
+
+    T resultData;
+
+    if (result.length > 0) {
+      resultData = json.decode(result.first["t_val"]);
+      yield resultData;
+    }
+
+    final data = await dataRetriever();
+    if (data != null) {
+      final tVal = json.encode(data["result"]);
+
+      await dbClient.rawQuery(
+          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+
+      resultData = data["result"];
+    }
+
+    yield resultData;
+  }
+
+  Future<Map<String, dynamic>> fetchApi(String storeName, String apiPath,
+      {force: bool}) {
     return fetch(storeName, () => PublicApi.get(apiPath), force: force);
   }
 
@@ -136,8 +161,6 @@ class PersistentLayeredRepo extends LayeredRepo {
       resultData = null;
     }
 
-    print("updateEntriesItem > resultData: $resultData");
-
     if (resultData != null) {
       bool replaced = false;
       List<dynamic> newEntries = (resultData["entries"] as List).map((a) {
@@ -156,6 +179,33 @@ class PersistentLayeredRepo extends LayeredRepo {
 
       // await dbClient.insert(
       //       key, {"t_key": storeName, "t_val": json.encode(newEntries)});
+      final tVal = json.encode({"entries": newEntries});
+
+      await dbClient.rawQuery(
+          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+    }
+  }
+
+  Future<void> deleteEntriesItem(
+      String storeName, Map<String, dynamic> value) async {
+    final dbClient = await DatabaseHelper().db;
+
+    List<Map> result = await dbClient
+        .rawQuery('SELECT * FROM $key WHERE t_key=\'$storeName\' LIMIT 1');
+
+    Map<String, dynamic> resultData;
+
+    if (result.length > 0) {
+      resultData = json.decode(result.first["t_val"]);
+    } else {
+      resultData = null;
+    }
+
+    if (resultData != null) {
+      List<dynamic> newEntries = (resultData["entries"] as List)
+          .where((a) => a["id"] != value["id"])
+          .toList();
+
       final tVal = json.encode({"entries": newEntries});
 
       await dbClient.rawQuery(
