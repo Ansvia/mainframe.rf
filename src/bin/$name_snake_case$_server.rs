@@ -39,7 +39,7 @@ ____________    __      ____________,
 
     let auth_service = AuthService::new();
     let system_service = SystemService::new();
-    let $param.service_name_snake_case$_service = $param.service_name_camel_case$Service::new();
+    let $param.service_name_snake_case$_service = $param.service_name_pascal_case$Service::new();
 
     let public_listening_address =
         env::var("$name_shout_snake_case$_PUBLIC_LISTENING").unwrap_or_else(|_| "0.0.0.0:8080".to_string());

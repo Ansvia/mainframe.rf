@@ -1,4 +1,4 @@
-//! Schema operation a.k.a DAO, digunakan untuk melakukan operasi seperti
+//! $param.service_name_pascal_case$Dao operation a.k.a DAO, digunakan untuk melakukan operasi seperti
 //! membuat akun baru, update, dan delete.
 
 use chrono::{NaiveDateTime, Utc};
@@ -7,7 +7,7 @@ use failure;
 
 use crate::{
     crypto::{self, PublicKey, SecretKey},
-    error::Error as $name_camel_case$Error,
+    error::Error as $name_pascal_case$Error,
     error::ErrorCode,
     models::*,
     result::Result,
@@ -21,7 +21,7 @@ use std::sync::Arc;
 #[derive(Insertable)]
 #[table_name = "register_$param.service_name_snake_case$s"]
 #[doc(hidden)]
-pub struct NewRegister$param.service_name_camel_case$<'a> {
+pub struct NewRegister$param.service_name_pascal_case$<'a> {
     pub token: &'a str,
     pub full_name: &'a str,
     pub email: &'a str,
@@ -33,7 +33,7 @@ pub struct NewRegister$param.service_name_camel_case$<'a> {
 #[derive(Insertable)]
 #[table_name = "$param.service_name_snake_case$s"]
 #[doc(hidden)]
-pub struct New$param.service_name_camel_case$<'a> {
+pub struct New$param.service_name_pascal_case$<'a> {
     pub full_name: &'a str,
     pub email: &'a str,
     pub phone_num: &'a str,
@@ -44,7 +44,7 @@ pub struct New$param.service_name_camel_case$<'a> {
 #[derive(Insertable)]
 #[table_name = "$param.service_name_snake_case$_passhash"]
 #[doc(hidden)]
-pub struct New$param.service_name_camel_case$Passhash<'a> {
+pub struct New$param.service_name_pascal_case$Passhash<'a> {
     pub $param.service_name_snake_case$_id: ID,
     pub passhash: &'a str,
     pub deprecated: bool,
@@ -54,7 +54,7 @@ pub struct New$param.service_name_camel_case$Passhash<'a> {
 #[derive(Insertable)]
 #[table_name = "$param.service_name_snake_case$_keys"]
 #[doc(hidden)]
-pub struct New$param.service_name_camel_case$Key {
+pub struct New$param.service_name_pascal_case$Key {
     pub $param.service_name_snake_case$_id: ID,
     pub pub_key: String,
     pub secret_key: String,
@@ -62,18 +62,15 @@ pub struct New$param.service_name_camel_case$Key {
 }
 
 /// Untuk mengoperasikan skema data di database
-pub struct Schema<'a> {
+#[derive(Dao)]
+pub struct $param.service_name_pascal_case$Dao<'a> {
     db: &'a PgConnection,
 }
 
-impl<'a> Schema<'a> {
-    /// Create new schema instance.
-    pub fn new(db: &'a PgConnection) -> Self {
-        Self { db }
-    }
+impl<'a> $param.service_name_pascal_case$Dao<'a> {
 
     /// Mendapatkan akun berdasarkan emailnya.
-    pub fn get_$param.service_name_snake_case$_by_email(&self, email: &str) -> Result<$param.service_name_camel_case$> {
+    pub fn get_by_email(&self, email: &str) -> Result<$param.service_name_pascal_case$> {
         use crate::schema::$param.service_name_snake_case$s::{self, dsl};
         dsl::$param.service_name_snake_case$s
             .filter(dsl::email.eq(email))
@@ -82,7 +79,7 @@ impl<'a> Schema<'a> {
     }
 
     /// Mendapatkan akun berdasarkan nomor telp-nya.
-    pub fn get_$param.service_name_snake_case$_by_phone_num(&self, phone: &str) -> Result<$param.service_name_camel_case$> {
+    pub fn get_by_phone_num(&self, phone: &str) -> Result<$param.service_name_pascal_case$> {
         use crate::schema::$param.service_name_snake_case$s::{self, dsl};
         dsl::$param.service_name_snake_case$s
             .filter(dsl::phone_num.eq(phone))
@@ -90,17 +87,17 @@ impl<'a> Schema<'a> {
             .map_err(From::from)
     }
 
-    /// Get $param.service_name_snake_case$ by ID.
-    pub fn get_$param.service_name_snake_case$(&self, $param.service_name_snake_case$_id: ID) -> Result<$param.service_name_camel_case$> {
-        use crate::schema::$param.service_name_snake_case$s::dsl::$param.service_name_snake_case$s;
-        $param.service_name_snake_case$s.find($param.service_name_snake_case$_id).first(self.db).map_err(From::from)
-    }
+    // /// Get $param.service_name_snake_case$ by ID.
+    // pub fn get_by_id(&self, $param.service_name_snake_case$_id: ID) -> Result<$param.service_name_pascal_case$> {
+    //     use crate::schema::$param.service_name_snake_case$s::dsl::$param.service_name_snake_case$s;
+    //     $param.service_name_snake_case$s.find($param.service_name_snake_case$_id).first(self.db).map_err(From::from)
+    // }
 
     /// Setting $param.service_name_snake_case$'s password
     pub fn set_password(&self, $param.service_name_snake_case$_id: ID, password: &str) -> Result<()> {
         use crate::schema::$param.service_name_snake_case$_passhash::{self, dsl};
 
-        let _ = self.get_$param.service_name_snake_case$($param.service_name_snake_case$_id)?;
+        let _ = self.get_by_id($param.service_name_snake_case$_id)?;
 
         self.db.build_transaction().read_write().run(|| {
             let passhash = &crate::crypto::get_passhash(password);
@@ -115,7 +112,7 @@ impl<'a> Schema<'a> {
 
             // tambahkan password baru
             diesel::insert_into($param.service_name_snake_case$_passhash::table)
-                .values(&New$param.service_name_camel_case$Passhash {
+                .values(&New$param.service_name_pascal_case$Passhash {
                     $param.service_name_snake_case$_id,
                     passhash,
                     deprecated: false,
@@ -129,9 +126,9 @@ impl<'a> Schema<'a> {
     }
 
     /// Mendaftarkan akun baru.
-    /// Mengembalikan ID dari registered $param.service_name_snake_case$ (bukan [$param.service_name_camel_case$]: $name_snake_case$::models::$param.service_name_camel_case$)
+    /// Mengembalikan ID dari registered $param.service_name_snake_case$ (bukan [$param.service_name_pascal_case$]: $name_snake_case$::models::$param.service_name_pascal_case$)
     /// karena user belum aktif, untuk mengaktifkannya perlu memanggil
-    /// perintah [Schema::activate_registered_$param.service_name_snake_case$].
+    /// perintah [$param.service_name_pascal_case$Dao::activate_registered_$param.service_name_snake_case$].
     pub fn register_$param.service_name_snake_case$(&self, full_name: &str, email: &str, phone_num: &str) -> Result<String> {
         use crate::schema::{
             $param.service_name_snake_case$s::dsl as dsl_$param.service_name_snake_case$,
@@ -139,18 +136,18 @@ impl<'a> Schema<'a> {
         };
 
         if full_name == "" {
-            Err($name_camel_case$Error::InvalidParameter(
+            Err($name_pascal_case$Error::InvalidParameter(
                 "full name cannot be empty".to_string(),
             ))?
         }
         if email == "" {
-            Err($name_camel_case$Error::InvalidParameter(
+            Err($name_pascal_case$Error::InvalidParameter(
                 "email cannot be empty".to_string(),
             ))?
         }
         // @TODO(robin): lakukan validasi format nomor telp
         if phone_num == "" {
-            Err($name_camel_case$Error::InvalidParameter(
+            Err($name_pascal_case$Error::InvalidParameter(
                 "phone_num cannot be empty".to_string(),
             ))?
         }
@@ -159,14 +156,14 @@ impl<'a> Schema<'a> {
         // @TODO(robin): buat konfigurable
         if full_name == "nobody" {
             warn!("Name exception to register: `{}`", full_name);
-            Err($name_camel_case$Error::Unauthorized)?
+            Err($name_pascal_case$Error::Unauthorized)?
         }
 
         // apabila sudah exists di registered_$param.service_name_snake_case$s table
         // kembalikan token-nya aja
         if let Ok(ra) = dsl_ra::register_$param.service_name_snake_case$s
             .filter(dsl_ra::email.eq(email).or(dsl_ra::phone_num.eq(phone_num)))
-            .first::<Register$param.service_name_camel_case$>(self.db)
+            .first::<Register$param.service_name_pascal_case$>(self.db)
         {
             return Ok(ra.token);
         }
@@ -183,10 +180,10 @@ impl<'a> Schema<'a> {
             .is_ok();
 
         if exists {
-            Err($name_camel_case$Error::AlreadyExists)?
+            Err($name_pascal_case$Error::AlreadyExists)?
         }
 
-        let new_reg_$param.service_name_snake_case$ = NewRegister$param.service_name_camel_case$ {
+        let new_reg_$param.service_name_snake_case$ = NewRegister$param.service_name_pascal_case$ {
             token: &token::generate_token(),
             full_name,
             email,
@@ -203,17 +200,17 @@ impl<'a> Schema<'a> {
     }
 
     /// Mengaktifkan akun yang telah melakukan registrasi tapi belum aktif.
-    pub fn activate_registered_$param.service_name_snake_case$(&self, token: String) -> Result<$param.service_name_camel_case$> {
+    pub fn activate_registered_$param.service_name_snake_case$(&self, token: String) -> Result<$param.service_name_pascal_case$> {
         use crate::schema::$param.service_name_snake_case$_keys::{self, dsl as ak_dsl};
         use crate::schema::{$param.service_name_snake_case$s, register_$param.service_name_snake_case$s};
 
         self.db.build_transaction().read_write().run(|| {
-            let reg_acc: Register$param.service_name_camel_case$ = register_$param.service_name_snake_case$s::dsl::register_$param.service_name_snake_case$s
+            let reg_acc: Register$param.service_name_pascal_case$ = register_$param.service_name_snake_case$s::dsl::register_$param.service_name_snake_case$s
                 .find(token.clone())
                 .first(self.db)?;
             // .map_err(From::from)?;
 
-            let new_$param.service_name_snake_case$ = New$param.service_name_camel_case$ {
+            let new_$param.service_name_snake_case$ = New$param.service_name_pascal_case$ {
                 full_name: &reg_acc.full_name,
                 email: &reg_acc.email,
                 phone_num: &reg_acc.phone_num,
@@ -223,14 +220,14 @@ impl<'a> Schema<'a> {
 
             let $param.service_name_snake_case$ = diesel::insert_into($param.service_name_snake_case$s::table)
                 .values(&new_$param.service_name_snake_case$)
-                .get_result::<$param.service_name_camel_case$>(self.db)?;
+                .get_result::<$param.service_name_pascal_case$>(self.db)?;
             // .map_err(From::from)?;
 
             // Buatkan key pair untuk akun yang baru saja dibuat.
             let (pub_key, secret_key) = crypto::gen_keypair();
 
             diesel::insert_into($param.service_name_snake_case$_keys::table)
-                .values(&New$param.service_name_camel_case$Key {
+                .values(&New$param.service_name_pascal_case$Key {
                     $param.service_name_snake_case$_id: $param.service_name_snake_case$.id,
                     pub_key: pub_key.to_hex(),
                     secret_key: secret_key.to_hex(),
@@ -246,7 +243,7 @@ impl<'a> Schema<'a> {
     }
 
     /// Mendapatkan informasi key untuk akun.
-    pub fn get_$param.service_name_snake_case$_key(&self, $param.service_name_snake_case$_id: ID) -> Result<$param.service_name_camel_case$Key> {
+    pub fn get_$param.service_name_snake_case$_key(&self, $param.service_name_snake_case$_id: ID) -> Result<$param.service_name_pascal_case$Key> {
         use crate::schema::$param.service_name_snake_case$_keys::{self, dsl as ak_dsl};
         use crate::schema::$param.service_name_snake_case$s;
 
@@ -257,20 +254,20 @@ impl<'a> Schema<'a> {
     }
 
     /// Buat akun baru secara langsung.
-    pub fn create_$param.service_name_snake_case$(&self, new_$param.service_name_snake_case$: &New$param.service_name_camel_case$) -> Result<($param.service_name_camel_case$, (PublicKey, SecretKey))> {
+    pub fn create_$param.service_name_snake_case$(&self, new_$param.service_name_snake_case$: &New$param.service_name_pascal_case$) -> Result<($param.service_name_pascal_case$, (PublicKey, SecretKey))> {
         use crate::schema::$param.service_name_snake_case$_keys::{self, dsl as ak_dsl};
         use crate::schema::$param.service_name_snake_case$s;
 
         self.db.build_transaction().read_write().run(|| {
             let $param.service_name_snake_case$ = diesel::insert_into($param.service_name_snake_case$s::table)
                 .values(new_$param.service_name_snake_case$)
-                .get_result::<$param.service_name_camel_case$>(self.db)?;
+                .get_result::<$param.service_name_pascal_case$>(self.db)?;
 
             // Buatkan key pair untuk akun yang baru saja dibuat.
             let keypair = crypto::gen_keypair();
 
             diesel::insert_into($param.service_name_snake_case$_keys::table)
-                .values(&New$param.service_name_camel_case$Key {
+                .values(&New$param.service_name_pascal_case$Key {
                     $param.service_name_snake_case$_id: $param.service_name_snake_case$.id,
                     pub_key: keypair.0.to_hex(),
                     secret_key: keypair.1.to_hex(),
@@ -292,34 +289,34 @@ impl<'a> Schema<'a> {
             .map_err(From::from)
     }
 
-    /// Get multiple $param.service_name_snake_case$s
-    pub fn get_$param.service_name_snake_case$s(&self, offset: i64, limit: i64) -> Result<Vec<$param.service_name_camel_case$>> {
-        use crate::schema::$param.service_name_snake_case$s;
-        use crate::schema::$param.service_name_snake_case$s::dsl;
+    // /// Get multiple $param.service_name_snake_case$s
+    // pub fn get_$param.service_name_snake_case$s(&self, offset: i64, limit: i64) -> Result<Vec<$param.service_name_pascal_case$>> {
+    //     use crate::schema::$param.service_name_snake_case$s;
+    //     use crate::schema::$param.service_name_snake_case$s::dsl;
 
-        dsl::$param.service_name_snake_case$s
-            .filter(dsl::id.ne(0))
-            .offset(offset)
-            .limit(limit)
-            .load(self.db)
-            .map_err(From::from)
-    }
+    //     dsl::$param.service_name_snake_case$s
+    //         .filter(dsl::id.ne(0))
+    //         .offset(offset)
+    //         .limit(limit)
+    //         .load(self.db)
+    //         .map_err(From::from)
+    // }
 
-    /// Mendapatkan jumlah akun keseluruhan di dalam database.
-    pub fn get_$param.service_name_snake_case$_count(&self) -> Result<i64> {
-        use crate::schema::$param.service_name_snake_case$s;
-        use crate::schema::$param.service_name_snake_case$s::dsl;
+    // /// Mendapatkan jumlah akun keseluruhan di dalam database.
+    // pub fn get_$param.service_name_snake_case$_count(&self) -> Result<i64> {
+    //     use crate::schema::$param.service_name_snake_case$s;
+    //     use crate::schema::$param.service_name_snake_case$s::dsl;
 
-        dsl::$param.service_name_snake_case$s
-            .select(diesel::dsl::count(dsl::id))
-            .first(self.db)
-            .map_err(From::from)
-    }
+    //     dsl::$param.service_name_snake_case$s
+    //         .select(diesel::dsl::count(dsl::id))
+    //         .first(self.db)
+    //         .map_err(From::from)
+    // }
 
     /// Mencari akun berdasarkan kata kunci
     /// Ini mengembalikan tidak hanya daftar akun tetapi juga jumlah
     /// akun yang ada sesuai kata kunci tersebut.
-    pub fn search_$param.service_name_snake_case$s(&self, keyword: &str, offset: i64, limit: i64) -> Result<(Vec<$param.service_name_camel_case$>, i64)> {
+    pub fn search(&self, keyword: &str, offset: i64, limit: i64) -> Result<(Vec<$param.service_name_pascal_case$>, i64)> {
         use crate::schema::$param.service_name_snake_case$s;
         use crate::schema::$param.service_name_snake_case$s::dsl;
 
@@ -346,7 +343,7 @@ impl<'a> Schema<'a> {
     }
 }
 
-/// Schema untuk memudahkan integration testing
+/// $param.service_name_pascal_case$Dao untuk memudahkan integration testing
 #[cfg(feature = "with-test")]
 pub struct TestSchema<'a> {
     db: &'a PgConnection,

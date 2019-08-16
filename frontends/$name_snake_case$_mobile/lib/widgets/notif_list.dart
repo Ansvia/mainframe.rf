@@ -16,17 +16,17 @@ class NotifList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final $name_snake_case$Bloc = BlocProvider.of<$name_camel_case$Bloc>(context);
+    // final $name_snake_case$Bloc = BlocProvider.of<$name_pascal_case$Bloc>(context);
 
     return BlocBuilder<NotifBloc, NotifState>(
       builder: (context, state) {
         if (state is NotifListLoading) {
-          return LoadingIndicator(key: $name_camel_case$Keys.loading);
+          return LoadingIndicator(key: $name_pascal_case$Keys.loading);
         } else if (state is NotifListLoaded) {
           // return Text("satu");
           final notifs = state.notifs;
           return ListView.builder(
-            key: $name_camel_case$Keys.notifList,
+            key: $name_pascal_case$Keys.notifList,
             itemCount: notifs.length,
             itemBuilder: (BuildContext context, int index) {
               final item = notifs[index];

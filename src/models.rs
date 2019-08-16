@@ -9,7 +9,7 @@ use crate::ID;
 
 /// Bentuk model akun di dalam database.
 #[derive(Queryable, Clone, Serialize, PartialEq)]
-pub struct $param.service_name_camel_case$ {
+pub struct $param.service_name_pascal_case$ {
     /// ID dari akun.
     pub id: i64,
 
@@ -66,7 +66,7 @@ pub struct Address {
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct Register$param.service_name_camel_case$ {
+pub struct Register$param.service_name_pascal_case$ {
     // pub id: i64,
     pub token: String,
     pub full_name: String,
@@ -87,7 +87,7 @@ pub struct AccessToken {
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct $param.service_name_camel_case$Pashash {
+pub struct $param.service_name_pascal_case$Pashash {
     pub $param.service_name_snake_case$_id: i64,
     pub passhash: String,
     pub deperecated: bool,
@@ -97,7 +97,7 @@ pub struct $param.service_name_camel_case$Pashash {
 
 #[doc(hidden)]
 #[derive(Queryable)]
-pub struct $param.service_name_camel_case$Key {
+pub struct $param.service_name_pascal_case$Key {
     pub id: ID,
     pub $param.service_name_snake_case$_id: ID,
     pub pub_key: String,
@@ -106,13 +106,13 @@ pub struct $param.service_name_camel_case$Key {
     pub active: bool,
 }
 
-impl fmt::Display for $param.service_name_camel_case$ {
+impl fmt::Display for $param.service_name_pascal_case$ {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "$param.service_name_camel_case$({}, {})", self.id, self.full_name)
+        write!(f, "$param.service_name_pascal_case$({}, {})", self.id, self.full_name)
     }
 }
 
-impl fmt::Display for $param.service_name_camel_case$Key {
+impl fmt::Display for $param.service_name_pascal_case$Key {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Key({})", &self.pub_key[..8])
     }

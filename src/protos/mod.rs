@@ -23,4 +23,4 @@ mod inner {
     include!(concat!(env!("OUT_DIR"), "/$name_snake_case$.rs"));
 }
 
-pub use self::inner::{$param.service_name_camel_case$};
+pub use self::inner::{$param.service_name_pascal_case$};

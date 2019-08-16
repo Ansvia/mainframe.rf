@@ -1,4 +1,4 @@
-//! Event stream and listener implementation for $name_camel_case$
+//! Event stream and listener implementation for $name_pascal_case$
 
 extern crate event_stream;
 
@@ -18,15 +18,15 @@ pub enum Event {
     // @TODO(*): Add more events here
 }
 
-/// $name_camel_case$ event listener implemetation
+/// $name_pascal_case$ event listener implemetation
 #[derive(Clone)]
-struct $name_camel_case$EventListener {
+struct $name_pascal_case$EventListener {
     db: db::DbConnMan,
 }
 
-impl_event_listener!($name_camel_case$EventListener);
+impl_event_listener!($name_pascal_case$EventListener);
 
-impl EventListener<Event> for $name_camel_case$EventListener {
+impl EventListener<Event> for $name_pascal_case$EventListener {
     fn dispatch(&self, event: &Event) {
         use self::Event::*;
 
@@ -41,9 +41,9 @@ impl EventListener<Event> for $name_camel_case$EventListener {
     }
 }
 
-impl std::fmt::Debug for $name_camel_case$EventListener {
+impl std::fmt::Debug for $name_pascal_case$EventListener {
     fn fmt(&self, out: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
-        write!(out, "<$name_camel_case$EventListener>")
+        write!(out, "<$name_pascal_case$EventListener>")
     }
 }
 
@@ -53,7 +53,7 @@ lazy_static! {
     /// Event dispatcher global var
     pub static ref EVENT_DISPATCHER:EventDispatcher<Event> = {
         let event_dispatcher = EventDispatcherBuilder::new()
-        .add_listener($name_camel_case$EventListener::new())
+        .add_listener($name_pascal_case$EventListener::new())
         .build();
 
         event_dispatcher.start();

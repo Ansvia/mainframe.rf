@@ -8,7 +8,7 @@ import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_cas
 import 'package:$name_snake_case$_mobile/models/notif_item.dart';
 
 class NotifBloc extends Bloc<NotifEvent, NotifState> {
-  final $name_camel_case$Bloc $name_snake_case$Bloc;
+  final $name_pascal_case$Bloc $name_snake_case$Bloc;
   StreamSubscription _$name_snake_case$Subs;
 
   NotifBloc({@required this.$name_snake_case$Bloc}){

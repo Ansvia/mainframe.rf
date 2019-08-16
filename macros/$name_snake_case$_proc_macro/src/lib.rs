@@ -729,12 +729,12 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                             let current_$param.service_name_snake_case$ = req.headers().get("X-Access-Token")
                                 .map(|at| {
                                     let conn = state.db();
-                                    let schema = crate::auth::Schema::new(&conn);
+                                    let schema = crate::auth::AuthDao::new(&conn);
                                     schema.get_access_token(at.to_str().unwrap())
                                         .map(|at|{
                                             if !at.expired(){
-                                                let $param.service_name_snake_case$_schema = crate::schema_$param.service_name_snake_case$::Schema::new(&conn);
-                                                $param.service_name_snake_case$_schema.get_$param.service_name_snake_case$(at.$param.service_name_snake_case$_id)
+                                                let $param.service_name_snake_case$_dao = crate::$param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao::new(&conn);
+                                                $param.service_name_snake_case$_dao.get_by_id(at.$param.service_name_snake_case$_id)
                                                     .map_err(api::Error::from)
                                             }else{
                                                 Err(api::Error::Expired("access token"))

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package $param.service_name_snake_case$;
 
-message $param.service_name_camel_case$ {
+message $param.service_name_pascal_case$ {
     int64 id = 1;
     string name = 2;
     string email = 3;

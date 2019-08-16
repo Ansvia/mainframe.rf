@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'package:$name_snake_case$_mobile/user_repository/user_repository.dart';
+import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_repository/$param.service_name_snake_case$_repository.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_bloc.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_event.dart';
 import 'package:$name_snake_case$_mobile/screens/login/login.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository userRepository;
-  final $name_camel_case$Bloc $name_snake_case$Bloc;
+  final UserRepository $param.service_name_camel_case$Repository;
+  final $name_pascal_case$Bloc $name_camel_case$Bloc;
 
   LoginBloc({
-    @required this.userRepository,
-    @required this.$name_snake_case$Bloc,
-  })  : assert(userRepository != null),
-        assert($name_snake_case$Bloc != null);
+    @required this.$param.service_name_camel_case$Repository,
+    @required this.$name_camel_case$Bloc,
+  })  : assert($param.service_name_camel_case$Repository != null),
+        assert($name_camel_case$Bloc != null);
 
   @override
   LoginState get initialState => LoginInitial();
@@ -26,12 +26,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
-        final session = await userRepository.authenticate(
+        final session = await $param.service_name_camel_case$Repository.authenticate(
           email: event.email,
           password: event.password,
         );
         print("session: $session");
-        $name_snake_case$Bloc.dispatch(LoggedIn(token: session.token));
+        $name_camel_case$Bloc.dispatch(LoggedIn(token: session.token));
         yield LoginInitial();
       } catch (error) {
         yield LoginFailure(error: error.toString());

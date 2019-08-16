@@ -59,7 +59,7 @@ mod protos;
 // <% endif %>
 mod result;
 mod schema;
-pub mod schema_$param.service_name_snake_case$;
+pub mod $param.service_name_snake_case$_dao;
 pub mod dao;
 pub mod service;
 pub mod token;
@@ -83,8 +83,8 @@ pub mod prelude {
             ServiceApiConfig, ServiceApiScope,
         },
         result::Result,
-        schema_$param.service_name_snake_case$::Schema,
-        service::{$param.service_name_camel_case$Service, Service},
+        $param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao,
+        service::{$param.service_name_pascal_case$Service, Service},
         valid::{Expirable, Validable},
     };
 }

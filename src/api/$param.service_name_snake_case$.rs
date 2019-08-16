@@ -18,13 +18,13 @@ use crate::{
     auth,
     error::{Error, ErrorCode},
     prelude::*,
-    schema_$param.service_name_snake_case$,
+    $param.service_name_snake_case$_dao,
     ID
 };
 
 /// Definisi query untuk mendaftarkan akun baru via rest API.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Register$param.service_name_camel_case$ {
+pub struct Register$param.service_name_pascal_case$ {
     pub full_name: String,
     pub email: String,
     pub phone_num: String,
@@ -34,7 +34,7 @@ pub struct Register$param.service_name_camel_case$ {
 
 /// Definisi query untuk mengaktifkan akun yang telah didaftarkan.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Activate$param.service_name_camel_case$ {
+pub struct Activate$param.service_name_pascal_case$ {
     pub token: String,
     pub password: String,
 }
@@ -115,7 +115,7 @@ pub mod types {
 
     /// Bentuk model akun di dalam database.
     #[derive(Clone, Serialize, Deserialize, PartialEq)]
-    pub struct $param.service_name_camel_case$ {
+    pub struct $param.service_name_pascal_case$ {
         /// ID dari akun.
         pub id: i64,
 
@@ -132,9 +132,9 @@ pub mod types {
         pub register_time: NaiveDateTime,
     }
 
-    impl From<models::$param.service_name_camel_case$> for $param.service_name_camel_case$ {
-        fn from(a: models::$param.service_name_camel_case$) -> Self {
-            $param.service_name_camel_case$ {
+    impl From<models::$param.service_name_pascal_case$> for $param.service_name_pascal_case$ {
+        fn from(a: models::$param.service_name_pascal_case$) -> Self {
+            $param.service_name_pascal_case$ {
                 id: a.id,
                 full_name: a.full_name,
                 email: a.email,
@@ -144,9 +144,9 @@ pub mod types {
         }
     }
 
-    impl From<models::$param.service_name_camel_case$> for ApiResult<$param.service_name_camel_case$> {
-        fn from(a: models::$param.service_name_camel_case$) -> Self {
-            ApiResult::success($param.service_name_camel_case$ {
+    impl From<models::$param.service_name_pascal_case$> for ApiResult<$param.service_name_pascal_case$> {
+        fn from(a: models::$param.service_name_pascal_case$) -> Self {
+            ApiResult::success($param.service_name_pascal_case$ {
                 id: a.id,
                 full_name: a.full_name,
                 email: a.email,
@@ -164,13 +164,13 @@ use crate::models::AccessToken;
 /// Holder untuk implementasi API endpoint publik untuk $param.service_name_snake_case$.
 pub struct PublicApi;
 
-#[api_group("$param.service_name_camel_case$", "public", base="/$param.service_name_snake_case$/v1")]
+#[api_group("$param.service_name_pascal_case$", "public", base="/$param.service_name_snake_case$/v1")]
 impl PublicApi {
 
 
     // <% if param.with_protobuf %>
     #[inline]
-    fn verify_tx<T>(query: &TxQuery<T>, schema: &Schema, current_$param.service_name_snake_case$: &db::$param.service_name_camel_case$) -> api::Result<()>
+    fn verify_tx<T>(query: &TxQuery<T>, schema: &$param.service_name_pascal_case$Dao, current_$param.service_name_snake_case$: &db::$param.service_name_pascal_case$) -> api::Result<()>
     where
         T: Serialize + protobuf::Message + Clone,
     {
@@ -190,9 +190,9 @@ impl PublicApi {
     /// Setelah register akun tidak langsung aktif, perlu melakukan
     /// aktifasi menggunakan endpoint `/$param.service_name_snake_case$/activate`.
     #[api_endpoint(path = "/$param.service_name_snake_case$/register", mutable, auth = "none")]
-    pub fn register_$param.service_name_snake_case$(query: Register$param.service_name_camel_case$) -> ApiResult<String> {
+    pub fn register_$param.service_name_snake_case$(query: Register$param.service_name_pascal_case$) -> ApiResult<String> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let schema = $param.service_name_pascal_case$Dao::new(&conn);
 
         schema
             .register_$param.service_name_snake_case$(&query.full_name, &query.email, &query.phone_num)
@@ -203,9 +203,9 @@ impl PublicApi {
     /// Mengaktifkan user yang telah teregister.
     /// Ini nantinya dijadikan link yang akan dikirimkan ke email pendaftar.
     #[api_endpoint(path = "/$param.service_name_snake_case$/activate", auth = "none", mutable)]
-    pub fn activate_$param.service_name_snake_case$(query: Activate$param.service_name_camel_case$) -> ApiResult<types::$param.service_name_camel_case$> {
+    pub fn activate_$param.service_name_snake_case$(query: Activate$param.service_name_pascal_case$) -> ApiResult<types::$param.service_name_pascal_case$> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let schema = $param.service_name_pascal_case$Dao::new(&conn);
         let $param.service_name_snake_case$ = schema.activate_registered_$param.service_name_snake_case$(query.token)?;
         schema.set_password($param.service_name_snake_case$.id, &query.password)?;
         Ok($param.service_name_snake_case$.into())
@@ -213,7 +213,7 @@ impl PublicApi {
 
     /// Mendapatkan informasi current $param.service_name_snake_case$.
     #[api_endpoint(path = "/me/info", auth = "required")]
-    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> types::$param.service_name_camel_case$ {
+    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> types::$param.service_name_pascal_case$ {
         Ok(current_$param.service_name_snake_case$.into())
     }
 }
@@ -223,26 +223,26 @@ use crate::models as db;
 /// Holder untuk implementasi API endpoint privat.
 pub struct PrivateApi;
 
-#[api_group("$param.service_name_camel_case$", "private", base = "/$param.service_name_snake_case$/v1")]
+#[api_group("$param.service_name_pascal_case$", "private", base = "/$param.service_name_snake_case$/v1")]
 impl PrivateApi {
 
     /// Listing $param.service_name_snake_case$
     #[api_endpoint(path = "/$param.service_name_snake_case$s", auth = "none")]
-    pub fn list_$param.service_name_snake_case$(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
+    pub fn list_$param.service_name_snake_case$(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_pascal_case$>> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
-        let entries = schema.get_$param.service_name_snake_case$s(query.offset, query.limit)?;
+        let entries = dao.get_$param.service_name_snake_case$s(query.offset, query.limit)?;
 
-        let count = schema.get_$param.service_name_snake_case$_count()?;
+        let count = dao.count()?;
         Ok(ApiResult::success(EntriesResult { count, entries }))
     }
 
     /// Mencari akun berdasarkan kata kunci.
     #[api_endpoint(path = "/$param.service_name_snake_case$/search", auth = "none")]
-    pub fn search_$param.service_name_snake_case$s(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_camel_case$>> {
+    pub fn search_$param.service_name_snake_case$s(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_pascal_case$>> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
         if query.query.is_none() {
             return Self::list_$param.service_name_snake_case$(&state, query, req);
@@ -250,7 +250,7 @@ impl PrivateApi {
 
         let keyword = query.query.unwrap();
 
-        let (entries, count) = schema.search_$param.service_name_snake_case$s(&keyword, query.offset, query.limit)?;
+        let (entries, count) = dao.search(&keyword, query.offset, query.limit)?;
 
         Ok(ApiResult::success(EntriesResult { count, entries }))
     }
@@ -259,22 +259,22 @@ impl PrivateApi {
     #[api_endpoint(path = "/$param.service_name_snake_case$/count")]
     pub fn $param.service_name_snake_case$_count(state: &AppState, query: ()) -> ApiResult<i64> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
-        schema
-            .get_$param.service_name_snake_case$_count()
+        dao
+            .count()
             .map(ApiResult::success)
             .map_err(From::from)
     }
 
     /// Mendapatkan data akun.
     #[api_endpoint(path = "/$param.service_name_snake_case$/info", auth = "required")]
-    pub fn $param.service_name_snake_case$_info(query: IdQuery) -> ApiResult<db::$param.service_name_camel_case$> {
+    pub fn $param.service_name_snake_case$_info(query: IdQuery) -> ApiResult<db::$param.service_name_pascal_case$> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
-        schema
-            .get_$param.service_name_snake_case$(query.id)
+        dao
+            .get_by_id(query.id)
             .map(ApiResult::success)
             .map_err(From::from)
     }

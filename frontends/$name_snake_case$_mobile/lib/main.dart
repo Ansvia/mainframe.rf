@@ -22,27 +22,27 @@ void main() {
 
   runApp(BlocProvider(
     builder: (ctx) {
-      return $name_camel_case$Bloc(userRepository: userRepository)
+      return $name_pascal_case$Bloc(userRepository: userRepository)
         ..dispatch(StartupEvent());
     },
-    child: $name_camel_case$App(userRepository: userRepository),
+    child: $name_pascal_case$App(userRepository: userRepository),
   ));
 }
 
-class $name_camel_case$App extends StatelessWidget {
+class $name_pascal_case$App extends StatelessWidget {
   final UserRepository userRepository;
 
-  $name_camel_case$App({Key key, @required this.userRepository}) : super(key: key);
+  $name_pascal_case$App({Key key, @required this.userRepository}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final $name_snake_case$Bloc = BlocProvider.of<$name_camel_case$Bloc>(context);
+    final $name_snake_case$Bloc = BlocProvider.of<$name_pascal_case$Bloc>(context);
 
-    return MaterialApp(title: '$name$', theme: $name_camel_case$Theme.theme, routes: {
+    return MaterialApp(title: '$name$', theme: $name_pascal_case$Theme.theme, routes: {
       "/": (context) {
-        return BlocListener<$name_camel_case$Bloc, $name_camel_case$State>(
-          listener: (BuildContext context, $name_camel_case$State state) {
+        return BlocListener<$name_pascal_case$Bloc, $name_pascal_case$State>(
+          listener: (BuildContext context, $name_pascal_case$State state) {
             print("main state: $state");
             if (state is AuthenticationUnauthenticated) {
               Navigator.of(context).pushReplacementNamed('/login');
@@ -56,8 +56,8 @@ class $name_camel_case$App extends StatelessWidget {
       "/inner": (context) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider<$name_camel_case$Bloc>(
-              builder: (context) => $name_camel_case$Bloc(userRepository: userRepository),
+            BlocProvider<$name_pascal_case$Bloc>(
+              builder: (context) => $name_pascal_case$Bloc(userRepository: userRepository),
             ),
             BlocProvider<TabBloc>(
               builder: (context) => TabBloc(),
@@ -72,8 +72,8 @@ class $name_camel_case$App extends StatelessWidget {
         );
       },
       "/login": (context) {
-        return BlocListener<$name_camel_case$Bloc, $name_camel_case$State>(
-          listener: (BuildContext context, $name_camel_case$State state) {
+        return BlocListener<$name_pascal_case$Bloc, $name_pascal_case$State>(
+          listener: (BuildContext context, $name_pascal_case$State state) {
             if (state is AuthenticationAuthenticated) {
               Navigator.of(context).pushReplacementNamed('/inner');
             }
@@ -88,7 +88,7 @@ class $name_camel_case$App extends StatelessWidget {
 }
 
 
-class $name_camel_case$Theme {
+class $name_pascal_case$Theme {
   static get theme {
     final originalTextTheme = ThemeData.light().textTheme;
     final originalBody1 = originalTextTheme.body1;

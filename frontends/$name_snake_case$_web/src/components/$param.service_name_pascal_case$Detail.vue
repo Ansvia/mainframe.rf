@@ -1,5 +1,5 @@
 <template>
-  <div id="$param.service_name_camel_case$Detail">
+  <div id="$param.service_name_pascal_case$Detail">
     <AnsTab>
       <div class="ui grid">
         <div class="six wide column">
@@ -37,7 +37,7 @@
 import AnsTab from "@/components/AnsTab";
 
 export default {
-  name: "$param.service_name_camel_case$Detail",
+  name: "$param.service_name_pascal_case$Detail",
   components: {
     AnsTab
   },

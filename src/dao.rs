@@ -12,7 +12,8 @@ use crate::{
     models::*,
     result::Result,
     schema::*,
-    schema_account, token, ID,
+    token,
+    ID,
 };
 
 use std::sync::Arc;

@@ -1,7 +1,7 @@
 [reframe]
 name = "Mainframe"
 author = "r@nosql.asia"
-min_version = "0.1.8"
+min_version = "0.3.0"
 
 [project]
 name = "Mainframe"
@@ -37,7 +37,7 @@ To run:
 desc = { ask = "Description ?", default="My Mainframe project" }
 
 [[param]]
-service_name = { ask = "Service name?", default="account" }
+service_name = { ask = "User/account management service name?", default="user" }
 
 [[param]]
 author_name = { ask = "Author name?", default="Robin" }

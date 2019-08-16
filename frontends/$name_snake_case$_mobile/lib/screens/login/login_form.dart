@@ -41,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
               child: ListView(
                 children: [
                   Hero(
-                      tag: $name_camel_case$Keys.logo,
+                      tag: $name_pascal_case$Keys.logo,
                       child: Image.asset("assets/img/ansvia-logo.png")),
                   Center(
                       child: Text(

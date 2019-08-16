@@ -6,7 +6,7 @@ use chrono::{Duration, NaiveDateTime};
 use diesel::{pg::PgConnection, prelude::*};
 
 use crate::{
-    models::{AccessToken, $param.service_name_camel_case$},
+    models::{AccessToken, $param.service_name_pascal_case$},
     prelude::*,
     schema::access_tokens,
     token, util,
@@ -26,18 +26,18 @@ pub struct NewAccessToken<'a> {
 }
 
 /// Untuk mengoperasikan skema data di database
-pub struct Schema<'a> {
+pub struct AuthDao<'a> {
     db: &'a PgConnection,
 }
 
-impl<'a> Schema<'a> {
+impl<'a> AuthDao<'a> {
     /// Create new schema instance.
     pub fn new(db: &'a PgConnection) -> Self {
         Self { db }
     }
 
     /// Mendapatkan akun dari akses token.
-    pub fn get_$param.service_name_snake_case$_from_access_token(&self, access_token: &str) -> Result<$param.service_name_camel_case$> {
+    pub fn get_$param.service_name_snake_case$_from_access_token(&self, access_token: &str) -> Result<$param.service_name_pascal_case$> {
         use crate::schema::$param.service_name_snake_case$s::dsl::$param.service_name_snake_case$s;
 
         // @TODO(robin): ini masih bisa diimprove dengan hanya menggunakan sekali call ke DB
@@ -108,10 +108,10 @@ impl<'a> Schema<'a> {
         Ok(())
     }
 
-    /// Clear account's access tokens by account id
-    pub fn clear_access_token_by_account_id(&self, account_id: ID) -> Result<()> {
+    /// Clear $param.service_name_snake_case$'s access tokens by $param.service_name_snake_case$ id
+    pub fn clear_access_token_by_$param.service_name_snake_case$_id(&self, $param.service_name_snake_case$_id: ID) -> Result<()> {
         use crate::schema::access_tokens::{self, dsl};
-        diesel::delete(dsl::access_tokens.filter(dsl::account_id.eq(account_id))).execute(self.db)?;
+        diesel::delete(dsl::access_tokens.filter(dsl::$param.service_name_snake_case$_id.eq($param.service_name_snake_case$_id))).execute(self.db)?;
         Ok(())
     }
 

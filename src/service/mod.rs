@@ -7,7 +7,7 @@ mod system;
 
 pub use self::{
     auth::AuthService,
-    $param.service_name_snake_case$::$param.service_name_camel_case$Service,
+    $param.service_name_snake_case$::$param.service_name_pascal_case$Service,
     system::SystemService
 };
 

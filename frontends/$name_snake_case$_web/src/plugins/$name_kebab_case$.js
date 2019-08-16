@@ -4,7 +4,7 @@ import { ApiClient, Crypto } from "../../../../libs/$name_kebab_case$-client-js"
 import * as protos from '../proto/stubs';
 // <% endif %>
 
-export default class $name_camel_case$ {
+export default class $name_pascal_case$ {
   static install(Vue) {
 
     var api;
@@ -67,7 +67,7 @@ export default class $name_camel_case$ {
             if (resp.data.code == 0) {
               session().set("token", resp.data.result.token);
               updateSession(resp.data.result.token);
-              this.load$param.service_name_camel_case$Key();
+              this.load$param.service_name_pascal_case$Key();
             }
             return resp;
           });
@@ -92,7 +92,7 @@ export default class $name_camel_case$ {
       },
 
       // Fetch current $param.service_name_snake_case$ key-pair.
-      load$param.service_name_camel_case$Key() {
+      load$param.service_name_pascal_case$Key() {
         return api.publicApi.get("/auth/v1/get_key")
           .then((resp) => {
             console.log("$param.service_name_snake_case$ key loaded.");
@@ -117,7 +117,7 @@ export default class $name_camel_case$ {
           secretKey: Buffer.from(sk, 'hex'),
         }
       },
-      // credit$param.service_name_camel_case$Balance($param.service_name_snake_case$Id, amount) {
+      // credit$param.service_name_pascal_case$Balance($param.service_name_snake_case$Id, amount) {
       //   var credit = new protos.$param.service_name_snake_case$.Credit({
       //     $param.service_name_snake_case$: $param.service_name_snake_case$Id,
       //     amount: parseFloat(amount),

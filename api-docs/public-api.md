@@ -4,9 +4,9 @@ FORMAT: 1A
 
 Dokumentasi rest API public untuk $name$.
 
-## Group $param.service_name_camel_case$
+## Group $param.service_name_pascal_case$
 
-### Register $param.service_name_camel_case$ [POST /$param.service_name_snake_case$/v1/$param.service_name_snake_case$/register]
+### Register $param.service_name_pascal_case$ [POST /$param.service_name_snake_case$/v1/$param.service_name_snake_case$/register]
 
 Rest API endpoint untuk mendaftarkan akun baru.
 Setelah register akun tidak langsung aktif, perlu melakukan

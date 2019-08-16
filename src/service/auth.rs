@@ -9,9 +9,9 @@ use serde_json::Value as JsonValue;
 use crate::crypto::{self, SecretKey};
 use crate::{
     api::{types::IdQuery, ApiResult, Error as ApiError, ErrorCode},
-    auth, models,
+    auth::AuthDao, models,
     prelude::*,
-    schema_$param.service_name_snake_case$,
+    $param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao,
 };
 
 /// Core basis service untuk authentikasi.
@@ -64,8 +64,8 @@ impl PrivateApi {
     #[api_endpoint(path = "/remove_access_token", auth = "required", mutable)]
     pub fn remove_access_token(query: AccessTokenQuery) -> ApiResult<()> {
         let conn = state.db();
-        let schema = auth::Schema::new(&conn);
-        schema.remove_access_token(&query.token)?;
+        let dao = AuthDao::new(&conn);
+        dao.remove_access_token(&query.token)?;
 
         Ok(ApiResult::success(()))
     }
@@ -74,9 +74,9 @@ impl PrivateApi {
     #[api_endpoint(path = "/unauthorize", auth = "required", mutable)]
     pub fn unauthorize(query: IdQuery) -> ApiResult<()> {
         let conn = state.db();
-        let schema = auth::Schema::new(&conn);
+        let dao = AuthDao::new(&conn);
 
-        schema.clear_access_token_by_account_id(query.id)?;
+        dao.clear_access_token_by_$param.service_name_snake_case$_id(query.id)?;
 
         Ok(ApiResult::success(()))
      }
@@ -93,11 +93,11 @@ impl PublicApi {
     pub fn authorize(state: &mut AppState, query: Authorize) -> ApiResult<AccessToken> {
         let conn = state.db();
         let $param.service_name_snake_case$ = {
-            let schema = Schema::new(&conn);
+            let dao = $param.service_name_pascal_case$Dao::new(&conn);
             if let Some(email) = query.email {
-                schema.get_$param.service_name_snake_case$_by_email(&email)?
+                dao.get_by_email(&email)?
             } else if let Some(phone) = query.phone {
-                schema.get_$param.service_name_snake_case$_by_phone_num(&phone)?
+                dao.get_by_phone_num(&phone)?
             } else {
                 Err(ApiError::InvalidParameter(
                     ErrorCode::NoLoginInfo as i32,
@@ -106,24 +106,24 @@ impl PublicApi {
             }
         };
 
-        let schema = auth::Schema::new(&conn);
+        let dao = AuthDao::new(&conn);
 
         // <% if param.password_crypt_algo == "sha256" %>
-        if !schema.valid_passhash($param.service_name_snake_case$.id, &query.passhash) {
+        if !dao.valid_passhash($param.service_name_snake_case$.id, &query.passhash) {
             warn!("$param.service_name_snake_case$ `{}` try to authorize using wrong password", &$param.service_name_snake_case$.id);
             Err(ApiError::Unauthorized)?
         }        
         // <% endif %>
 
         // <% if param.password_crypt_algo == "bcrypt" %>
-        let $param.service_name_snake_case$_passhash = schema.get_passhash($param.service_name_snake_case$.id)?;
+        let $param.service_name_snake_case$_passhash = dao.get_passhash($param.service_name_snake_case$.id)?;
         if !crypto::password_match(&query.password, &$param.service_name_snake_case$_passhash){
             warn!("$param.service_name_snake_case$ `{}` try to authorize using wrong password", &$param.service_name_snake_case$.id);
             Err(ApiError::Unauthorized)?
         }
         // <% endif %>
 
-        schema
+        dao
             .generate_access_token($param.service_name_snake_case$.id)
             .map_err(From::from)
             .map(ApiResult::success)
@@ -133,15 +133,15 @@ impl PublicApi {
     /// Unauthorize current user session, this will invalidate all valid access tokens.
     #[api_endpoint(path = "/unauthorize", auth = "required", mutable)]
     pub fn unauthorize(query: ()) -> ApiResult<()> {
-        PrivateApi::unauthorize(state, IdQuery { id: current_account.id }, req)
+        PrivateApi::unauthorize(state, IdQuery { id: current_$param.service_name_snake_case$.id }, req)
     }
 
     /// Mendapatkan keypair dari $param.service_name_snake_case$.
     #[api_endpoint(path = "/get_key", auth = "required")]
     fn $param.service_name_snake_case$_get_key(query: ()) -> ApiResult<JsonValue> {
         let conn = state.db();
-        let schema = Schema::new(&conn);
-        let $param.service_name_snake_case$_key = schema.get_$param.service_name_snake_case$_key(current_$param.service_name_snake_case$.id)?;
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
+        let $param.service_name_snake_case$_key = dao.get_$param.service_name_snake_case$_key(current_$param.service_name_snake_case$.id)?;
 
         Ok(ApiResult::success(
             json!({"pub_key": $param.service_name_snake_case$_key.pub_key, "secret_key": $param.service_name_snake_case$_key.secret_key}),

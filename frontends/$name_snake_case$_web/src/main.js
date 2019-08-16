@@ -7,7 +7,7 @@ import Notifications from 'vue-notification'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import $name_camel_case$ from './plugins/$name_kebab_case$';
+import $name_pascal_case$ from './plugins/$name_kebab_case$';
 
 // ----- Vuejs Dialog Stuff -------------
 import VuejsDialog from "vuejs-dialog"
@@ -46,7 +46,7 @@ Vue.config.runMode = process.env.VUE_APP_RUN_MODE;
 
 Vue.use(VueSession)
 Vue.use(Notifications)
-Vue.use($name_camel_case$)
+Vue.use($name_pascal_case$)
 Vue.use(VueSidebarMenu)
 
 

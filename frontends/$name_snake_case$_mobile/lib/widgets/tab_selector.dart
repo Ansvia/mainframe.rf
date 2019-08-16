@@ -17,7 +17,7 @@ class TabSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      key: $name_camel_case$Keys.tabs,
+      key: $name_pascal_case$Keys.tabs,
       currentIndex: AppTab.values.indexOf(activeTab),
       onTap: (index) => onTabSelected(AppTab.values[index]),
       items: AppTab.values.map((tab) {
@@ -26,19 +26,19 @@ class TabSelector extends StatelessWidget {
         String title;
         if (tab == AppTab.timeline){
           icon = Icons.rss_feed;
-          key = $name_camel_case$Keys.timelineTab;
+          key = $name_pascal_case$Keys.timelineTab;
           title = "Timeline";
         }else if (tab == AppTab.notif){
           icon = Icons.notifications;
-          key = $name_camel_case$Keys.notifTab;
+          key = $name_pascal_case$Keys.notifTab;
           title = "Notif";
         }else if (tab == AppTab.todo){
           icon = Icons.list;
-          key = $name_camel_case$Keys.todoTab;
+          key = $name_pascal_case$Keys.todoTab;
           title = "Todo";
         }else{
           icon = Icons.dashboard;
-          key = $name_camel_case$Keys.dashboardTab;
+          key = $name_pascal_case$Keys.dashboardTab;
           title = "Menu";
         }
         return BottomNavigationBarItem(

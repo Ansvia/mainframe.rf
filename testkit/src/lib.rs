@@ -45,8 +45,8 @@ pub enum ApiKind {
     System,
     /// `api/auth` endpoints. Mengarah ke servis [Auth].
     Auth,
-    /// `api/$param.service_name_snake_case$` endpoints. Mengarah ke servis [$param.service_name_camel_case$].
-    $param.service_name_camel_case$,
+    /// `api/$param.service_name_snake_case$` endpoints. Mengarah ke servis [$param.service_name_pascal_case$].
+    $param.service_name_pascal_case$,
     /// Gunakan ini apabila ada servis khusus (user).
     Service(&'static str),
 }
@@ -56,7 +56,7 @@ impl fmt::Display for ApiKind {
         match self {
             ApiKind::System => write!(f, "api/system"),
             ApiKind::Auth => write!(f, "api/auth"),
-            ApiKind::$param.service_name_camel_case$ => write!(f, "api/$param.service_name_snake_case$"),
+            ApiKind::$param.service_name_pascal_case$ => write!(f, "api/$param.service_name_snake_case$"),
             ApiKind::Service(name) => write!(f, "api/{}", name),
         }
     }
@@ -118,7 +118,7 @@ impl TestKitApi {
         )
     }
 
-    /// Cara pintas untuk meng-otorisasi $param.service_name_camel_case$,
+    /// Cara pintas untuk meng-otorisasi $param.service_name_pascal_case$,
     /// atau dengan kata lain me-login-kan sehingga
     /// nanti http client akan meng-embed X-Access-Token secara otomatis.
     pub fn authorize(&mut self, $param.service_name_snake_case$_id: ID) {
@@ -306,7 +306,7 @@ pub fn setup() {
 pub fn create_test_server() -> TestServer {
     setup();
 
-    let service = service::$param.service_name_camel_case$Service::new();
+    let service = service::$param.service_name_pascal_case$Service::new();
     let system_service = service::SystemService::new();
 
     let agg = ApiAggregator::new(vec![service, system_service]);

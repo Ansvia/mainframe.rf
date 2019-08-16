@@ -82,7 +82,7 @@ macro_rules! implement_crypto_wrapper {
 // macro_rules! api_endpoint {
 //     ($name:ident, $qt:ty, $rv:ty, (|$schema:ident, $query:ident| $( $cs:tt )+ ) ) => {
 //         pub fn $name(state: &AppState, $query: $qt) -> ApiResult<$rv> {
-//             let $schema = Schema::new(state.db());
+//             let $schema = $param.service_name_pascal_case$Dao::new(state.db());
 
 //             {$($cs)+}
 //         }
@@ -92,7 +92,7 @@ macro_rules! implement_crypto_wrapper {
 macro_rules! api_endpoint_req {
     ($name:ident, $qt:ty, $rv:ty, (|$schema:ident, $query:ident| $( $cs:tt )+ ) ) => {
         pub fn $name(state: &AppState, $query: $qt, req: &ApiHttpRequest) -> ApiResult<$rv> {
-            let $schema = Schema::new(state.db());
+            let $schema = $param.service_name_pascal_case$Dao::new(state.db());
 
             {$($cs)+}
         }
@@ -102,7 +102,7 @@ macro_rules! api_endpoint_req {
 macro_rules! api_endpoint_mut {
     ($name:ident, $qt:ty, $rv:ty, (|$schema:ident, $query:ident| $( $cs:tt )+ ) ) => {
         pub fn $name(state: &mut AppState, $query: $qt) -> ApiResult<$rv> {
-            let $schema = Schema::new(state.db());
+            let $schema = $param.service_name_pascal_case$Dao::new(state.db());
 
             {$($cs)+}
         }
@@ -113,7 +113,7 @@ macro_rules! api_endpoint_mut {
 macro_rules! api_tx_endpoint {
     ($name:ident, $qt:ty, $rv:ty, (|$schema:ident, $query:ident| $( $cs:tt )+ ) ) => {
         pub fn $name(state: &AppState, $query: TxQuery<$qt>) -> ApiResult<$rv> {
-            let $schema = Schema::new(state.db());
+            let $schema = $param.service_name_pascal_case$Dao::new(state.db());
 
             {$($cs)+}
         }

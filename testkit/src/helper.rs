@@ -1,6 +1,6 @@
 use $name_snake_case$::api::$param.service_name_snake_case$::types;
 use $name_snake_case$::api::{
-    $param.service_name_snake_case$::{Activate$param.service_name_camel_case$, Register$param.service_name_camel_case$},
+    $param.service_name_snake_case$::{Activate$param.service_name_pascal_case$, Register$param.service_name_pascal_case$},
     ApiResult,
 };
 // <% if param.with_protobuf %>
@@ -10,7 +10,7 @@ use $name_snake_case$::auth;
 use $name_snake_case$::crypto::*;
 use $name_snake_case$::models;
 use $name_snake_case$::prelude::*;
-use $name_snake_case$::schema_$param.service_name_snake_case$::*;
+use $name_snake_case$::$param.service_name_snake_case$_dao::*;
 use $name_snake_case$::{
     api::types::IdQuery,
     util,
@@ -25,14 +25,14 @@ use std::{
     sync::{Arc, Mutex, MutexGuard},
 };
 
-pub struct $param.service_name_camel_case$WithKey {
-    pub $param.service_name_snake_case$: types::$param.service_name_camel_case$,
+pub struct $param.service_name_pascal_case$WithKey {
+    pub $param.service_name_snake_case$: types::$param.service_name_pascal_case$,
     pub public_key: PublicKey,
     pub secret_key: SecretKey,
 }
 
-impl $param.service_name_camel_case$WithKey {
-    pub fn new($param.service_name_snake_case$: types::$param.service_name_camel_case$, public_key: PublicKey, secret_key: SecretKey) -> Self {
+impl $param.service_name_pascal_case$WithKey {
+    pub fn new($param.service_name_snake_case$: types::$param.service_name_pascal_case$, public_key: PublicKey, secret_key: SecretKey) -> Self {
         Self {
             $param.service_name_snake_case$,
             public_key,
@@ -64,9 +64,9 @@ impl TestHelper {
         PG_CONN_FOR_TEST.lock().unwrap()
     }
 
-    pub fn get_$param.service_name_snake_case$_by_id(&self, id: ID) -> Result<models::$param.service_name_camel_case$> {
+    pub fn get_$param.service_name_snake_case$_by_id(&self, id: ID) -> Result<models::$param.service_name_pascal_case$> {
         let db = Self::get_db();
-        let schema = Schema::new(&db);
+        let schema = $param.service_name_pascal_case$Dao::new(&db);
         schema.get_$param.service_name_snake_case$(id)
     }
 
@@ -74,13 +74,13 @@ impl TestHelper {
     /// Tidak melalui API endpoint `/authorize`.
     pub fn gen_access_token_for(&self, id: ID) -> Result<models::AccessToken> {
         let db = Self::get_db();
-        let schema = auth::Schema::new(&db);
+        let schema = auth::$param.service_name_pascal_case$Dao::new(&db);
         schema.generate_access_token(id).map_err(From::from)
     }
 
     pub fn cleanup_registered_$param.service_name_snake_case$(&self, token: &str) {
         let db = Self::get_db();
-        let schema = Schema::new(&db);
+        let schema = $param.service_name_pascal_case$Dao::new(&db);
         let _ = schema.cleanup_registered_$param.service_name_snake_case$(token);
     }
 
@@ -104,12 +104,12 @@ impl TestHelper {
 
     /// Menggenerasikan beberapa akun sekaligus,
     /// ini tidak via rest API, tapi langsung ke database.
-    pub fn generate_$param.service_name_snake_case$s(&self, count: usize) -> Vec<$param.service_name_camel_case$WithKey> {
+    pub fn generate_$param.service_name_snake_case$s(&self, count: usize) -> Vec<$param.service_name_pascal_case$WithKey> {
         let db = Self::get_db();
-        let schema = Schema::new(&db);
+        let schema = $param.service_name_pascal_case$Dao::new(&db);
         let mut rv = vec![];
         for _ in 0..count {
-            let new_$param.service_name_snake_case$ = New$param.service_name_camel_case$ {
+            let new_$param.service_name_snake_case$ = New$param.service_name_pascal_case$ {
                 full_name: &self.generate_full_name(),
                 email: &self.generate_email(),
                 phone_num: &self.generate_phone_num(),
@@ -119,7 +119,7 @@ impl TestHelper {
             let ($param.service_name_snake_case$, (public_key, secret_key)) = schema
                 .create_$param.service_name_snake_case$(&new_$param.service_name_snake_case$)
                 .expect("cannot create $param.service_name_snake_case$");
-            rv.push($param.service_name_camel_case$WithKey::new($param.service_name_snake_case$.into(), public_key, secret_key));
+            rv.push($param.service_name_pascal_case$WithKey::new($param.service_name_snake_case$.into(), public_key, secret_key));
         }
         rv
     }
@@ -132,7 +132,7 @@ impl TestHelper {
     }
 
     /// Menghapus akun
-    pub fn cleanup_$param.service_name_snake_case$(&self, $param.service_name_snake_case$: types::$param.service_name_camel_case$) {
+    pub fn cleanup_$param.service_name_snake_case$(&self, $param.service_name_snake_case$: types::$param.service_name_pascal_case$) {
         self.cleanup_$param.service_name_snake_case$_by_id($param.service_name_snake_case$.id);
     }
 
@@ -158,30 +158,30 @@ impl<'a> ApiHelper<'a> {
     pub fn register_$param.service_name_snake_case$(&self, $param.service_name_snake_case$_name: &str, email: &str, phone_number: &str) -> ApiResult<String> {
         let api = self.testkit.api();
 
-        let data = Register$param.service_name_camel_case$ {
+        let data = Register$param.service_name_pascal_case$ {
             full_name: $param.service_name_snake_case$_name.to_owned(),
             email: email.to_owned(),
             phone_num: phone_number.to_owned(),
         };
 
-        api.public(ApiKind::$param.service_name_camel_case$)
+        api.public(ApiKind::$param.service_name_pascal_case$)
             .query(&data)
             .post("v1/$param.service_name_snake_case$/register")
             .expect("create $param.service_name_snake_case$")
     }
 
     /// Aktivasi akun menggunakan token yang telah didapat dari hasil register.
-    pub fn activate_$param.service_name_snake_case$(&self, token: String, password: &str) -> ApiResult<types::$param.service_name_camel_case$> {
+    pub fn activate_$param.service_name_snake_case$(&self, token: String, password: &str) -> ApiResult<types::$param.service_name_pascal_case$> {
         let api = self.testkit.api();
 
-        let data = Activate$param.service_name_camel_case$ {
+        let data = Activate$param.service_name_pascal_case$ {
             token,
             password: password.to_owned(),
         };
 
-        api.public(ApiKind::$param.service_name_camel_case$)
+        api.public(ApiKind::$param.service_name_pascal_case$)
             .query(&data)
-            .post::<ApiResult<types::$param.service_name_camel_case$>>("v1/$param.service_name_snake_case$/activate")
+            .post::<ApiResult<types::$param.service_name_pascal_case$>>("v1/$param.service_name_snake_case$/activate")
             .expect("activate $param.service_name_snake_case$")
     }
 }
