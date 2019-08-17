@@ -213,8 +213,8 @@ impl PublicApi {
 
     /// Mendapatkan informasi current $param.service_name_snake_case$.
     #[api_endpoint(path = "/me/info", auth = "required")]
-    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> types::$param.service_name_pascal_case$ {
-        Ok(current_$param.service_name_snake_case$.into())
+    pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> ApiResult<types::$param.service_name_pascal_case$> {
+        Ok(ApiResult::success(current_$param.service_name_snake_case$.into()))
     }
 }
 
