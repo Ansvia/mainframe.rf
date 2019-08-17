@@ -130,10 +130,19 @@ impl PublicApi {
 
     }
 
-    /// Unauthorize current user session, this will invalidate all valid access tokens.
-    #[api_endpoint(path = "/unauthorize", auth = "required", mutable)]
+    /// Unauthorize current $param.service_name$ session, this will invalidate all valid access tokens.
+    #[api_endpoint(path = "/unauthorize", auth = "optional", mutable)]
     pub fn unauthorize(query: ()) -> ApiResult<()> {
-        PrivateApi::unauthorize(state, IdQuery { id: current_$param.service_name_snake_case$.id }, req)
+        match current_$param.service_name_snake_case$ {
+            Some(current_$param.service_name_snake_case$) => PrivateApi::unauthorize(
+                state,
+                IdQuery {
+                    id: current_$param.service_name_snake_case$.id,
+                },
+                req,
+            ),
+            None => Ok(ApiResult::success(())),
+        }
     }
 
     /// Mendapatkan keypair dari $param.service_name_snake_case$.

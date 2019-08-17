@@ -158,8 +158,15 @@ pub mod types {
 
 }
 
-use crate::models::AccessToken;
 
+#[derive(Deserialize)]
+pub struct UpdatePassword {
+    pub old_password: String,
+    pub new_password: String,
+    pub verif_new_password: String,
+}
+
+use crate::models::AccessToken;
 
 /// Holder untuk implementasi API endpoint publik untuk $param.service_name_snake_case$.
 pub struct PublicApi;
@@ -215,6 +222,36 @@ impl PublicApi {
     #[api_endpoint(path = "/me/info", auth = "required")]
     pub fn me_info(state: &AppState, query: (), req: &ApiHttpRequest) -> ApiResult<types::$param.service_name_pascal_case$> {
         Ok(ApiResult::success(current_$param.service_name_snake_case$.into()))
+    }
+
+    /// Update password.
+    #[api_endpoint(path = "/update_password", auth = "required", mutable)]
+    pub fn update_password(query: UpdatePassword) -> ApiResult<()> {
+        let conn = state.db();
+        let dao = $param.service_name_pascal_case$Dao::new(&conn);
+
+        if query.new_password.len() < 6 {
+            param_error("New password too short, please use min 6 characters long")?;
+        }
+
+        if query.new_password != query.verif_new_password {
+            param_error("Password verification didn't match")?;
+        }
+
+        let auth_dao = auth::Schema::new(&conn);
+
+        let $param.service_name_snake_case$_passhash = auth_dao.get_passhash(current_$param.service_name_snake_case$.id)?;
+        if !crypto::password_match(&query.old_password, &$param.service_name_snake_case$_passhash) {
+            warn!(
+                "$param.service_name_snake_case$ `{}` try to update password using wrong password",
+                &current_$param.service_name_snake_case$.id
+            );
+            Err(ApiError::Unauthorized)?
+        }
+
+        dao.set_password(current_$param.service_name_snake_case$.id, &query.new_password)?;
+
+        Ok(ApiResult::success(()))
     }
 }
 
