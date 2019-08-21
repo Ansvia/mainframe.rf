@@ -50,6 +50,7 @@ def load_doc(scope, in_path):
         in_api_endpoint_parameters = False
         in_api_endpoint_request = False
         in_api_endpoint_response = False
+        in_api_endpoint_request_header = False
         current_group = ""
         lines = f.readlines()
         for line in lines:
@@ -76,6 +77,7 @@ def load_doc(scope, in_path):
                 in_api_endpoint = False
                 in_api_endpoint_request = False
                 in_api_endpoint_response = False
+                in_api_endpoint_request_header = False
                 
             elif in_group:
                 in_group = not line.startswith("## ")
@@ -105,30 +107,41 @@ def load_doc(scope, in_path):
                             'method_name': method_name,
                             'request_param': "",
                             'request_json': "",
-                            'response_ok': ""})
+                            'response_ok': "",
+                            'headers': ""})
 
                         in_api_endpoint_parameters = False
                         in_api_endpoint_request = False
                         in_api_endpoint_response = False
+                        in_api_endpoint_request_header = False
                         continue
 
                     elif in_api_endpoint:
                         in_api_endpoint = not line.startswith("##")
                         if in_api_endpoint:
-                            if line.startswith('+ Request'):
+                            if line.startswith('+ Request JSON'):
                                 in_api_endpoint_request = True
                                 in_api_endpoint_parameters = False
                                 in_api_endpoint_response = False
+                                in_api_endpoint_request_header = False
                                 continue
                             elif line.startswith('+ Parameters'):
                                 in_api_endpoint_parameters = True
                                 in_api_endpoint_response = False
                                 in_api_endpoint_request = False
+                                in_api_endpoint_request_header = False
                                 continue
                             elif line.startswith('+ Response'):
                                 in_api_endpoint_response = True
                                 in_api_endpoint_request = False
                                 in_api_endpoint_parameters = False
+                                in_api_endpoint_request_header = False
+                                continue
+                            elif line.startswith('+ Request plain'):
+                                in_api_endpoint_response = False
+                                in_api_endpoint_request = False
+                                in_api_endpoint_parameters = False
+                                in_api_endpoint_request_header = True
                                 continue
                             elif in_api_endpoint_parameters:
                                 in_api_endpoint_parameters = not line.startswith("+") and not line.startswith("#")
@@ -142,6 +155,11 @@ def load_doc(scope, in_path):
                                 in_api_endpoint_response = not line.startswith("+") and not line.startswith("#")
                                 if in_api_endpoint_response:
                                     docs[-1]['response_ok'] = (docs[-1]['response_ok'] + '\n' + line).strip()
+                            elif in_api_endpoint_request_header:
+                                in_api_endpoint_request_header = not line.startswith("+") and not line.startswith("#")
+                                if in_api_endpoint_request_header:
+                                    if not line.strip().startswith("+ Headers"):
+                                        docs[-1]['headers'] = (docs[-1]['headers'] + '\n' + line).strip()
                             else:
                                 docs[-1]['desc'] = (docs[-1]['desc'] + line)
 
@@ -243,6 +261,7 @@ def gen_doc(scope, in_path, out_path):
     os.rename(out_path + '.tmp~', out_path)
 
 BP_PARAM_RE = re.compile(r"\+ (.*?):\s*([0-9]*).*?\-s*(.*)")
+HEADER_REQ_RE = re.compile(r"(.*?):\s\"(.*?)\"(\s-\s(.*))?")
 
 def parse_query_params(param_str):
     rv = []
@@ -257,6 +276,34 @@ def parse_query_params(param_str):
             rv.append(dict(key=key, value=value, description=desc))
     return rv
 
+def parse_request_headers(param):
+    rv = [
+        {
+            "key": "Content-Type",
+            "value": "application/json"
+        },
+        {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "Request JSON"
+        }
+    ]
+    if "headers" in param:
+        param_str = param['headers']
+        for line in param_str.split("\n"):
+            line = line.strip()
+            rs = HEADER_REQ_RE.match(line)
+            if rs:
+                key = rs.group(1).strip()
+                value = rs.group(2).strip()
+                desc = ""
+                
+                if rs.group(3):
+                    desc = rs.group(3).strip()
+
+                rv.append(dict(key=key, value=value, description=desc))
+
+    return rv
 
 def gen_postman(api_scope, input_path, out_path):
     parsed_docs = load_doc(api_scope, input_path)
@@ -279,22 +326,13 @@ def gen_postman(api_scope, input_path, out_path):
                 raise Exception("prev element not `Group`")
             
             query_params = parse_query_params(m['request_param'])
+            headers = parse_request_headers(m)
 
             d['item'][-1]['item'].append({
                 'name': m['title'],
                 'request': {
                     'method': m['method'],
-                    'header': [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                        },
-                        {
-                            "key": "Accept",
-                            "value": 'application/json',
-                            'description': 'Request JSON'
-                        }
-                    ],
+                    'header': headers,
                     'body': {
                         'mode': "raw",
                         'raw': pretty_json_str(m['request_json'])
@@ -338,6 +376,13 @@ def process_line(j, fout):
             title = j['method_name'].replace('_', ' ').title()
         fout.write("### %s [%s %s]\n\n" % (title, j['method'], j['path']))
         fout.write("%s\n\n" % j['desc'])
+        if 'headers' in j and j['headers'].strip() != "":
+            headers = j['headers']
+
+            fout.write("+ Request plain text\n\n")
+            fout.write("    + Headers\n\n")
+            fout.write("            %s\n\n" % headers)
+
         if j['request_param'] and j['request_param'] != "":
             fout.write("+ Parameters\n\n")
             request_param = j['request_param']
@@ -379,3 +424,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
