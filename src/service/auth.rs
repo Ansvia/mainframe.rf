@@ -116,7 +116,7 @@ impl PublicApi {
         // <% endif %>
 
         // <% if param.password_crypt_algo == "bcrypt" %>
-        let $param.service_name_snake_case$_passhash = dao.get_passhash($param.service_name_snake_case$.id)?;
+        let $param.service_name_snake_case$_passhash = dao.get_passhash("$param.service_name_snake_case$", $param.service_name_snake_case$.id)?;
         if !crypto::password_match(&query.password, &$param.service_name_snake_case$_passhash){
             warn!("$param.service_name_snake_case$ `{}` try to authorize using wrong password", &$param.service_name_snake_case$.id);
             Err(ApiError::Unauthorized)?

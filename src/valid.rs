@@ -1,6 +1,6 @@
 use chrono::Utc;
 
-use crate::models::AccessToken;
+use crate::models::{AccessToken, AdminAccessToken};
 
 /// Trait untuk memastikan apakah suatu object
 /// bisa divalidasi atau tidak.
@@ -29,6 +29,14 @@ impl Expirable for AccessToken {
         now > self.valid_thru
     }
 }
+
+impl Expirable for AdminAccessToken {
+    fn expired(&self) -> bool {
+        let now = Utc::now().naive_utc();
+        now > self.valid_thru
+    }
+}
+
 
 #[cfg(test)]
 mod tests {

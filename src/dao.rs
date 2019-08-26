@@ -1,20 +1,24 @@
-//! Data Access Object for models, digunakan untuk melakukan operasi seperti
-//! membuat project baru, update, dll.
+//! DAO re-exports
 
-use chrono::{NaiveDateTime, Utc};
-use diesel::prelude::*;
-use failure;
+use diesel::sql_types;
 
-use crate::{
-    crypto::{self, PublicKey, SecretKey},
-    error::Error as RactaError,
-    error::ErrorCode,
-    models::*,
-    result::Result,
-    schema::*,
-    token,
-    ID,
-};
+pub use crate::admin_dao::AdminDao;
 
-use std::sync::Arc;
+sql_function!(
+    /// To lowerize sql column value typely
+    fn lower(x: sql_types::Text) -> sql_types::Text);
 
+/// Search result type from DAO (not rest API)
+pub struct EntriesResult<T> {
+    /// list of entry
+    pub entries: Vec<T>,
+    /// entry count found
+    pub count: i64,
+}
+
+impl<T> EntriesResult<T> {
+    /// Create new entries result type
+    pub fn new(entries: Vec<T>, count: i64) -> Self {
+        Self { entries, count }
+    }
+}

@@ -6,6 +6,7 @@
 
 use actix_web::http::StatusCode;
 use serde::Serialize;
+use validator::{ValidationErrors, ValidationErrorsKind};
 
 use crate::{api::ApiResult, error::Error as $name_pascal_case$Error, error::ErrorCode};
 
@@ -78,6 +79,33 @@ impl From<hex::FromHexError> for Error {
     }
 }
 
+impl From<validator::ValidationErrors> for Error {
+    fn from(e: validator::ValidationErrors) -> Self {
+        // dbg!(&e);
+        for (k, v) in e.errors() {
+            // dbg!(&v);
+            match v {
+                ValidationErrorsKind::Field(fields) => {
+                    let field = fields.last().expect("Empty error fields");
+                    let param_value = field
+                        .params
+                        .get("value")
+                        .map(|a| format!("{}", a))
+                        .unwrap_or("".to_string());
+                    let message = match &field.message {
+                        Some(msg) => msg.to_string().replace("{}", &param_value),
+                        _ => format!("Invalid {}: {}", field.code, param_value),
+                    };
+                    return Error::InvalidParameter(ErrorCode::InvalidParameter as i32, message);
+                }
+                _ => (),
+            }
+        }
+        Error::InvalidParameter(ErrorCode::InvalidParameter as i32, "Invalid parameter".to_owned())
+    }
+}
+
+
 use diesel::result::DatabaseErrorKind;
 
 impl From<$name_pascal_case$Error> for Error {
@@ -144,4 +172,10 @@ pub fn param_error<T>(msg: &str) -> Result<T, Error> {
         msg.to_string(),
     ))?;
     panic!("Unhandled error: {}", msg);
+}
+
+/// Build parameter error
+pub fn unauthorized<T>() -> Result<T, Error> {
+    Err(Error::Unauthorized)?;
+    panic!("Unhandled error");
 }

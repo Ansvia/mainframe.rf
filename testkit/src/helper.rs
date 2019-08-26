@@ -66,22 +66,22 @@ impl TestHelper {
 
     pub fn get_$param.service_name_snake_case$_by_id(&self, id: ID) -> Result<models::$param.service_name_pascal_case$> {
         let db = Self::get_db();
-        let schema = $param.service_name_pascal_case$Dao::new(&db);
-        schema.get_$param.service_name_snake_case$(id)
+        let dao = $param.service_name_pascal_case$Dao::new(&db);
+        dao.get_by_id(id)
     }
 
     /// Menggenerasikan akses token langsung dari database,
     /// Tidak melalui API endpoint `/authorize`.
     pub fn gen_access_token_for(&self, id: ID) -> Result<models::AccessToken> {
         let db = Self::get_db();
-        let schema = auth::$param.service_name_pascal_case$Dao::new(&db);
-        schema.generate_access_token(id).map_err(From::from)
+        let dao = auth::AuthDao::new(&db);
+        dao.generate_access_token(id).map_err(From::from)
     }
 
     pub fn cleanup_registered_$param.service_name_snake_case$(&self, token: &str) {
         let db = Self::get_db();
-        let schema = $param.service_name_pascal_case$Dao::new(&db);
-        let _ = schema.cleanup_registered_$param.service_name_snake_case$(token);
+        let dao = $param.service_name_pascal_case$Dao::new(&db);
+        let _ = dao.cleanup_registered_$param.service_name_snake_case$(token);
     }
 
     pub fn generate_full_name(&self) -> String {

@@ -14,7 +14,7 @@ use crate::crypto::{self, PublicKey, SecretKey, Signature};
 use crate::{
     api,
     api::types::*,
-    api::{ApiResult, Error as ApiError, HttpRequest as ApiHttpRequest},
+    api::{error::param_error, ApiResult, Error as ApiError, HttpRequest as ApiHttpRequest},
     auth,
     error::{Error, ErrorCode},
     prelude::*,
@@ -171,7 +171,7 @@ use crate::models::AccessToken;
 /// Holder untuk implementasi API endpoint publik untuk $param.service_name_snake_case$.
 pub struct PublicApi;
 
-#[api_group("$param.service_name_pascal_case$", "public", base="/$param.service_name_snake_case$/v1")]
+#[api_group("$param.service_name_pascal_case$", "public", base = "/$param.service_name_snake_case$/v1")]
 impl PublicApi {
 
 
@@ -238,9 +238,9 @@ impl PublicApi {
             param_error("Password verification didn't match")?;
         }
 
-        let auth_dao = auth::Schema::new(&conn);
+        let auth_dao = auth::AuthDao::new(&conn);
 
-        let $param.service_name_snake_case$_passhash = auth_dao.get_passhash(current_$param.service_name_snake_case$.id)?;
+        let $param.service_name_snake_case$_passhash = auth_dao.get_passhash("user", current_$param.service_name_snake_case$.id)?;
         if !crypto::password_match(&query.old_password, &$param.service_name_snake_case$_passhash) {
             warn!(
                 "$param.service_name_snake_case$ `{}` try to update password using wrong password",
@@ -298,10 +298,7 @@ impl PrivateApi {
         let conn = state.db();
         let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
-        dao
-            .count()
-            .map(ApiResult::success)
-            .map_err(From::from)
+        dao.count().map(ApiResult::success).map_err(From::from)
     }
 
     /// Mendapatkan data akun.
@@ -310,8 +307,7 @@ impl PrivateApi {
         let conn = state.db();
         let dao = $param.service_name_pascal_case$Dao::new(&conn);
 
-        dao
-            .get_by_id(query.id)
+        dao.get_by_id(query.id)
             .map(ApiResult::success)
             .map_err(From::from)
     }

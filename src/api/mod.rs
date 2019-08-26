@@ -1,5 +1,5 @@
 //! Module inti yang berkaitan dengan kebutuhan pembuatan rest API.
-//! 
+//!
 
 use actix_web::{
     actix::System,
@@ -15,8 +15,9 @@ use regex::Regex;
 mod error;
 mod with;
 
-pub mod $param.service_name_snake_case$;
 pub mod types;
+pub mod $param.service_name_snake_case$;
+pub mod admin;
 
 use self::with::{Immutable, ImmutableReq, Mutable, MutableReq, NamedWith, With};
 pub use self::{error::Error, with::Result};

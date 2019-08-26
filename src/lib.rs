@@ -45,6 +45,9 @@ extern crate lazy_static;
 // <% if param.password_crypt_algo == "bcrypt" %>
 extern crate bcrypt;
 // <% endif %>
+#[macro_use]
+extern crate validator_derive;
+extern crate validator;
 
 #[macro_use]
 mod macros;
@@ -60,6 +63,7 @@ mod protos;
 mod result;
 mod schema;
 pub mod $param.service_name_snake_case$_dao;
+pub mod admin_dao;
 pub mod dao;
 pub mod service;
 pub mod token;

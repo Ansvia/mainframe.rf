@@ -6,14 +6,14 @@ use chrono::{Duration, NaiveDateTime};
 use diesel::{pg::PgConnection, prelude::*};
 
 use crate::{
+    error::{Error as MainframeError, ErrorCode},
+    models::AdminAccessToken,
     models::{AccessToken, $param.service_name_pascal_case$},
     prelude::*,
-    schema::access_tokens,
+    schema::{access_tokens, admin_access_tokens},
     token, util,
     ID
 };
-
-// use std::time::Duration;
 
 #[doc(hidden)]
 #[derive(Insertable)]
@@ -21,6 +21,16 @@ use crate::{
 pub struct NewAccessToken<'a> {
     pub token: &'a str,
     pub $param.service_name_snake_case$_id: ID,
+    pub created: NaiveDateTime,
+    pub valid_thru: NaiveDateTime,
+}
+
+#[doc(hidden)]
+#[derive(Insertable)]
+#[table_name = "admin_access_tokens"]
+pub struct NewAdminAccessToken<'a> {
+    pub token: &'a str,
+    pub admin_id: ID,
     pub created: NaiveDateTime,
     pub valid_thru: NaiveDateTime,
 }
@@ -55,6 +65,17 @@ impl<'a> AuthDao<'a> {
             .map_err(From::from)
     }
 
+
+    /// Mendapatkan akses token object dari string token untuk Admin.
+    pub fn get_admin_access_token(&self, access_token: &str) -> Result<AdminAccessToken> {
+        use crate::schema::admin_access_tokens::dsl::admin_access_tokens;
+
+        admin_access_tokens
+            .find(access_token)
+            .first(self.db)
+            .map_err(From::from)
+    }
+
     /// Generate access token, this write access token into database.
     pub fn generate_access_token(&self, $param.service_name_snake_case$_id: ID) -> Result<AccessToken> {
         use crate::schema::access_tokens::{self, dsl};
@@ -79,14 +100,55 @@ impl<'a> AuthDao<'a> {
             .map_err(From::from)
     }
 
-    /// Mendapatkan passhash pada akun.
-    pub fn get_passhash(&self, $param.service_name_snake_case$_id: ID) -> Result<String> {
-        use crate::schema::$param.service_name_snake_case$_passhash::dsl;
-        dsl::$param.service_name_snake_case$_passhash
-            .filter(dsl::$param.service_name_snake_case$_id.eq($param.service_name_snake_case$_id))
-            .select(dsl::passhash)
-            .get_result::<String>(self.db)
+
+    /// Generate admin access token
+    pub fn generate_admin_access_token(&self, admin_id: ID) -> Result<AccessToken> {
+        use crate::schema::admin_access_tokens::{self, dsl};
+
+        let now = chrono::Utc::now().naive_utc();
+
+        // hapus token lama kalau ada
+        diesel::delete(dsl::admin_access_tokens.filter(dsl::admin_id.eq(admin_id))).execute(self.db)?;
+
+        let token = NewAdminAccessToken {
+            token: &token::generate_access_token(),
+            admin_id,
+            created: now,
+            valid_thru: now
+                .checked_add_signed(Duration::days(7))
+                .expect("cannot assign valid_thru time"),
+        };
+
+        diesel::insert_into(admin_access_tokens::table)
+            .values(&token)
+            .get_result(self.db)
             .map_err(From::from)
+    }
+
+    /// Mendapatkan passhash
+    pub fn get_passhash(&self, kind: &str, id: ID) -> Result<String> {
+        match kind {
+            "$param.service_name_snake_case$" => {
+                use crate::schema::$param.service_name_snake_case$_passhash::dsl;
+                dsl::$param.service_name_snake_case$_passhash
+                    .filter(dsl::$param.service_name_snake_case$_id.eq(id).and(dsl::deprecated.eq(false)))
+                    .select(dsl::passhash)
+                    .get_result::<String>(self.db)
+                    .map_err(From::from)
+            }
+            "admin" => {
+                use crate::schema::admin_passhash::dsl;
+                dsl::admin_passhash
+                    .filter(dsl::admin_id.eq(id).and(dsl::deprecated.eq(false)))
+                    .select(dsl::passhash)
+                    .get_result::<String>(self.db)
+                    .map_err(From::from)
+            }
+            _ => Err($name_pascal_case$Error::BadRequest(
+                ErrorCode::InvalidParameter as i32,
+                "Kind not found".to_string(),
+            ))?,
+        }
     }
 
     /// Periksa apakah akun terhubung dengan spesifik passhash.
@@ -115,4 +177,10 @@ impl<'a> AuthDao<'a> {
         Ok(())
     }
 
+    /// Clear admin's access tokens by admin id
+    pub fn clear_access_token_by_admin_id(&self, admin_id: ID) -> Result<()> {
+        use crate::schema::admin_access_tokens::{self, dsl};
+        diesel::delete(dsl::admin_access_tokens.filter(dsl::admin_id.eq(admin_id))).execute(self.db)?;
+        Ok(())
+    }
 }

@@ -3,7 +3,7 @@
 //! Here you can implement service as simple write one line
 //! this done by using impl_service macro, example:
 //! 
-//!     impl_service!(UserService, user);
+//! `impl_service!(UserService, user);`
 //!
 //! You need to implement api interface for the above service inside `api` module.
 //!
@@ -53,4 +53,4 @@ macro_rules! impl_service {
 
 // Example implementing service using macro:
 // impl_service!(UserService, user);
-
+impl_service!(AdminService, admin);

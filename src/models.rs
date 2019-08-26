@@ -117,3 +117,34 @@ impl fmt::Display for $param.service_name_pascal_case$Key {
         write!(f, "Key({})", &self.pub_key[..8])
     }
 }
+
+
+#[doc(hidden)]
+#[derive(Queryable, Serialize)]
+pub struct Admin {
+    pub id: ID,
+    pub name: String,
+    pub email: String,
+    pub phone_num: String,
+    pub labels: Vec<String>,
+    pub active: bool,
+    pub register_time: NaiveDateTime,
+}
+
+#[doc(hidden)]
+#[derive(Queryable, Serialize)]
+pub struct AdminAccessToken {
+    pub token: String,
+    pub admin_id: ID,
+    pub created: NaiveDateTime,
+    pub valid_thru: NaiveDateTime,
+}
+
+#[doc(hidden)]
+#[derive(Queryable, Serialize)]
+pub struct ResetPasswordAdmin {
+    pub admin_id: ID,
+    pub token: String,
+    pub created: NaiveDateTime,
+    pub expiration: Option<NaiveDateTime>,
+}

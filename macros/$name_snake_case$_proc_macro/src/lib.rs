@@ -14,6 +14,7 @@ extern crate serde;
 extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
+extern crate heck;
 
 use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use quote::quote;
@@ -44,6 +45,7 @@ struct ApiGroup {
     pub group: String,
     pub title: String,
     pub desc: String,
+    pub accessors: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -59,6 +61,7 @@ struct ApiEndpoint {
     pub request_param: String,
     pub request_json: String,
     pub response_ok: String,
+    pub accessors: Vec<String>,
 }
 
 #[derive(Clone)]
@@ -117,6 +120,7 @@ fn get_lit_str(lit: &proc_macro2::Literal) -> String {
 
 fn gather_endpoint_info(stream: TokenStream, base: &str, group: &str) -> ApiEndpoint {
     let mut path = String::new();
+    let mut accessor = String::new();
     let mut mutable = false;
 
     let mut to_update = &mut path;
@@ -133,6 +137,10 @@ fn gather_endpoint_info(stream: TokenStream, base: &str, group: &str) -> ApiEndp
                 to_update = &mut path;
                 nicd = 2;
             }
+            TokenTree::Ident(ident) if ident.to_string() == "accessor" => {
+                to_update = &mut accessor;
+                nicd = 2;
+            }
             TokenTree::Literal(lit) if nicd == 0 => {
                 *to_update = get_lit_str(lit);
             }
@@ -140,6 +148,15 @@ fn gather_endpoint_info(stream: TokenStream, base: &str, group: &str) -> ApiEndp
         }
         nicd = nicd - 1;
     }
+
+    let mut accessors: Vec<String> = accessor
+        .split(",")
+        .into_iter()
+        .map(|a| a.trim().to_string())
+        .filter(|a| !a.is_empty())
+        .collect();
+
+    // println!("accessors: {:?}", accessors);
 
     ApiEndpoint {
         elem: "ApiEndpoint".to_string(),
@@ -154,6 +171,7 @@ fn gather_endpoint_info(stream: TokenStream, base: &str, group: &str) -> ApiEndp
             "GET".to_string()
         },
         method_name: Default::default(),
+        accessors: accessors,
         ..Default::default()
     }
 }
@@ -165,6 +183,7 @@ impl ApiEndpoint {
         self.desc = right.desc.clone();
         self.method = right.method.clone();
         self.method_name = right.method_name.clone();
+        self.accessors = right.accessors.clone();
     }
 }
 
@@ -245,12 +264,13 @@ fn write_doc(api_scope: &str) {
 pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let attr = proc_macro2::TokenStream::from(attr);
 
+    let mut _void = String::new();
     let mut group_name = String::new();
     let mut api_scope = String::new();
     let mut api_doc = String::new();
     let mut base = String::new();
     let mut struct_name = String::new();
-    let mut _void = String::new();
+    let mut accessor_str = "$param.service_name_snake_case$".to_string();
 
     // dbg!(&attr);
     // dbg!(&item);
@@ -262,6 +282,7 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
             match &item {
                 TokenTree::Ident(ident) => match ident.to_string().as_str() {
                     "base" => to_update = &mut base,
+                    "accessor" => to_update = &mut accessor_str,
                     _ => (),
                 },
                 TokenTree::Literal(lit) => {
@@ -308,6 +329,12 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
     }
 
     // dbg!(&api_doc);
+    let mut accessors: Vec<String> = accessor_str
+        .split(",")
+        .into_iter()
+        .map(|a| a.trim().to_string())
+        .filter(|a| !a.is_empty())
+        .collect();
 
     merge_doc(
         &api_scope,
@@ -316,18 +343,17 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
             group: group_name.clone(),
             title: group_name.clone(),
             desc: api_doc,
+            accessors,
         }),
     );
 
     let mut api_endpoint_info = vec![];
 
-    {
+    let mut new_items: proc_macro2::TokenStream = {
         let mut to_update = &mut _void;
         let items = proc_macro2::TokenStream::from(item.clone());
 
-        for item in items {
-            // dbg!(&item);
-
+        for item in items.clone() {
             match &item {
                 TokenTree::Ident(ident) if ident.to_string() == "impl" => {
                     to_update = &mut struct_name;
@@ -336,81 +362,152 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
                     *to_update = ident.to_string();
                     to_update = &mut _void;
                 }
-                TokenTree::Group(group) => {
-                    let mut tb: Vec<TokenTree> = vec![];
-                    let items = group.stream().into_iter();
-                    let mut docs = vec![];
-
-                    for item in items {
-                        // dbg!(&item);
-                        match &item {
-                            TokenTree::Group(group) => {
-                                let items = group.stream().into_iter();
-
-                                let mut begin_doc = false;
-                                let mut begin_api_endpoint = false;
-
-                                for item in items {
-                                    // dbg!(&item);
-                                    match &item {
-                                        TokenTree::Ident(ident) => {
-                                            // dbg!(&ident);
-                                            match ident.to_string().as_ref() {
-                                                "doc" => {
-                                                    begin_doc = true;
-                                                }
-                                                "api_endpoint" => {
-                                                    begin_api_endpoint = true;
-                                                }
-                                                _ => (),
-                                            }
-                                        }
-                                        TokenTree::Literal(lit) if begin_doc => {
-                                            docs.push(get_lit_str(&lit));
-                                        }
-                                        TokenTree::Group(group) if begin_api_endpoint == true => {
-                                            let mut info =
-                                                gather_endpoint_info(group.stream(), &base, &group_name);
-
-                                            info.desc = docs.join("\n");
-                                            begin_doc = false;
-                                            docs = vec![];
-                                            api_endpoint_info.push(info);
-
-                                            begin_api_endpoint = false;
-                                        }
-                                        _ => (),
-                                    }
-                                }
-                            }
-                            TokenTree::Ident(ident) => {
-                                if api_endpoint_info.last().map(|a| a.method_name.is_empty()) == Some(true) 
-                                   && !tb.is_empty() 
-                                   && tb[tb.len() - 1].to_string() == "fn" {
-                                    api_endpoint_info.last_mut().map(|info| {
-                                        info.method_name = ident.to_string();
-                                        // dbg!(&info);
-                                    });
-                                }
-                            }
-                            _ => (),
-                        }
-
-                        tb.push(item.clone());
-                    }
-                }
                 _ => (),
             }
         }
 
-        for aei in &api_endpoint_info {
-            merge_doc(&api_scope, &DocElem::Endpoint(aei.clone()));
-        }
+        let new_items: proc_macro2::TokenStream = items
+            .into_iter()
+            .map(|item| {
+                match &item {
+                    TokenTree::Group(group) => {
+                        let mut tb: Vec<TokenTree> = vec![];
+                        let items = group.stream().into_iter();
+                        let mut docs = vec![];
+
+                        TokenTree::Group(Group::new(
+                            group.delimiter(),
+                            items
+                                .map(|item| {
+                                    match &item {
+                                        TokenTree::Group(group) => {
+                                            let items = group.stream().into_iter();
+
+                                            let mut begin_doc = false;
+                                            let mut begin_api_endpoint = false;
+                                            let mut is_api_endpoint = false;
+
+                                            tb.push(item.clone());
+
+                                            // let mut meds: Vec<TokenTree> = vec![];
+
+                                            TokenTree::Group(Group::new(
+                                                group.delimiter(),
+                                                items
+                                                    .map(|item| {
+                                                        let mut new_tt: proc_macro2::TokenTree = item.clone();
+                                                        match &item {
+                                                            TokenTree::Ident(ident) => {
+                                                                // dbg!(&ident);
+                                                                match ident.to_string().as_ref() {
+                                                                    "doc" => {
+                                                                        begin_doc = true;
+                                                                    }
+                                                                    "api_endpoint" => {
+                                                                        begin_api_endpoint = true;
+                                                                        is_api_endpoint = true;
+                                                                        new_tt = item.clone();
+                                                                    }
+                                                                    _ => (),
+                                                                }
+                                                            }
+                                                            TokenTree::Literal(lit) if begin_doc => {
+                                                                docs.push(get_lit_str(&lit));
+                                                            }
+                                                            TokenTree::Group(group)
+                                                                if begin_api_endpoint == true =>
+                                                            {
+                                                                let mut info = gather_endpoint_info(
+                                                                    group.stream(),
+                                                                    &base,
+                                                                    &group_name,
+                                                                );
+
+                                                                info.desc = docs.join("\n");
+                                                                begin_doc = false;
+                                                                docs = vec![];
+
+                                                                // dbg!(&group);
+
+                                                                if info.accessors.is_empty() {
+                                                                    // dbg!(&info.accessors);
+                                                                    let mut stream = group.stream();
+                                                                    stream.extend(vec![
+                                                                        TokenTree::Ident(Ident::new(
+                                                                            "accessor",
+                                                                            group.span(),
+                                                                        )),
+                                                                        TokenTree::Punct(Punct::new(
+                                                                            '=',
+                                                                            Spacing::Alone,
+                                                                        )),
+                                                                        TokenTree::Literal(Literal::string(
+                                                                            &accessor_str,
+                                                                        )),
+                                                                    ]);
+                                                                    new_tt = TokenTree::Group(Group::new(
+                                                                        group.delimiter(),
+                                                                        stream,
+                                                                    ));
+                                                                    // dbg!(&new_tt);
+                                                                }
+
+                                                                api_endpoint_info.push(info);
+
+                                                                begin_api_endpoint = false;
+                                                            }
+                                                            _ => (),
+                                                        }
+
+                                                        if is_api_endpoint {
+                                                            // dbg!(&new_tt);
+                                                            new_tt
+                                                        } else {
+                                                            item
+                                                        }
+                                                    })
+                                                    .collect(),
+                                            ))
+                                        }
+                                        TokenTree::Ident(ident) => {
+                                            if api_endpoint_info.last().map(|a| a.method_name.is_empty())
+                                                == Some(true)
+                                                && !tb.is_empty()
+                                                && tb[tb.len() - 1].to_string() == "fn"
+                                            {
+                                                api_endpoint_info.last_mut().map(|info| {
+                                                    info.method_name = ident.to_string();
+                                                    // dbg!(&info);
+                                                });
+                                            }
+
+                                            tb.push(item.clone());
+
+                                            item
+                                        }
+                                        _ => {
+                                            tb.push(item.clone());
+                                            item
+                                        }
+                                    }
+                                })
+                                .collect(),
+                        ))
+                    }
+                    _ => item,
+                }
+            })
+            .collect();
+        new_items
+    };
+
+    for aei in &api_endpoint_info {
+        merge_doc(&api_scope, &DocElem::Endpoint(aei.clone()));
     }
 
     write_doc(&api_scope);
 
-    // buatkan auto wire interface function
+    // buatkan auto wire interface method
     let tts = {
         let struct_name = Ident::new(&struct_name, Span::call_site());
         let mut sas = vec![];
@@ -419,17 +516,18 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
                 let s = aei.path.split("/").skip(2).collect::<Vec<&str>>();
                 s.join("/")
             };
-            let path = Literal::string(&rel_path);
+            let path = Literal::string(&aei.path);
+            let rel_path = Literal::string(&rel_path);
             let method_name = Ident::new(&aei.method_name, Span::call_site());
             sas.push(if aei.method == "POST" {
                 quote! {
                     debug!(" + wiring endpoint POST `{}`", #path);
-                    sas.endpoint_mut(#path, #struct_name::#method_name);
+                    sas.endpoint_mut(#rel_path, #struct_name::#method_name);
                 }
             } else {
                 quote! {
                     debug!(" + wiring endpoint GET `{}`", #path);
-                    sas.endpoint(#path, #struct_name::#method_name);
+                    sas.endpoint(#rel_path, #struct_name::#method_name);
                 }
             });
         }
@@ -444,10 +542,12 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
         }
     };
 
-    let mut item = proc_macro2::TokenStream::from(item);
-    item.extend(tts);
+    // let mut item = proc_macro2::TokenStream::from(item);
+    // item.extend(tts);
+    new_items.extend(tts);
 
-    proc_macro::TokenStream::from(item)
+    // proc_macro::TokenStream::from(item)
+    proc_macro::TokenStream::from(new_items)
 }
 
 #[proc_macro_attribute]
@@ -455,55 +555,53 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
     // proses atribut
     let attr = proc_macro2::TokenStream::from(attr);
 
-    let mut in_path = false;
-    let mut in_auth = false;
     let mut path = "".to_string();
+    let mut accessor_str = "".to_string();
     let mut auth = 2;
-    let mut auth_str = "required";
+    let mut auth_str = "required".to_string();
     let mut func_name = "".to_string();
     let mut is_mutable = false;
     let mut debug = false;
 
-    // dbg!(&attr);
+    let mut to_update = &mut path;
+    let mut nicd = 0;
 
     for item in attr {
-        match item {
-            TokenTree::Ident(ident) => {
-                in_path = ident.to_string() == "path";
-                in_auth = ident.to_string() == "auth";
-                is_mutable = is_mutable || ident.to_string() == "mutable";
+        match &item {
+            TokenTree::Ident(ident) if ident.to_string() == "auth" => {
+                // in_auth = true;
+                to_update = &mut auth_str;
+                nicd = 2;
+            }
+            TokenTree::Ident(ident) if ident.to_string() == "mutable" => {
+                is_mutable = true;
+            }
+            TokenTree::Ident(ident) if ident.to_string() == "path" => {
+                to_update = &mut path;
+                nicd = 2;
+            }
+            TokenTree::Ident(ident) if ident.to_string() == "accessor" => {
+                to_update = &mut accessor_str;
+                nicd = 2;
+            }
+            TokenTree::Literal(lit) if nicd == 0 => {
+                *to_update = get_lit_str(lit);
             }
             TokenTree::Punct(_) => {}
-            TokenTree::Literal(lit) => {
-                if in_path {
-                    in_path = false;
-                    path = lit.to_string().replace("\"", "");
-                }
-                if in_auth {
-                    in_auth = false;
-                    match lit.to_string().as_ref() {
-                        "\"optional\"" => {
-                            auth = 1;
-                            auth_str = "optional";
-                        }
-                        "\"required\"" => {
-                            auth = 2;
-                            auth_str = "required";
-                        }
-                        "\"none\"" => {
-                            auth = 0;
-                            auth_str = "none";
-                        }
-                        x => panic!(
-                            "kebutuhan auth tidak dipahami: {}, hanya bisa salah satu dari: `optional`, \
-                             `required`, dan `none`.",
-                            x
-                        ),
-                    }
-                }
-            }
             _ => (),
         }
+        nicd = nicd - 1;
+    }
+
+    match auth_str.as_str() {
+        "optional" => auth = 1,
+        "required" => auth = 2,
+        "none" => auth = 0,
+        x => panic!(
+            "kebutuhan auth tidak dipahami: {}, hanya bisa salah satu dari: `optional`, `required`, dan \
+             `none`.",
+            x
+        ),
     }
 
     // dbg!((in_path, in_auth, auth_str, is_mutable));
@@ -722,27 +820,73 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                 if let TokenTree::Group(ref group) = item {
                     let mut new_stream = vec![];
 
+                    let mut accessors: Vec<String> = accessor_str
+                        .split(",")
+                        .into_iter()
+                        .map(|a| a.trim().to_string())
+                        .filter(|a| !a.is_empty())
+                        .collect();
+
                     if auth != 0 {
                         // selain `none`
-                        let access_token_guard: TokenStream = quote! {
+                        new_stream.push(quote! {
                             use crate::valid::Expirable;
-                            let current_$param.service_name_snake_case$ = req.headers().get("X-Access-Token")
-                                .map(|at| {
-                                    let conn = state.db();
-                                    let schema = crate::auth::AuthDao::new(&conn);
-                                    schema.get_access_token(at.to_str().unwrap())
-                                        .map(|at|{
-                                            if !at.expired(){
-                                                let $param.service_name_snake_case$_dao = crate::$param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao::new(&conn);
-                                                $param.service_name_snake_case$_dao.get_by_id(at.$param.service_name_snake_case$_id)
-                                                    .map_err(api::Error::from)
-                                            }else{
-                                                Err(api::Error::Expired("access token"))
-                                            }
-                                        })
-                                        .map_err(|_| api::Error::Unauthorized)
-                                });
-                        };
+                            let mut accessor_loaded = false;
+                        });
+
+                        let access_token_guard: TokenStream =
+                            accessors.iter().map(move |ac| {
+                                match ac.as_str() {
+                                    "$param.service_name_snake_case$" => {
+                                        quote! {
+                                            let current_$param.service_name_snake_case$ = if !accessor_loaded {
+                                                req.headers().get("X-Access-Token")
+                                                .map(|at| {
+                                                    let conn = state.db();
+                                                    let schema = crate::auth::AuthDao::new(&conn);
+                                                    schema.get_access_token(at.to_str().unwrap())
+                                                        .map(|at|{
+                                                            if !at.expired(){
+                                                                let $param.service_name_snake_case$_dao = crate::$param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao::new(&conn);
+                                                                $param.service_name_snake_case$_dao.get_by_id(at.$param.service_name_snake_case$_id)
+                                                                    .map_err(api::Error::from)
+                                                            }else{
+                                                                Err(api::Error::Expired("access token"))
+                                                            }
+                                                        })
+                                                        .map_err(|_| api::Error::Unauthorized)
+                                                })
+                                            } else { None };
+                                            accessor_loaded = current_$param.service_name_snake_case$.is_some();
+                                        }
+                                    },
+                                    "admin" => {
+                                        quote! {
+                                            let current_admin = if !accessor_loaded {
+                                                req.headers().get("X-Access-Token")
+                                                    .map(|at| {
+                                                        let conn = state.db();
+                                                        let schema = crate::auth::AuthDao::new(&conn);
+                                                        schema.get_admin_access_token(at.to_str().unwrap())
+                                                            .map(|at|{
+                                                                if !at.expired(){
+                                                                    let admin_dao = crate::admin_dao::AdminDao::new(&conn);
+                                                                    admin_dao.get_by_id(at.admin_id)
+                                                                        .map_err(api::Error::from)
+                                                                }else{
+                                                                    Err(api::Error::Expired("access token"))
+                                                                }
+                                                            })
+                                                            .map_err(|_| api::Error::Unauthorized)
+                                                    })
+                                            } else { None };
+                                            accessor_loaded = current_admin.is_some();
+                                        }
+                                    },
+                                    x => panic!("Unknown accessor: {}", x)
+                                }
+
+                            }).collect();
 
                         new_stream.push(access_token_guard);
                     }
@@ -750,23 +894,61 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                     match auth {
                         2 => {
                             // required
-                            let access_token_unwraper = quote! {
-                                let current_$param.service_name_snake_case$ = match current_$param.service_name_snake_case$ {
-                                    Some(r) => r??,
-                                    None => Err(api::Error::Unauthorized)?
+                            new_stream.push(quote! { if });
+
+                            for accessor in &accessors {
+                                let accessor_ident =
+                                    Ident::new(&format!("current_{}", accessor), Span::call_site());
+                                new_stream.push(quote! {
+                                    #accessor_ident.is_none()
+                                });
+                                new_stream.push(quote! { && });
+                            }
+                            new_stream.pop();
+                            new_stream.push(quote! {
+                                {
+                                    Err(api::Error::Unauthorized)?
+                                }
+                            });
+
+                            if accessors.len() == 1 {
+                                let accessor = accessors.pop().expect("no accessor");
+                                let accessor_ident =
+                                    Ident::new(&format!("current_{}", accessor), Span::call_site());
+                                let access_token_unwraper = quote! {
+                                    let #accessor_ident = match #accessor_ident {
+                                        Some(r) => r??,
+                                        None => Err(api::Error::Unauthorized)?
+                                    };
                                 };
-                            };
-                            new_stream.push(access_token_unwraper);
+                                new_stream.push(access_token_unwraper);
+                            } else {
+                                for accessor in accessors {
+                                    let accessor_ident =
+                                        Ident::new(&format!("current_{}", accessor), Span::call_site());
+                                    let access_token_unwraper = quote! {
+                                        let #accessor_ident = match #accessor_ident {
+                                            Some(Ok(Ok(a))) => Some(a),
+                                            _ => None
+                                        };
+                                    };
+                                    new_stream.push(access_token_unwraper);
+                                }
+                            }
                         }
                         1 => {
                             // optional
-                            let access_token_unwraper = quote! {
-                                let current_$param.service_name_snake_case$ = match current_$param.service_name_snake_case$ {
-                                    Some(Ok(Ok(a))) => Some(a),
-                                    _ => None
+                            for accessor in accessors {
+                                let accessor_ident =
+                                    Ident::new(&format!("current_{}", accessor), Span::call_site());
+                                let access_token_unwraper = quote! {
+                                    let #accessor_ident = match #accessor_ident {
+                                        Some(Ok(Ok(a))) => Some(a),
+                                        _ => None
+                                    };
                                 };
-                            };
-                            new_stream.push(access_token_unwraper);
+                                new_stream.push(access_token_unwraper);
+                            }
                         }
                         _ => (), // none
                     }
@@ -793,7 +975,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
     proc_macro::TokenStream::from(TokenStream::from_iter(tb.into_iter()))
 }
 
-#[proc_macro_derive(Dao, attributes(id_type, record_type, table_name))]
+#[proc_macro_derive(Dao, attributes(id_type, record_type, table_name, model_name))]
 pub fn derive_dao(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     expand_proc_macro(input, dao::derive)
 }
