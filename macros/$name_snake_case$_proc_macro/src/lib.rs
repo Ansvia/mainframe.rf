@@ -841,20 +841,21 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                                         quote! {
                                             let current_$param.service_name_snake_case$ = if !accessor_loaded {
                                                 req.headers().get("X-Access-Token")
-                                                .map(|at| {
+                                                .and_then(|at| {
                                                     let conn = state.db();
                                                     let schema = crate::auth::AuthDao::new(&conn);
-                                                    schema.get_access_token(at.to_str().unwrap())
-                                                        .map(|at|{
+                                                    schema.get_access_token(at.to_str().unwrap()).ok()
+                                                        .and_then(|at|{
                                                             if !at.expired(){
                                                                 let $param.service_name_snake_case$_dao = crate::$param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao::new(&conn);
-                                                                $param.service_name_snake_case$_dao.get_by_id(at.$param.service_name_snake_case$_id)
-                                                                    .map_err(api::Error::from)
+                                                                $param.service_name_snake_case$_dao.get_by_id(at.$param.service_name_snake_case$_id).ok()
+                                                                    // .map_err(api::Error::from)
                                                             }else{
-                                                                Err(api::Error::Expired("access token"))
+                                                                // Err(api::Error::Expired("access token"))
+                                                                None
                                                             }
                                                         })
-                                                        .map_err(|_| api::Error::Unauthorized)
+                                                        // .map_err(|_| api::Error::Unauthorized)
                                                 })
                                             } else { None };
                                             accessor_loaded = current_$param.service_name_snake_case$.is_some();
@@ -864,20 +865,21 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                                         quote! {
                                             let current_admin = if !accessor_loaded {
                                                 req.headers().get("X-Access-Token")
-                                                    .map(|at| {
+                                                    .and_then(|at| {
                                                         let conn = state.db();
                                                         let schema = crate::auth::AuthDao::new(&conn);
-                                                        schema.get_admin_access_token(at.to_str().unwrap())
-                                                            .map(|at|{
+                                                        schema.get_admin_access_token(at.to_str().unwrap()).ok()
+                                                            .and_then(|at|{
                                                                 if !at.expired(){
                                                                     let admin_dao = crate::admin_dao::AdminDao::new(&conn);
-                                                                    admin_dao.get_by_id(at.admin_id)
-                                                                        .map_err(api::Error::from)
+                                                                    admin_dao.get_by_id(at.admin_id).ok()
+                                                                        // .map_err(api::Error::from)
                                                                 }else{
-                                                                    Err(api::Error::Expired("access token"))
+                                                                    // Err(api::Error::Expired("access token"))
+                                                                    None
                                                                 }
                                                             })
-                                                            .map_err(|_| api::Error::Unauthorized)
+                                                            // .map_err(|_| api::Error::Unauthorized)
                                                     })
                                             } else { None };
                                             accessor_loaded = current_admin.is_some();
@@ -917,12 +919,12 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                                     Ident::new(&format!("current_{}", accessor), Span::call_site());
                                 let access_token_unwraper = quote! {
                                     let #accessor_ident = match #accessor_ident {
-                                        Some(r) => r??,
+                                        Some(r) => r,
                                         None => Err(api::Error::Unauthorized)?
                                     };
                                 };
                                 new_stream.push(access_token_unwraper);
-                            } else {
+                            }/* else {
                                 for accessor in accessors {
                                     let accessor_ident =
                                         Ident::new(&format!("current_{}", accessor), Span::call_site());
@@ -934,11 +936,11 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                                     };
                                     new_stream.push(access_token_unwraper);
                                 }
-                            }
+                            }*/
                         }
                         1 => {
                             // optional
-                            for accessor in accessors {
+                            /*for accessor in accessors {
                                 let accessor_ident =
                                     Ident::new(&format!("current_{}", accessor), Span::call_site());
                                 let access_token_unwraper = quote! {
@@ -948,7 +950,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
                                     };
                                 };
                                 new_stream.push(access_token_unwraper);
-                            }
+                            }*/
                         }
                         _ => (), // none
                     }
