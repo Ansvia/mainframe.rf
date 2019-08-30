@@ -18,6 +18,7 @@ use crate::{
     api::{Error as ApiError, HttpRequest as ApiHttpRequest, Result as ApiResult},
     auth, models,
     prelude::*,
+    service::{AuthService, SystemService}
 };
 
 macro_rules! impl_service {
@@ -54,3 +55,13 @@ macro_rules! impl_service {
 // Example implementing service using macro:
 // impl_service!(UserService, user);
 impl_service!(AdminService, admin);
+
+/// Initialize and load services
+pub fn load_services() -> Vec<Box<dyn Service>> {
+    vec![
+        AuthService::new(),
+        SystemService::new(),
+        $param.service_name_pascal_case$Service::new(),
+        AdminService::new(),
+    ]
+}

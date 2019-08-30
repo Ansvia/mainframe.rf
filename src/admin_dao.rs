@@ -7,7 +7,7 @@ use diesel::prelude::*;
 use crate::{
     error::{Error as PdmError, ErrorCode},
     // <% if param.with_event_stream %>
-    eventstream::self,
+    eventstream,
     // <% endif %>
     models::{Admin, ResetPasswordAdmin},
     result::Result,

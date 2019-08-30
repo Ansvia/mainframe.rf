@@ -100,7 +100,6 @@ impl<'a> AuthDao<'a> {
             .map_err(From::from)
     }
 
-
     /// Generate admin access token
     pub fn generate_admin_access_token(&self, admin_id: ID) -> Result<AccessToken> {
         use crate::schema::admin_access_tokens::{self, dsl};

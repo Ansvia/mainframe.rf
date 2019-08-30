@@ -1,7 +1,7 @@
 //! Modular & extendable Service interface
 
-use serde_json::Value as JsonValue;
 use actix_web::{http::Method, App, AsyncResponder, Error, Path, Result};
+use serde_json::Value as JsonValue;
 
 use crate::api;
 use crate::api::*;
@@ -32,7 +32,7 @@ struct PublicApi {}
 
 #[api_group("System", "public", base = "/system/v1")]
 impl PublicApi {
-    #[api_endpoint(path = "/info", auth="optional")]
+    #[api_endpoint(path = "/info", auth = "optional")]
     pub fn info(state: &AppState, query: ()) -> JsonValue {
         Ok(json!({ "version": env!("CARGO_PKG_VERSION"), 
                 "build": env!("BUILD_INFO"), "git": env!("GIT_REV") }))

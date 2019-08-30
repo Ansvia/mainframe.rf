@@ -9,7 +9,8 @@ use serde_json::Value as JsonValue;
 use crate::crypto::{self, SecretKey};
 use crate::{
     api::{types::IdQuery, ApiResult, Error as ApiError, ErrorCode},
-    auth::AuthDao, models,
+    auth::AuthDao,
+    models,
     prelude::*,
     $param.service_name_snake_case$_dao::$param.service_name_pascal_case$Dao,
 };
@@ -123,8 +124,7 @@ impl PublicApi {
         }
         // <% endif %>
 
-        dao
-            .generate_access_token($param.service_name_snake_case$.id)
+        dao.generate_access_token($param.service_name_snake_case$.id)
             .map_err(From::from)
             .map(ApiResult::success)
 

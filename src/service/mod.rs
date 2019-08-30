@@ -5,6 +5,7 @@ mod auth;
 mod $param.service_name_snake_case$;
 mod system;
 
+pub use self::services::load_services;
 pub use self::{
     auth::AuthService,
     $param.service_name_snake_case$::$param.service_name_pascal_case$Service,

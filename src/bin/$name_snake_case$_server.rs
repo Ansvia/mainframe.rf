@@ -5,7 +5,7 @@ extern crate dotenv;
 extern crate env_logger;
 
 use $name_snake_case$::prelude::*;
-use $name_snake_case$::service::{AuthService, SystemService};
+use $name_snake_case$::service::load_services;
 
 use std::env;
 
@@ -37,9 +37,7 @@ ____________    __      ____________,
 
     trace!("starting up...");
 
-    let auth_service = AuthService::new();
-    let system_service = SystemService::new();
-    let $param.service_name_snake_case$_service = $param.service_name_pascal_case$Service::new();
+    let services = load_services();
 
     let public_listening_address =
         env::var("$name_shout_snake_case$_PUBLIC_LISTENING").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
@@ -51,9 +49,5 @@ ____________    __      ____________,
         ApiServer::new(ApiAccess::Private, private_listening_address),
     ]);
 
-    api::start(ApiAggregator::new(vec![
-            auth_service,
-            $param.service_name_snake_case$_service,
-            system_service
-            ]), config);
+    api::start(ApiAggregator::new(services), config);
 }
