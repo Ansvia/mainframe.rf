@@ -6,7 +6,7 @@ use chrono::{Duration, NaiveDateTime};
 use diesel::{pg::PgConnection, prelude::*};
 
 use crate::{
-    error::{Error as MainframeError, ErrorCode},
+    error::{Error as $name_pascal_case$Error, ErrorCode},
     models::AdminAccessToken,
     models::{AccessToken, $param.service_name_pascal_case$},
     prelude::*,
