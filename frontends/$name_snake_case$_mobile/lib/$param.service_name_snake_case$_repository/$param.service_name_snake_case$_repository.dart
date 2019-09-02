@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:$name_snake_case$_mobile/api/$name_snake_case$_api.dart';
 import 'package:$name_snake_case$_mobile/core/smart_repo.dart';
 import 'package:$name_snake_case$_mobile/models/models.dart';
+import 'package:$name_snake_case$_mobile/core/error.dart';
 
 class $param.service_name_pascal_case$Repository {
   PersistentSmartRepo repo;

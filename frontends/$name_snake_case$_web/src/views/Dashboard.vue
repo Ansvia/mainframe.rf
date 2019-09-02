@@ -31,7 +31,7 @@
         :mapItemFunc="userListAllMapper"
       />
 
-      <AccountDetail v-if="$route.path.startsWith('/dashboard/accounts/')" :accountId="$route.params.id"/>
+      <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/accounts/')" :accountId="$route.params.id"/>
     </div>
 
     <notifications group="default" position="top center" classes="vue-notification" />
@@ -41,13 +41,13 @@
 <script>
 // @ is an alias to /src
 import AnsTable from "@/components/AnsTable.vue";
-import AccountDetail from "@/components/AccountDetail.vue";
+import $param.service_name_pascal_case$Detail from "@/components/$param.service_name_pascal_case$Detail.vue";
 
 export default {
   name: "Dashboard",
   components: {
     AnsTable,
-    AccountDetail
+    $param.service_name_pascal_case$Detail
   },
   data() {
     return {
@@ -66,7 +66,7 @@ export default {
           icon: "fa fa-user"
         },
         {
-          title: "Accounts",
+          title: "$param.service_name_pascal_case$s",
           icon: "fa fa-users",
           href: "/dashboard/accounts"
         },

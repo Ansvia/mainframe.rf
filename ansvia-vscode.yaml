@@ -1,0 +1,9 @@
+
+
+sync_gen:
+  error_code:
+    src: src/error.rs
+    outs:
+      - js:frontends/$name_snake_case$_web/src/$name_snake_case$/ErrorCode.js
+      - dart:frontends/$name_snake_case$_mobile/lib/core/error_code.dart
+

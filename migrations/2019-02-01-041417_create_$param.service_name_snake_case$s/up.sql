@@ -11,8 +11,11 @@ CREATE TABLE $param.service_name_snake_case$s (
 -- create nobody $param.service_name_snake_case$
 INSERT INTO $param.service_name_snake_case$s (id, full_name, email, phone_num, active)
 VALUES
-(0, 'nobody', 'nobody@nowhere.net', '', TRUE);
+(0, 'nobody', 'nobody@nowhere.net', '+628512345', TRUE),
+(1, 'Dummy User', 'dummy@nowhere.net', '+62856789', TRUE)
+;
 
+SELECT nextval('users_id_seq');
 
 CREATE UNIQUE INDEX $param.service_name_snake_case$s_email ON $param.service_name_snake_case$s (
     (lower(email))

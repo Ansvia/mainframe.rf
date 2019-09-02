@@ -15,8 +15,8 @@ CREATE UNIQUE INDEX admins_email ON admins (
 -- create nobody admin
 INSERT INTO admins (id, "name", email, phone_num, active)
 VALUES
-(0, 'nobody', 'nobody@pdm.net', '+62123', TRUE),
-(1, 'Admin', 'admin@pdm.net', '+62456', TRUE)
+(0, 'nobody', 'nobody@$name_snake_case$.net', '+62123', TRUE),
+(1, 'Admin', 'admin@$name_snake_case$.net', '+62456', TRUE)
 ;
 
 SELECT nextval('admins_id_seq');

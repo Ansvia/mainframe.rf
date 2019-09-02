@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
               children: <Widget>[
                 new DrawerHeader(child: new Text("$name_pascal_case$ Header")),
                 new ListTile(
-                    title: new Text("Accounts"),
+                    title: new Text("$param.service_name_pascal_case$s"),
                     onTap: () {
                       Navigator.pop(context);
                       // Navigator.of(context).pushNamed($name_pascal_case$Routes.taskMan);
