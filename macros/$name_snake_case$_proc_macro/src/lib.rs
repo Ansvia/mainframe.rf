@@ -977,7 +977,7 @@ pub fn api_endpoint(attr: proc_macro::TokenStream, item: proc_macro::TokenStream
     proc_macro::TokenStream::from(TokenStream::from_iter(tb.into_iter()))
 }
 
-#[proc_macro_derive(Dao, attributes(id_type, record_type, table_name, model_name))]
+#[proc_macro_derive(Dao, attributes(id_name, id_type, record_type, table_name))]
 pub fn derive_dao(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     expand_proc_macro(input, dao::derive)
 }
