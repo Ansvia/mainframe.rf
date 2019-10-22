@@ -3,12 +3,10 @@
 
 use chrono::{NaiveDateTime, Utc};
 use diesel::prelude::*;
-use failure;
 
 use crate::{
     crypto::{self, PublicKey, SecretKey},
     error::Error as $name_pascal_case$Error,
-    error::ErrorCode,
     models::*,
     result::Result,
     schema::*,
@@ -71,7 +69,7 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
 
     /// Mendapatkan akun berdasarkan emailnya.
     pub fn get_by_email(&self, email: &str) -> Result<$param.service_name_pascal_case$> {
-        use crate::schema::$param.service_name_snake_case$s::{self, dsl};
+        use crate::schema::$param.service_name_snake_case$s::dsl;
         dsl::$param.service_name_snake_case$s
             .filter(dsl::email.eq(email))
             .first(self.db)
@@ -80,7 +78,7 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
 
     /// Mendapatkan akun berdasarkan nomor telp-nya.
     pub fn get_by_phone_num(&self, phone: &str) -> Result<$param.service_name_pascal_case$> {
-        use crate::schema::$param.service_name_snake_case$s::{self, dsl};
+        use crate::schema::$param.service_name_snake_case$s::dsl;
         dsl::$param.service_name_snake_case$s
             .filter(dsl::phone_num.eq(phone))
             .first(self.db)
@@ -95,7 +93,7 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
 
     /// Setting $param.service_name_snake_case$'s password
     pub fn set_password(&self, $param.service_name_snake_case$_id: ID, password: &str) -> Result<()> {
-        use crate::schema::$param.service_name_snake_case$_passhash::{self, dsl};
+        use crate::schema::$param.service_name_snake_case$_passhash::dsl;
 
         let _ = self.get_by_id($param.service_name_snake_case$_id)?;
 
@@ -132,7 +130,7 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
     pub fn register_$param.service_name_snake_case$(&self, full_name: &str, email: &str, phone_num: &str) -> Result<String> {
         use crate::schema::{
             $param.service_name_snake_case$s::dsl as dsl_$param.service_name_snake_case$,
-            register_$param.service_name_snake_case$s::{self, dsl as dsl_ra},
+            register_$param.service_name_snake_case$s::{dsl as dsl_ra},
         };
 
         if full_name == "" {
@@ -281,7 +279,6 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
 
     /// Clean up registered $param.service_name_snake_case$ by token
     pub fn cleanup_registered_$param.service_name_snake_case$(&self, token: &str) -> Result<usize> {
-        use crate::schema::register_$param.service_name_snake_case$s;
         use crate::schema::register_$param.service_name_snake_case$s::dsl;
 
         diesel::delete(dsl::register_$param.service_name_snake_case$s.filter(dsl::token.eq(token)))
@@ -378,7 +375,6 @@ impl<'a> TestSchema<'a> {
 
     /// Hapus akun berdasarkan id
     pub fn delete_$param.service_name_snake_case$_by_id(&self, id: ID) -> Result<usize> {
-        use crate::schema::$param.service_name_snake_case$s;
         use crate::schema::$param.service_name_snake_case$s::dsl;
         diesel::delete(dsl::$param.service_name_snake_case$s.find(id))
             .execute(self.db)

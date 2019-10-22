@@ -6,7 +6,6 @@ use crate::crypto;
 use byteorder::{BigEndian, LittleEndian, ReadBytesExt, WriteBytesExt};
 use hex;
 use rand::{thread_rng, Rng, RngCore};
-use rsnowflake::SnowflakeIdGenerator;
 use std::io::Cursor;
 
 /// Generate random token

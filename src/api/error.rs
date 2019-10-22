@@ -4,8 +4,6 @@
 
 //! The set of errors for the API module.
 
-use actix_web::http::StatusCode;
-use serde::Serialize;
 use validator::{ValidationErrors, ValidationErrorsKind};
 
 use crate::{api::ApiResult, error::Error as $name_pascal_case$Error, error::ErrorCode};

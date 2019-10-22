@@ -4,7 +4,7 @@ use $name_snake_case$::api::{
     ApiResult,
 };
 // <% if param.with_protobuf %>
-use $name_snake_case$::api::TxQuery;
+use $name_snake_case$::api::types::TxQuery;
 // <% endif %>
 use $name_snake_case$::auth;
 use $name_snake_case$::crypto::*;

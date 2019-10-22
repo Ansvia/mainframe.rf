@@ -3,10 +3,10 @@
 
 use actix_web::{
     actix::System,
-    http::{header, Method},
+    http::header,
     middleware::{self, cors::Cors},
-    server::{self, HttpServer},
-    AsyncResponder, FromRequest, HttpMessage, HttpResponse, Query,
+    server::HttpServer,
+    AsyncResponder, FromRequest, HttpMessage, HttpResponse, Query
 };
 use diesel::{pg::PgConnection, prelude::*};
 use futures::future::{Future, IntoFuture};
@@ -15,9 +15,9 @@ use regex::Regex;
 mod error;
 mod with;
 
+pub mod admin;
 pub mod types;
 pub mod $param.service_name_snake_case$;
-pub mod admin;
 
 use self::with::{Immutable, ImmutableReq, Mutable, MutableReq, NamedWith, With};
 pub use self::{error::Error, with::Result};

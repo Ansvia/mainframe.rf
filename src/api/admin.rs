@@ -1,22 +1,15 @@
 //! Koleksi query yang digunakan untuk operasi pada rest API Admin
 #![allow(missing_docs)]
 
-use actix_web::{HttpRequest, HttpResponse};
-use chrono::NaiveDateTime;
-use serde::{Deserialize, Serialize};
-use serde_json::Value as JsonValue;
 use validator::Validate;
 
 use crate::{
     api,
     api::types::*,
-    api::{error::param_error, ApiResult, Error as ApiError, HttpRequest as ApiHttpRequest},
-    auth,
+    api::{error::param_error, ApiResult},
     dao::AdminDao,
-    error::{Error, ErrorCode},
     models,
     prelude::*,
-    ID,
 };
 
 /// New Admin query

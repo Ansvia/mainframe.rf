@@ -6,9 +6,6 @@ use diesel::prelude::*;
 
 use crate::{
     error::{Error as PdmError, ErrorCode},
-    // <% if param.with_event_stream %>
-    eventstream,
-    // <% endif %>
     models::{Admin, ResetPasswordAdmin},
     result::Result,
     schema::{admin_passhash, admins, reset_password_admins},
@@ -60,7 +57,6 @@ impl<'a> AdminDao<'a> {
         phone_num: &'a str,
         labels: &'a Vec<String>,
     ) -> Result<Admin> {
-        use crate::schema::admins::{self, dsl};
 
         diesel::insert_into(admins::table)
             .values(&NewAdmin {
@@ -75,7 +71,7 @@ impl<'a> AdminDao<'a> {
 
     /// Mendapatkan admin berdasarkan emailnya.
     pub fn get_admin_by_email(&self, email: &str) -> Result<Admin> {
-        use crate::schema::admins::{self, dsl};
+        use crate::schema::admins::dsl;
         dsl::admins
             .filter(dsl::email.eq(email))
             .first(self.db)
@@ -142,7 +138,7 @@ impl<'a> AdminDao<'a> {
 
     /// Setting admin's password
     pub fn set_password(&self, admin_id: ID, password: &str) -> Result<()> {
-        use crate::schema::admin_passhash::{self, dsl};
+        use crate::schema::admin_passhash::dsl;
 
         let _ = self.get_by_id(admin_id)?;
 
