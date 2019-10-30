@@ -187,6 +187,28 @@
 			"    ${3:.map_err(From::from)}?;"
 		]
 	},
+        "Create diesel transaction": {
+                "prefix": "dieseltx",
+                "body": [
+                        "conn.build_transaction()",
+                        "    .read_write()",
+                        "    .run::<_, ${1:error}, _>(|| {",
+                        "        ${2:}",
+                        "        Ok(())",
+                        "    })"
+                ]
+        },
+        "Create diesel delete": {
+                "prefix": "dieseldelete",
+                "body": [
+                        "diesel::delete(",
+                        "    dsl::${1:tables}.filter(",
+                        "        dsl::${2:field}.eq(${2:field})",
+                        "       ),",
+                        ")",
+                        ".execute(self.db)"
+                ]
+        },
 	"Create ApiResult::success": {
 		"prefix": "apiresultsucess",
 		"body": [
