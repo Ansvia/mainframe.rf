@@ -237,5 +237,34 @@
 			"        .map_err(From::from)",
 			"}"
 		]
+	},
+	"Create DAO update method": {
+		"prefix": "daoupdatemethod",
+		"body": [
+			"/// Update ${1:}",
+			"pub fn update_${1:something}(&self, ${2:param}) -> Result<()> {",
+			"    use crate::schema::${3:table_name}s::{self, dsl};",
+			"",
+			"	   diesel::update(dsl::${3:table_name}s.filter(dsl::id.eq(${3:table_name}.id)))",
+			"		   	.set(dsl::${4:name}.eq(${5:}))",
+			"			  .execute(self.db)",
+			"		  	.map_err(Error::from)?;",
+			"	   Ok(())",
+			"}"
+		]
+	},
+	"use diesel::prelude::*;": {
+		"prefix": "usedieselprelude",
+		"body": "use diesel::prelude::*;"
+	},
+	"Add impl fmt::Display for": {
+		"prefix": "impldisplay",
+		"body": [
+			"impl fmt::Display for ${1:Name} {",
+			"    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {",
+			"        write!(f, \"${2:text}\")",
+			"    }",
+		  "}"
+		]
 	}
 }
