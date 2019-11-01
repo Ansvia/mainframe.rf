@@ -63,15 +63,35 @@ impl fmt::Display for ApiKind {
 }
 
 #[derive(Clone)]
-pub struct TestKit {}
+pub struct TestKit {
+    pub accessor_$param.service_name_snake_case$_id: Option<ID>,
+    pub test_server_url: String,
+}
 
 impl TestKit {
     pub fn new() -> Self {
-        Self {}
+        create_test_server();
+        let server_url = SERVER_URL.clone();
+        let server_url = server_url.lock().unwrap();
+        let test_server_url = server_url.to_owned();
+        Self {
+            // accessor_$param.service_name_snake_case$: None,
+            accessor_$param.service_name_snake_case$_id: None,
+            test_server_url,
+        }
+    }
+
+    pub fn set_accessor(&mut self, accessor_id: ID) {
+        self.accessor_$param.service_name_snake_case$_id = Some(accessor_id);
     }
 
     pub fn api(&self) -> TestKitApi {
-        TestKitApi::new(self)
+        let mut tapi = TestKitApi::new(self, self.test_server_url.to_owned());
+        match &self.accessor_$param.service_name_snake_case$_id {
+            Some(_) => tapi.authorize_$param.service_name_snake_case$(),
+            None => (),
+        }
+        tapi
     }
 
     pub fn helper(&self) -> TestHelper {
@@ -85,23 +105,24 @@ impl TestKit {
 
 pub struct TestKitApi {
     testkit: TestKit,
-    test_server: TestServer,
+    // test_server: TestServer,
     test_client: Client,
+    test_server_url: String,
 }
 
 impl TestKitApi {
-    pub fn new(testkit: &TestKit) -> Self {
+    pub fn new(testkit: &TestKit, test_server_url: String) -> Self {
         TestKitApi {
             testkit: testkit.clone(),
-            test_server: create_test_server(),
             test_client: Client::new(),
+            test_server_url,
         }
     }
 
     /// Creates a requests builder for the public API scope.
     pub fn public(&self, kind: impl fmt::Display) -> RequestBuilder {
         RequestBuilder::new(
-            self.test_server.url(""),
+            self.test_server_url.to_owned(),
             &self.test_client,
             ApiAccess::Public,
             kind.to_string(),
@@ -111,14 +132,14 @@ impl TestKitApi {
     /// Creates a requests builder for the private API scope.
     pub fn private(&self, kind: impl fmt::Display) -> RequestBuilder {
         RequestBuilder::new(
-            self.test_server.url(""),
+            self.test_server_url.to_owned(),
             &self.test_client,
             ApiAccess::Private,
             kind.to_string(),
         )
     }
 
-    /// Cara pintas untuk meng-otorisasi $param.service_name_pascal_case$,
+    /// Cara pintas untuk meng-otorisasi User,
     /// atau dengan kata lain me-login-kan sehingga
     /// nanti http client akan meng-embed X-Access-Token secara otomatis.
     pub fn authorize(&mut self, $param.service_name_snake_case$_id: ID) {
@@ -128,6 +149,23 @@ impl TestKitApi {
             .helper()
             .gen_access_token_for($param.service_name_snake_case$_id)
             .expect("Cannot generate access token");
+        headers.insert("X-Access-Token", HeaderValue::from_str(&token.token).unwrap());
+        self.test_client = Client::builder()
+            .default_headers(headers)
+            .build()
+            .expect("Cannot build http client");
+    }
+
+    /// Cara pintas untuk meng-otorisasi User,
+    /// atau dengan kata lain me-login-kan sehingga
+    /// nanti http client akan meng-embed X-Access-Token secara otomatis.
+    pub fn authorize_$param.service_name_snake_case$(&mut self) {
+        let mut headers = HeaderMap::new();
+        let token = self
+            .testkit
+            .helper()
+            .gen_access_token_for(self.testkit.accessor_$param.service_name_snake_case$_id.expect("No accessor $param.service_name_snake_case$ id"))
+            .expect("Cannot generate $param.service_name_snake_case$ access token");
         headers.insert("X-Access-Token", HeaderValue::from_str(&token.token).unwrap());
         self.test_client = Client::builder()
             .default_headers(headers)
@@ -299,32 +337,73 @@ where
     }
 }
 
+
 pub fn setup() {
     let _ = env_logger::try_init();
+    env::set_var(
+        "DATABASE_URL",
+        env::var("DATABASE_TEST_URL").expect("No DATABASE_TEST_URL"),
+    );
 }
 
-pub fn create_test_server() -> TestServer {
+use std::sync::{mpsc::channel, Arc, Mutex};
+use std::{thread, time::Duration};
+
+lazy_static! {
+    static ref SERVER_URL: Arc<Mutex<String>> = Arc::new(Mutex::new("".to_string()));
+}
+
+pub fn create_test_server() {
     setup();
 
-    let service = service::$param.service_name_pascal_case$Service::new();
-    let system_service = service::SystemService::new();
+    let (tx, rx) = channel();
 
-    let agg = ApiAggregator::new(vec![service, system_service]);
+    let server_url = SERVER_URL.clone();
+    thread::spawn(move || {
+        let mut server_url = server_url.lock().unwrap();
 
-    let server = TestServer::with_factory(move || {
-        let state = api::AppState::new();
-        App::with_state(state.clone())
-            .scope("public/api", |scope| {
-                trace!("Create public API");
-                agg.extend(ApiAccess::Public, scope)
-            })
-            .scope("private/api", |scope| {
-                trace!("Create private API");
-                agg.extend(ApiAccess::Private, scope)
-            })
+        if !server_url.is_empty() {
+            // println!("SERVER_URL ALREADY DEFINED #2");
+            tx.send(0).unwrap();
+            return;
+        }
+
+        let services = load_services();
+
+        let agg = ApiAggregator::new(services);
+
+        let server = TestServer::with_factory(move || {
+            let state = api::AppState::new();
+            App::with_state(state.clone())
+                .scope("public/api", |scope| {
+                    trace!("Create public API");
+                    agg.extend(ApiAccess::Public, scope)
+                })
+                .scope("private/api", |scope| {
+                    trace!("Create private API");
+                    agg.extend(ApiAccess::Private, scope)
+                })
+        });
+
+        info!("Test server created on {}", server.addr());
+
+        *server_url = server.url("");
+
+        debug!("TEST SERVER URL: {}", &*server_url);
+
+        drop(server_url);
+
+        tx.send(1).expect("Cannot send tx");
+
+        for _ in 0..1000 {
+            thread::sleep(Duration::from_millis(1000));
+        }
     });
 
-    info!("Test server created on {}", server.addr());
+    thread::sleep(Duration::from_millis(50));
 
-    server
+    // tunggu sampai server_url telah terisi
+    debug!("Waiting for test server to become ready...");
+    debug!("Test Server READY! {}", rx.recv().unwrap());
 }
+
