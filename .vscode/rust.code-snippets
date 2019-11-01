@@ -182,7 +182,7 @@
 		"body": [
 			"use crate::schema::${1:name}::{self, dsl};",
 			"diesel::insert_into(${1:name}::table)",
-			"    .values(&{2:})",
+			"    .values(&${2:Data})",
 			"    .execute(&conn)",
 			"    ${3:.map_err(From::from)}?;"
 		]
@@ -265,6 +265,20 @@
 			"        write!(f, \"${2:text}\")",
 			"    }",
 		  "}"
+		]
+	},
+	"Create API query type": {
+		"prefix": "apiquery",
+		"body": [
+			"#[derive(Deserialize, Validate)]",
+			"pub struct ${1:QueryType} {",
+			"    ${2:pub id:ID,}",
+			"    ${3:pub query: Option<String>,}",
+			"    ${4:#[validate(range(min = 0, max = 1_000_000))]",
+			"    pub offset: i64,}",
+			"    ${5:#[validate(range(min = 1, max = 100))]",
+			"    pub limit: i64,}",
+			"}"
 		]
 	}
 }
