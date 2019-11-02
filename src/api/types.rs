@@ -17,7 +17,7 @@ use crate::{
     prelude::*,
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct EntriesResult<T> {
     pub entries: Vec<T>,
     pub count: i64,

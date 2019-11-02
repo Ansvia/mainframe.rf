@@ -33,6 +33,8 @@ use $name_snake_case$::{
     service,
 };
 
+pub use $name_snake_case$::api::{types::*, user::types::$param.service_name_pascal_case$};
+
 pub mod helper;
 
 pub use crate::helper::{ApiHelper, TestHelper};
