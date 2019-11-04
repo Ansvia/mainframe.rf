@@ -40,7 +40,9 @@ CREATE TABLE $param.service_name_snake_case$_passhash (
 -- Insert preset password for dummy user using password `123123` by default.
 INSERT INTO $param.service_name_snake_case$_passhash ($param.service_name_snake_case$_id, passhash, deprecated, ver)
 VALUES
-(1, '$2y$05$mw56Wls35HoufQH7QipJnOzqzVmZuwcVUojcqQxKZ5hcG8aBdZRo.', FALSE, 1)
+(1, '$2y$05$mw56Wls35HoufQH7QipJnOzqzVmZuwcVUojcqQxKZ5hcG8aBdZRo.', FALSE, 1),
+(2, '$2y$05$mw56Wls35HoufQH7QipJnOzqzVmZuwcVUojcqQxKZ5hcG8aBdZRo.', FALSE, 1),
+(3, '$2y$05$mw56Wls35HoufQH7QipJnOzqzVmZuwcVUojcqQxKZ5hcG8aBdZRo.', FALSE, 1)
 ;
 
 -- Tabel untuk menampung user-user yang baru mendaftar tapi belum melakukan aktifasi
