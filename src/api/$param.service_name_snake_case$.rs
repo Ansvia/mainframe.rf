@@ -78,13 +78,7 @@ pub mod types {
 
     impl From<models::$param.service_name_pascal_case$> for ApiResult<$param.service_name_pascal_case$> {
         fn from(a: models::$param.service_name_pascal_case$) -> Self {
-            ApiResult::success($param.service_name_pascal_case$ {
-                id: a.id,
-                full_name: a.full_name,
-                email: a.email,
-                phone_num: a.phone_num,
-                register_time: a.register_time,
-            })
+            ApiResult::success(a.into())
         }
     }
 
