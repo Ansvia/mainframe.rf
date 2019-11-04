@@ -98,7 +98,7 @@ class ApiResource {
   }
 
   Future<void> ensureAccessToken() async {
-    if (accessToken == "") {
+    if (accessToken == null || accessToken == "") {
       accessToken = await _$param.service_name_camel_case$Repository.getToken();
       print("loading get access token: $accessToken");
     }
