@@ -120,8 +120,9 @@ class PersistentSmartRepo extends SmartRepo {
 
         final tVal = json.encode(data["result"]);
 
-        await dbClient.rawQuery(
-            "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+        await dbClient.rawInsert(
+            "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES(?, ?)",
+            [storeName, tVal]);
 
         resultData = data["result"];
       }
@@ -148,7 +149,7 @@ class PersistentSmartRepo extends SmartRepo {
       yield RepoData(resultData, false);
     }
 
-    print("fetchGradually.resultData: $resultData");
+    // print("fetchGradually.resultData: $resultData");
 
     final data = await dataRetriever();
     if (data != null) {
@@ -156,8 +157,9 @@ class PersistentSmartRepo extends SmartRepo {
 
       final tVal = json.encode(data["result"]);
 
-      await dbClient.rawQuery(
-          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+      await dbClient.rawInsert(
+          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES(?, ?)",
+          [storeName, tVal]);
 
       resultData = data["result"];
       yield RepoData(resultData, true);
@@ -169,8 +171,9 @@ class PersistentSmartRepo extends SmartRepo {
     return fetch(storeName, () => PublicApi.get(apiPath), force: force);
   }
 
-  Future<Map<String, dynamic>> getEntriesItem(String storeName, dynamic id) async {
-        final dbClient = await getDb;
+  Future<Map<String, dynamic>> getEntriesItem(
+      String storeName, dynamic id) async {
+    final dbClient = await getDb;
 
     List<Map> result = await dbClient
         .rawQuery('SELECT * FROM $key WHERE t_key=\'$storeName\' LIMIT 1');
@@ -179,7 +182,8 @@ class PersistentSmartRepo extends SmartRepo {
 
     if (result.length > 0) {
       Map<String, dynamic> entriesData = json.decode(result.first["t_val"]);
-      resultData = (entriesData["entries"] as List).where((a) => a["id"] == id).first;
+      resultData =
+          (entriesData["entries"] as List).where((a) => a["id"] == id).first;
     } else {
       resultData = null;
     }
@@ -225,8 +229,9 @@ class PersistentSmartRepo extends SmartRepo {
       //       key, {"t_key": storeName, "t_val": json.encode(newEntries)});
       final tVal = json.encode({"entries": newEntries});
 
-      await dbClient.rawQuery(
-          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+      await dbClient.rawInsert(
+          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES(?, ?)",
+          [storeName, tVal]);
     }
   }
 
@@ -257,7 +262,8 @@ class PersistentSmartRepo extends SmartRepo {
       final tVal = json.encode({"entries": newEntries});
 
       await dbClient.rawQuery(
-          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+          "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES(?, ?)",
+          [storeName, tVal]);
     }
   }
 
@@ -266,7 +272,8 @@ class PersistentSmartRepo extends SmartRepo {
 
     final tVal = json.encode(data);
     await dbClient.rawQuery(
-        "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES('$storeName', '$tVal')");
+        "INSERT OR REPLACE INTO $key (t_key, t_val)VALUES(?, ?)",
+        [storeName, tVal]);
   }
 
   Future<Map<String, dynamic>> getData(String storeName) async {
