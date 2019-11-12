@@ -317,12 +317,12 @@ impl<'a> $param.service_name_pascal_case$Dao<'a> {
         use crate::schema::$param.service_name_snake_case$s;
         use crate::schema::$param.service_name_snake_case$s::dsl;
 
-        let like_clause = format!("%{}%", keyword);
+        let like_clause = format!("%{}%", keyword).to_lowercase();
 
         let filterer = dsl::id.ne(0).and(
-            dsl::full_name
+            lower(dsl::full_name)
                 .like(&like_clause)
-                .or(dsl::email.like(&like_clause)),
+                .or(lower(dsl::email).like(&like_clause)),
         );
 
         let entries = dsl::$param.service_name_snake_case$s

@@ -66,6 +66,7 @@ pub mod $param.service_name_snake_case$_dao;
 pub mod admin_dao;
 pub mod dao;
 pub mod service;
+mod sqlutil;
 pub mod token;
 pub mod util;
 mod valid;
