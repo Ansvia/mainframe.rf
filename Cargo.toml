@@ -1,6 +1,6 @@
 [package]
 name = "$name_kebab_case$"
-version = "$version$"
+version = "$version$" # auto generated do not edit by hand
 authors = ["$param.author_name$ <$param.author_email_lower_case$>"]
 edition = "2018"
 description = "$param.desc$"

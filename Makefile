@@ -1,6 +1,7 @@
 
 PROJ_DIR=$(shell pwd)
 
+VERSION=$(shell cat VERSION)
 PUBLIC_API_DOC_OUTPUT=$(PROJ_DIR)/target/api-docs/public-api.html
 PRIVATE_API_DOC_OUTPUT=$(PROJ_DIR)/target/api-docs/private-api.html
 LIBRARY_DOC_OUTPUT=$(PROJ_DIR)/target/doc/$name_snake_case$/index.html
@@ -53,6 +54,10 @@ commit:
 	@@cargo check
 	@@git ci -a
 
+version:
+	@@sed -i.bak 's/version = ".*" # auto generated do not edit by hand/version = "$(VERSION)" # auto generated do not edit by hand/' Cargo.toml
+	@@cat Cargo.toml | grep version | grep "edit by"
+
 release:
 	@@echo Build release mode...
 	@@cargo build --release
@@ -81,4 +86,6 @@ reset-db:
 .PHONY: prepare docs lib-docs api-docs fmt \
 		test test-dev lint audit commit \
 		release test-env test-env-redo release-linux \
-		reset-db
+		reset-db \
+		version
+

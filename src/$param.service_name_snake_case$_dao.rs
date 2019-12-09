@@ -10,6 +10,7 @@ use crate::{
     models::*,
     result::Result,
     schema::*,
+    sqlutil::lower,
     token,
     ID
 };

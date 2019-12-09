@@ -284,19 +284,19 @@ fn map_ok<I: Serialize>(value: I, request: &HttpRequest) -> HttpResponse {
         Ok(body) => {
             let contains = headers.contains_key(header::CONTENT_TYPE);
 
-            if !contains {
+            if body == "null" {
                 HttpResponse::Ok()
-                    .header(header::CONTENT_TYPE, "application/json")
-                    .body(body)
-            } else if body == "null" {
-                HttpResponse::Ok().json(ApiResult::<()>::new(
-                    ErrorCode::NoError as i32,
-                    "".to_string(),
-                    "".to_string(),
-                    None,
-                ))
+                    .header(header::CONTENT_TYPE, "application/json; charset=UTF-8")
+                    .json(ApiResult::<()>::new(
+                        ErrorCode::NoError as i32,
+                        "".to_string(),
+                        "".to_string(),
+                        None,
+                    ))
             } else {
-                HttpResponse::Ok().body(body)
+                HttpResponse::Ok()
+                    .header(header::CONTENT_TYPE, "application/json; charset=UTF-8")
+                    .body(body)
             }
         }
         Err(e) => panic!("cannot serialize response"),
