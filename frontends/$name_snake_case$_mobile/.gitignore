@@ -27,6 +27,7 @@
 .packages
 .pub-cache/
 .pub/
+.flutter-plugins-dependencies
 /build/
 
 # Android related
@@ -37,6 +38,7 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/ios/Flutter/flutter_export_environment.sh
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
