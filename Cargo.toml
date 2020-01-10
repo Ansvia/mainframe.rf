@@ -21,7 +21,7 @@ lazy_static = "1.2"
 rsnowflake = "0.1"
 
 # <% if param.with_event_stream %>
-event-stream = "0.1.0"
+event-stream = "0.1.1"
 # <% endif %>
 
 # <% if param.password_crypt_algo == "bcrypt" %>
