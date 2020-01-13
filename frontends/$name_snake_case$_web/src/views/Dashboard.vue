@@ -15,7 +15,7 @@
 
       <AnsTable
         v-if="currentPage['/dashboard']"
-        data-source-url="/$param.service_name_snake_case$/v1/accounts"
+        data-source-url="/$param.service_name_snake_case$/v1/$param.service_name_snake_case$s"
         :columns="['ID', 'Name', 'Email']"
         :searchable="true"
         :withActionButton="true"
@@ -23,15 +23,15 @@
       ></AnsTable>
 
       <AnsTable
-        v-if="currentPage['/dashboard/accounts']"
-        data-source-url="/$param.service_name_snake_case$/v1/accounts"
+        v-if="currentPage['/dashboard/$param.service_name_snake_case$s']"
+        data-source-url="/$param.service_name_snake_case$/v1/$param.service_name_snake_case$s"
         :columns="['ID', 'Name', 'Email', 'Phone', 'Active', 'Register']"
         :searchable="true"
         :withActionButton="true"
         :mapItemFunc="userListAllMapper"
       />
 
-      <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/accounts/')" :accountId="$route.params.id"/>
+      <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/$param.service_name_snake_case$s/')" :accountId="$route.params.id"/>
     </div>
 
     <notifications group="default" position="top center" classes="vue-notification" />
@@ -68,7 +68,7 @@ export default {
         {
           title: "$param.service_name_pascal_case$s",
           icon: "fa fa-users",
-          href: "/dashboard/accounts"
+          href: "/dashboard/$param.service_name_snake_case$s"
         },
         {
           title: "Logout",
