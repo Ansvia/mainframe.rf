@@ -106,6 +106,13 @@ impl PublicApi {
                 ))?
             }
         };
+        
+        if !$param.service_name_snake_case$.active {
+            return Err(ApiError::InvalidParameter(
+                ErrorCode::Unauthorized as i32,
+                "Account blocked".to_string(),
+            ));
+        }
 
         let dao = AuthDao::new(&conn);
 
