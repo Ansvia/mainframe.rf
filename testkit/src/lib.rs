@@ -370,7 +370,7 @@ pub fn create_test_server() {
             return;
         }
 
-        let services = load_services();
+        let services = service::load_services();
 
         let agg = ApiAggregator::new(services);
 
