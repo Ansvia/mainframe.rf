@@ -14,7 +14,7 @@ VALUES
 (0, 'nobody', 'nobody@nowhere.net', '+628512345', TRUE),
 (1, 'Dummy User 1', 'dummy1@nowhere.net', '+62856789', TRUE),
 (2, 'Dummy User 2', 'dummy2@nowhere.net', '+62856789124', TRUE),
-(3, 'Dummy User 3', 'dummy3@nowhere.net', '+62856789124', TRUE)
+(3, 'Dummy User 3', 'dummy3@nowhere.net', '+62856789125', TRUE)
 ;
 
 SELECT SETVAL('$param.service_name_snake_case$s_id_seq', 3);
