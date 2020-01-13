@@ -202,7 +202,7 @@ impl PrivateApi {
     }
 
     /// Mencari akun berdasarkan kata kunci.
-    #[api_endpoint(path = "/$param.service_name_snake_case$/search", auth = "none")]
+    #[api_endpoint(path = "/search", auth = "none")]
     pub fn search_$param.service_name_snake_case$s(query: QueryEntries) -> ApiResult<EntriesResult<db::$param.service_name_pascal_case$>> {
         let conn = state.db();
         let dao = $param.service_name_pascal_case$Dao::new(&conn);
