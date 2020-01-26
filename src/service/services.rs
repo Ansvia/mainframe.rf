@@ -22,9 +22,15 @@ use crate::{
 };
 
 macro_rules! impl_service {
-    ($service_name:ident, $api_name:ident) => {
+    // Gunakan macro ini untuk mendeklarasikan service rest API dengan multi versi,
+    // contoh `/v1` dan `/v2`.
+    // Contoh penggunaan:
+    //
+    //     impl_service!(FeedService, feed, [PublicApi, PublicApiV2], [PrivateApi]);
+    //
+    ($service_name:ident, $api_name:ident, [ $($endp_st_pub:ident,)* ], [ $($endp_st_priv:ident,)* ]) => {
         mod $api_name {
-            use crate::api::$api_name::{PrivateApi, PublicApi};
+            use crate::api::$api_name::{ $($endp_st_pub,)* $($endp_st_priv,)* };
 
             /// Core basis service racta.
             pub struct $service_name {}
@@ -42,13 +48,21 @@ macro_rules! impl_service {
                 }
 
                 fn wire_api(&self, builder: &mut crate::api::ServiceApiBuilder) {
-                    builder.public_scope().link(PublicApi::wire);
-                    builder.private_scope().link(PrivateApi::wire);
+                    $(builder.public_scope().link($endp_st_pub::wire);)*
+                    $(builder.private_scope().link($endp_st_priv::wire);)*
                 }
             }
         }
 
         pub use $api_name::$service_name;
+    };
+
+    ($service_name:ident, $api_name:ident, [ $($endp_st_pub:ident),* ],  [ $($endp_st_priv:ident),* ]) => {
+        impl_service!($service_name, $api_name, [ $($endp_st_pub,)* ], [ $($endp_st_priv,)* ]);
+    };
+
+    ($service_name:ident, $api_name:ident) => {
+        impl_service!($service_name, $api_name, [PublicApi], [PrivateApi]);
     };
 }
 

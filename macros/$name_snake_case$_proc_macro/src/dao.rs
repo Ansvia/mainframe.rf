@@ -79,9 +79,16 @@ pub fn derive(item: syn::DeriveInput) -> Result<proc_macro2::TokenStream, Diagno
         _ => quote! {},
     };
     let assert_id = match id_type.to_string().as_str() {
-        "i16" => quote! { assert!(#id_name != 0, concat!(#id_name_lit," is zero")); },
-        "i32" => quote! { assert!(#id_name != 0, concat!(#id_name_lit," is zero")); },
-        "i64" => quote! { assert!(#id_name != 0, concat!(#id_name_lit," is zero")); },
+        "i16" => {
+            quote! { assert!(#id_name > 0, format!(concat!(#id_name_lit," is minus ({})"), #id_name)) ; }
+        }
+        "i32" => {
+            quote! { assert!(#id_name > 0, format!(concat!(#id_name_lit," is minus ({})"), #id_name)) ; }
+        }
+        "i64" => {
+            quote! { assert!(#id_name > 0, format!(concat!(#id_name_lit," is minus ({})"), #id_name)) ; }
+        }
+        "ID" => quote! { assert!(#id_name > 0, format!(concat!(#id_name_lit," is minus ({})"), #id_name)) ; },
         _ => quote! {},
     };
     let get_by_id_param = match id_type.to_string().as_str() {

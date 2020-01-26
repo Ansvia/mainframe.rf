@@ -509,6 +509,7 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
 
     // buatkan auto wire interface method
     let tts = {
+        let scope_name = String::from(&struct_name[..struct_name.len() - 3]);
         let struct_name = Ident::new(&struct_name, Span::call_site());
         let mut sas = vec![];
         for aei in &api_endpoint_info {
@@ -521,12 +522,12 @@ pub fn api_group(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -
             let method_name = Ident::new(&aei.method_name, Span::call_site());
             sas.push(if aei.method == "POST" {
                 quote! {
-                    debug!(" + wiring endpoint POST `{}`", #path);
+                    debug!(concat!(#scope_name,"| + wiring endpoint POST `{}`"), #path);
                     sas.endpoint_mut(#rel_path, #struct_name::#method_name);
                 }
             } else {
                 quote! {
-                    debug!(" + wiring endpoint GET `{}`", #path);
+                    debug!(concat!(#scope_name,"| + wiring endpoint GET `{}`"), #path);
                     sas.endpoint(#rel_path, #struct_name::#method_name);
                 }
             });
