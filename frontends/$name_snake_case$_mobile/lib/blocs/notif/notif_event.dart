@@ -3,7 +3,10 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class NotifEvent extends Equatable {
-  NotifEvent([List props = const []]) : super(props);
+  const NotifEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
 class LoadNotif extends NotifEvent {

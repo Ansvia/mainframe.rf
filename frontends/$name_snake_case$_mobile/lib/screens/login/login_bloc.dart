@@ -31,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: event.password,
         );
         print("session: $session");
-        $name_camel_case$Bloc.dispatch(LoggedIn(token: session.token));
+        $name_camel_case$Bloc.add(LoggedIn(token: session.token));
         yield LoginInitial();
       } catch (error) {
         yield LoginFailure(error: error.toString());
