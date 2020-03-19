@@ -4,19 +4,13 @@ import 'package:$name_snake_case$_mobile/models/models.dart';
 
 @immutable
 abstract class TabEvent extends Equatable {
-  const TabEvent();
-
-  @override
-  List<Object> get props => [];
+  TabEvent([List props = const []]) : super(props);
 }
 
 class UpdateTab extends TabEvent {
   final AppTab tab;
 
-  UpdateTab(this.tab);
-
-  @override
-  List<Object> get props => [this.tab];
+  UpdateTab(this.tab) : super([tab]);
 
   @override
   String toString() => 'UpdateTab { tab: $tab }';

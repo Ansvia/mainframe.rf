@@ -6,10 +6,7 @@ import 'package:$name_snake_case$_mobile/models/models.dart';
 
 @immutable
 abstract class $name_pascal_case$Event extends Equatable {
-  const $name_pascal_case$Event();
-
-  @override
-  List<Object> get props => [];
+  $name_pascal_case$Event([List props = const []]) : super(props);
 }
 
 class StartupEvent extends $name_pascal_case$Event {
@@ -33,10 +30,7 @@ class AddComment extends $name_pascal_case$Event {
 class LoggedIn extends $name_pascal_case$Event {
   final String token;
 
-  LoggedIn({@required this.token});
-
-  @override
-  List<Object> get props => [this.token];
+  LoggedIn({@required this.token}) : super([token]);
 
   @override
   String toString() => 'LoggedIn { token: $token }';

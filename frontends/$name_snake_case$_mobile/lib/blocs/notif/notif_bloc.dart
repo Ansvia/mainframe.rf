@@ -12,9 +12,9 @@ class NotifBloc extends Bloc<NotifEvent, NotifState> {
   StreamSubscription _$name_snake_case$Subs;
 
   NotifBloc({@required this.$name_snake_case$Bloc}){
-    _$name_snake_case$Subs = $name_snake_case$Bloc.listen((state){
+    _$name_snake_case$Subs = $name_snake_case$Bloc.state.listen((state){
       if (state is AuthenticationAuthenticated){
-        add(LoadNotif());
+        dispatch(LoadNotif());
       }
     });
   }

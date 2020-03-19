@@ -123,7 +123,7 @@
         "prefix": "blocprovider",
         "body": [
             "BlocProvider(",
-            "  create: (BuildContext context){",
+            "  builder: (BuildContext context){",
             "    //@TODO(*): code here",
             "    return ${1:NameBloc};",
             "  },",
@@ -137,7 +137,7 @@
             "MultiBlocProvider(",
             "  providers:[",
             "    BlocProvider<${1:BlocName}>(",
-            "      create: (context) => ${1:BlocName}(),",
+            "      builder: (context) => ${1:BlocName}(),",
             "    )",
             "  ],",
             "child: ${2:Widget}()",

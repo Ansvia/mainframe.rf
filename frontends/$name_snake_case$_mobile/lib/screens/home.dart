@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                     title: new Text("Logout"),
                     onTap: () {
                       Navigator.pop(context);
-                      $name_snake_case$Bloc.add(LoggedOut());
+                      $name_snake_case$Bloc.dispatch(LoggedOut());
                       Navigator.pushReplacementNamed(context, $name_pascal_case$Routes.login);
                     }),
               ],
@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
           //     : null,
           bottomNavigationBar: TabSelector(
             activeTab: activeTab,
-            onTabSelected: (tab) => tabBloc.add(UpdateTab(tab)),
+            onTabSelected: (tab) => tabBloc.dispatch(UpdateTab(tab)),
           ),
         );
       },

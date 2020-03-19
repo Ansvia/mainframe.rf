@@ -4,10 +4,7 @@ import 'package:$name_snake_case$_mobile/models/models.dart';
 
 @immutable
 abstract class NotifState extends Equatable {
-  const NotifState();
-
-  @override
-  List<Object> get props => [];
+  NotifState([List props = const []]) : super(props);
 }
 
 class NotifListLoading extends NotifState {
@@ -18,10 +15,7 @@ class NotifListLoading extends NotifState {
 class NotifListLoaded extends NotifState {
   final List<NotifItem> notifs;
 
-  NotifListLoaded(this.notifs);
-
-  @override
-  List<Object> get props => [this.notifs];
+  NotifListLoaded(this.notifs) : super([notifs]);
 
   @override
   String toString() => "NotifListLoaded";

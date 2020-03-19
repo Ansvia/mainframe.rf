@@ -5,9 +5,7 @@ import 'package:$name_snake_case$_mobile/api/$name_snake_case$_api.dart';
 
 @immutable
 abstract class $name_pascal_case$State extends Equatable {
-  const $name_pascal_case$State();
-  @override
-  List<Object> get props => [];
+  $name_pascal_case$State([List props = const []]): super(props);
 }
 
 class $name_pascal_case$Loading extends $name_pascal_case$State {
