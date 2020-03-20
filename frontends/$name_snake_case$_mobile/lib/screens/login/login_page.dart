@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) {
           return LoginBloc(
-            $name_snake_case$Bloc: BlocProvider.of<$name_pascal_case$Bloc>(context),
+            $name_camel_case$Bloc: BlocProvider.of<$name_pascal_case$Bloc>(context),
             userRepository: userRepository,
           );
         },
