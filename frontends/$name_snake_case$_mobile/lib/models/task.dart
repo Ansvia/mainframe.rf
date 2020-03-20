@@ -8,8 +8,9 @@ class Task extends Equatable {
   final String text;
   final String expireTime;
 
-  Task(this.id, this.assigneeName, this.text, this.expireTime):
-   super([id, assigneeName, text, expireTime]);
+  const Task(this.id, this.assigneeName, this.text, this.expireTime);
   
+  @override
+  List<Object> get props => [id, assigneeName, text, expireTime];
 }
 

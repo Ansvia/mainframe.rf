@@ -9,8 +9,10 @@ class Session extends Equatable {
   final int $param.service_name_camel_case$Id;
   final String token;
 
-  Session(this.$param.service_name_camel_case$Id,this.token)
-      : super([$param.service_name_camel_case$Id,token,]);
+  const Session(this.$param.service_name_camel_case$Id,this.token);
+
+  @override
+  List<Object> get props => [$param.service_name_camel_case$Id,token,];
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> data = Map();
