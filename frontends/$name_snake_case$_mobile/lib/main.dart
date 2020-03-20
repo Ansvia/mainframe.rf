@@ -21,9 +21,9 @@ void main() {
   ApiClient.userRepository = userRepository;
 
   runApp(BlocProvider(
-    builder: (ctx) {
+    create: (ctx) {
       return $name_pascal_case$Bloc(userRepository: userRepository)
-        ..dispatch(StartupEvent());
+        ..add(StartupEvent());
     },
     child: $name_pascal_case$App(userRepository: userRepository),
   ));
@@ -57,12 +57,14 @@ class $name_pascal_case$App extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<$name_pascal_case$Bloc>(
-              builder: (context) => $name_pascal_case$Bloc(userRepository: userRepository),
+              create: (context) => $name_pascal_case$Bloc(userRepository: userRepository),
             ),
             BlocProvider<TabBloc>(
-              builder: (context) => TabBloc(),
+              create: (context) => TabBloc(),
             ),
-            BlocProvider<NotifBloc>(builder: (context) => NotifBloc($name_snake_case$Bloc: $name_snake_case$Bloc),),
+            BlocProvider<NotifBloc>(
+              create: (context) => NotifBloc($name_snake_case$Bloc: $name_snake_case$Bloc),
+            ),
             // BlocProvider<TaskManagerBloc>(builder: (context) => TaskManagerBloc(),),
           ],
           child: HomeScreen(

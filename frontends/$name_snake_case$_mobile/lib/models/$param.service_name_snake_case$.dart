@@ -7,8 +7,7 @@ class $param.service_name_pascal_case$ extends Equatable {
   final String fullName;
   final String email;
 
-  $param.service_name_pascal_case$(this.id, this.fullName, this.email)
-      : super([id, fullName, email]);
+  const $param.service_name_pascal_case$(this.id, this.fullName, this.email);
 
   Map<String,dynamic> toMap(){
     Map<String,dynamic> data;
@@ -21,4 +20,7 @@ class $param.service_name_pascal_case$ extends Equatable {
   static $param.service_name_pascal_case$ fromMap(Map<String, dynamic> data){
     return $param.service_name_pascal_case$(data['id'], data['fullName'], data['email']);
   }
+
+  @override
+  List<Object> get props => [this.id, this.fullName, this.email];
 }
