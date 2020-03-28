@@ -20,6 +20,7 @@
         :searchable="true"
         :withActionButton="true"
         :mapItemFunc="userListAllMapper2"
+        :showDetailFunc="showDetail"
       ></AnsTable>
 
       <AnsTable
@@ -29,6 +30,7 @@
         :searchable="true"
         :withActionButton="true"
         :mapItemFunc="userListAllMapper"
+        :showDetailFunc="showDetail"
       />
 
       <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/$param.service_name_snake_case$s/')" :accountId="$route.params.id"/>
@@ -93,6 +95,9 @@ export default {
     clearInterval(this.loginCheckerIval);
   },
   methods: {
+    showDetail(item){
+      this.$router.push("/dashboard/users/" + item.id);
+    },
     txItemMap(item) {
       return item;
     },
