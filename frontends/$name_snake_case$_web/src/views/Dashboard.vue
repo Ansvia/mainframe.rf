@@ -33,7 +33,7 @@
         :showDetailFunc="showDetail"
       />
 
-      <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/$param.service_name_snake_case$s/')" :accountId="$route.params.id"/>
+      <$param.service_name_pascal_case$Detail v-if="$route.path.startsWith('/dashboard/$param.service_name_snake_case$s/')" :$param.service_name_camel_case$Id="$route.params.id"/>
     </div>
 
     <notifications group="default" position="top center" classes="vue-notification" />
