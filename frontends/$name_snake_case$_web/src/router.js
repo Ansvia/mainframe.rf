@@ -32,7 +32,7 @@ let router = new Router({
     },
     {
       path: '/dashboard/$param.service_name_snake_case$s',
-      name: '$param.service_name$',
+      name: '$param.service_name_pascal_case$',
       component: Dashboard,
       meta: {
         title: 'Dashboard' + titleDesc,
@@ -40,7 +40,7 @@ let router = new Router({
     },
     {
       path: '/dashboard/$param.service_name_snake_case$s/:id',
-      name: '$param.service_name$_detail',
+      name: '$param.service_name_pascal_case$ detail',
       component: Dashboard,
       meta: {
         title: 'Dashboard' + titleDesc,
