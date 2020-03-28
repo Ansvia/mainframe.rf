@@ -45,7 +45,7 @@ export default {
     doSearch() {
       var url =
         this.dataSourceUrl +
-        `?query=${this.$refs.inputSearch.value}&page=${this.page}&limit=${this.limit}`;
+        `?query=${this.$refs.inputSearch.value}&offset=${this.offset}&limit=${this.limit}`;
       this.$$name_snake_case$
         .api()
         .privateApi.get(url)
@@ -59,15 +59,15 @@ export default {
   },
   created() {
     this.items = [];
-    this.page = 0;
+    this.offset = 0;
     this.limit = 5;
     var self = this;
     var url;
 
     if (this.searchable && this.query) {
-      url = this.dataSourceUrl + "?q=" + this.query + "&page=0&limit=10";
+      url = this.dataSourceUrl + "?q=" + this.query + "&offset=0&limit=10";
     } else {
-      url = this.dataSourceUrl + "?page=0&limit=10";
+      url = this.dataSourceUrl + "?offset=0&limit=10";
     }
 
     if (this.withActionButton){
