@@ -36,7 +36,8 @@ export default {
     columns: Array,
     searchable: Boolean,
     withActionButton: Boolean,
-    mapItemFunc: Function
+    mapItemFunc: Function,
+    showDetailFunc: Function
   },
   data() {
     return initialState;
@@ -54,7 +55,7 @@ export default {
         });
     },
     showDetail(item){
-      this.$router.push("/dashboard/$param.service_name_snake_case$s/" + item.id);
+      this.showDetailFunc(item);
     }
   },
   created() {
