@@ -40,8 +40,8 @@ export default {
     showDetailFunc: Function,
     apiScopeBuilder: {
       type: Function,
-      default: () => {
-        return this.$name_snake_case$.api().privateApi;
+      default: (self) => {
+        return self.$name_snake_case$.api().privateApi;
       }
     }
   },
@@ -53,7 +53,7 @@ export default {
       var url =
         this.dataSourceUrl +
         `?query=${this.$refs.inputSearch.value}&offset=${this.offset}&limit=${this.limit}`;
-      this.apiScopeBuilder().get(url)
+      this.apiScopeBuilder(this).get(url)
         .then(resp => {
           this.items = resp.data.result.entries.map(this.mapItemFunc);
         });
@@ -79,7 +79,7 @@ export default {
       this.columns.push('Action');
     }
 
-    this.apiScopeBuilder().get(url)
+    this.apiScopeBuilder(this).get(url)
       .then(resp => {
         self.items = resp.data.result.entries.map(this.mapItemFunc);
       });

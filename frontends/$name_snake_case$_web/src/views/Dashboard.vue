@@ -95,10 +95,15 @@ export default {
     clearInterval(this.loginCheckerIval);
   },
   methods: {
-    publicApiScope(){
-      return this.$$name_snake_case$
+    publicApiScope(self){
+      return self.$$name_snake_case$
         .api()
         .publicApi;
+    },
+    privateApiScope(self){
+      return self.$$name_snake_case$
+        .api()
+        .privateApi;
     },
     showDetail(item){
       this.$router.push("/dashboard/users/" + item.id);
