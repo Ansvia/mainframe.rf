@@ -95,6 +95,11 @@ export default {
     clearInterval(this.loginCheckerIval);
   },
   methods: {
+    publicApiScope(){
+      return this.$$name_snake_case$
+        .api()
+        .publicApi;
+    },
     showDetail(item){
       this.$router.push("/dashboard/users/" + item.id);
     },
