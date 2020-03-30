@@ -8,6 +8,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import $name_pascal_case$ from './plugins/$name_kebab_case$';
+import notifMixin from "./mixins/notifMixin";
 
 // ----- Vuejs Dialog Stuff -------------
 import VuejsDialog from "vuejs-dialog"
@@ -53,7 +54,8 @@ Vue.use(VueSidebarMenu)
 // Add utils option in components
 Vue.mixin({
   beforeCreate() {
-    const utils = this.$options.utils
+    // mixin utils and notif to all components
+    const utils = Object.assign({}, this.$options.utils, notifMixin);
     if (utils) {
       const keys = Object.keys(utils)
        for (let i = 0; i < keys.length; i++) {

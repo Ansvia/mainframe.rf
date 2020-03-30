@@ -15,8 +15,16 @@
           </thead>
           <tbody>
             <tr v-for="(item,a_idx) in items" v-bind:key="item.id">
-              <td v-for="(td,b_idx) in item" v-bind:key="item.id + '-' + a_idx + '-' + b_idx">{{td}}</td>
-              <td><button v-on:click="showDetail(item)">detail</button></td>
+             <slot name="tdmap" v-bind:item="item">
+               <td v-for="(td,b_idx) in item" v-bind:key="item.id + '-' + a_idx + '-' + b_idx">
+                 <div v-if="b_idx.endsWith('_raw')" v-html="td"></div>
+                 <div v-if="b_idx.endsWith('_func')" v-html="td(td)"></div>
+                 <div v-if="!b_idx.endsWith('_raw') && !b_idx.endsWith('_func')">{{td}}</div>
+               </td>
+               <td>
+                 <button v-on:click="showDetail(item)">detail</button>
+               </td>
+             </slot>
             </tr>
           </tbody>
         </table>
@@ -36,7 +44,10 @@ export default {
     columns: Array,
     searchable: Boolean,
     withActionButton: Boolean,
-    mapItemFunc: Function,
+    mapItemFunc: {
+        type: Function,
+        default: a => a
+    },
     showDetailFunc: Function,
     apiScopeBuilder: {
       type: Function,
