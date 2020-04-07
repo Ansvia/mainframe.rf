@@ -76,7 +76,7 @@ export default class $name_pascal_case$ {
         console.log("unauthorize");
         session().remove("token");
         updateSession();
-        return api.publicApi.post("/api/auth/v1/unauthorize", {});
+        return api.publicApi.post("/auth/v1/unauthorize", {});
       },
       isLoggedIn(cb) {
         this.getMeInfo().then((resp) => {
