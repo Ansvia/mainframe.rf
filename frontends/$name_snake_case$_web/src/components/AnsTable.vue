@@ -52,7 +52,7 @@ export default {
     apiScopeBuilder: {
       type: Function,
       default: (self) => {
-        return self.$name_snake_case$.api().privateApi;
+        return self.$$name_snake_case$.api().privateApi;
       }
     }
   },

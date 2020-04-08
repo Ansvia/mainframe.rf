@@ -3,8 +3,8 @@
     <div style="float: left;">
       <sidebar-menu
         :menu="menu"
-        @collapse="onCollapse"
-        @itemClick="onItemClick"
+        @toggle-collapse="onCollapse"
+        @item-click="onItemClick"
         :collapsed="true"
         style="z-index: 1000;"
       />
