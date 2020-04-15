@@ -33,7 +33,7 @@ use $name_snake_case$::{
     service,
 };
 
-pub use $name_snake_case$::api::{types::*, user::types::$param.service_name_pascal_case$};
+pub use $name_snake_case$::api::{types::*, $param.service_name_snake_case$::types::$param.service_name_pascal_case$};
 
 pub mod helper;
 
@@ -49,7 +49,7 @@ pub enum ApiKind {
     Auth,
     /// `api/$param.service_name_snake_case$` endpoints. Mengarah ke servis [$param.service_name_pascal_case$].
     $param.service_name_pascal_case$,
-    /// Gunakan ini apabila ada servis khusus (user).
+    /// Gunakan ini apabila ada servis khusus ($param.service_name_snake_case$).
     Service(&'static str),
 }
 
@@ -141,7 +141,7 @@ impl TestKitApi {
         )
     }
 
-    /// Cara pintas untuk meng-otorisasi User,
+    /// Cara pintas untuk meng-otorisasi $param.service_name_pascal_case$,
     /// atau dengan kata lain me-login-kan sehingga
     /// nanti http client akan meng-embed X-Access-Token secara otomatis.
     pub fn authorize(&mut self, $param.service_name_snake_case$_id: ID) {
@@ -158,7 +158,7 @@ impl TestKitApi {
             .expect("Cannot build http client");
     }
 
-    /// Cara pintas untuk meng-otorisasi User,
+    /// Cara pintas untuk meng-otorisasi $param.service_name_pascal_case$,
     /// atau dengan kata lain me-login-kan sehingga
     /// nanti http client akan meng-embed X-Access-Token secara otomatis.
     pub fn authorize_$param.service_name_snake_case$(&mut self) {
