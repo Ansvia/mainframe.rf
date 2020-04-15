@@ -164,20 +164,20 @@ def load_doc(scope, in_path):
                                 docs[-1]['desc'] = (docs[-1]['desc'] + line)
 
     for doc in docs:
-        if doc.has_key('desc'):
+        if 'desc' in doc:
             doc['desc'] = doc['desc'].strip()
                                 
     return docs
 
 
 def get_main_title(docs):
-    a = filter(lambda a: a['elem'] == "MainTitle", docs)
+    a = list(filter(lambda a: a['elem'] == "MainTitle", docs))
     if a:
         return a[0]['value']
     return 'Untitled'
 
 def get_main_desc(docs):
-    a = filter(lambda a: a['elem'] == "MainDesc", docs)
+    a = list(filter(lambda a: a['elem'] == "MainDesc", docs))
     if a:
         return a[0]['value']
     return 'Rest API documentation'
@@ -243,14 +243,14 @@ def gen_doc(scope, in_path, out_path):
 
         merge_doc(parsed_docs, new_docs)
 
-        def sorter(a, b):
-            if a.has_key('group') and b.has_key('group'):
-                return cmp(a['group'], b['group'])
-            return 0
+        def sorter(item):
+            if 'group' in item:
+                return item['group']
+            return item['elem']
 
-        updated_docs = sorted(parsed_docs, cmp=sorter)
+        updated_docs = sorted(parsed_docs, key=sorter)
         groups = filter(lambda a: a["elem"] == "Group", updated_docs)
-        endpoints = sorted(filter(lambda a: a["elem"] == "ApiEndpoint", updated_docs), lambda a,b: cmp(a['method_name'], b['method_name']))
+        endpoints = sorted(filter(lambda a: a["elem"] == "ApiEndpoint", updated_docs), key=lambda a: a['method_name'])
 
         for group in groups:
             process_line(group, fout)
