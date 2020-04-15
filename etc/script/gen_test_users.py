@@ -25,7 +25,7 @@ def main():
     print(tokens)
 
     for token in tokens:
-        if type(token) == unicode:
+        if isinstance(token, str):
             if $name_snake_case$.activate_$param.service_name_snake_case$(token, "123").status_code != 200:
                 print("cannot activate $param.service_name$ with token %s", token)
         
