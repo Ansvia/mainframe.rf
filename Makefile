@@ -2,6 +2,7 @@
 PROJ_DIR=$(shell pwd)
 
 VERSION=$(shell cat VERSION)
+MOBILE_VERSION=$(shell grep 'version:' frontends/$name_snake_case$_mobile/pubspec.yaml | cut -d ' ' -f2 | cut -d '+' -f1)
 PUBLIC_API_DOC_OUTPUT=$(PROJ_DIR)/target/api-docs/public-api.html
 PRIVATE_API_DOC_OUTPUT=$(PROJ_DIR)/target/api-docs/private-api.html
 LIBRARY_DOC_OUTPUT=$(PROJ_DIR)/target/doc/$name_snake_case$/index.html
@@ -72,6 +73,27 @@ release-linux:
 					-v /tmp:/root/.cargo/registry \
 					anvie/rust-musl-build:latest \
 					cargo build --release --target=x86_64-unknown-linux-musl
+
+<!-- <% if param.with_webapp %> -->
+build-web-frontend:
+	@@echo Building web frontend...
+	cd frontends/$name_snake_case$_web && \
+		sed -i .bak s/'dev'/'prod'/ .env && \
+		yarn run build && \
+		sed -i .bak s/'prod'/'dev'/ .env
+	@@echo Web frontend built.
+<!-- <% endif %> -->
+
+<!-- <% if param.with_flutter %> -->
+BUILD_APK_OUTPUT=$(PROJ_DIR)/frontends/$name_snake_case$_mobile/build/app/outputs/apk/release/$name_snake_case$-$(MOBILE_VERSION).apk
+
+build-apk:
+	@@echo Building $name_snake_case$ $(MOBILE_VERSION) for Android ...
+	cd frontends/$name_snake_case$_mobile && \
+		flutter build apk --build-name=$(MOBILE_VERSION)
+	mv $(PROJ_DIR)/frontends/$name_snake_case$_mobile/build/app/outputs/apk/release/app-release.apk $(BUILD_APK_OUTPUT)
+	@@echo Done : $(BUILD_APK_OUTPUT)
+<!-- <% endif %> -->
 
 test-env:
 	diesel database reset --database-url $(DATABASE_TEST_URL)

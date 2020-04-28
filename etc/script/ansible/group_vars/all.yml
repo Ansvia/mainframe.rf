@@ -1,0 +1,7 @@
+---
+project_dir: "{{lookup('env', 'PROJDIR')}}"
+dest_server_path: "{{lookup('env', 'name_upper_case$_DEST_SERVER_PATH')}}"
+remote_user: "{{lookup('env', 'name_upper_case$_REMOTE_SERVER_USER')}}"
+
+DATABASE_URL: "{{lookup('env', 'DATABASE_URL')}}"
+FCM_SERVER_KEY: "{{lookup('env', 'FCM_SERVER_KEY')}}"

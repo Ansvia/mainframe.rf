@@ -1,0 +1,30 @@
+- hosts: "{{server}}"
+  remote_user: "{{remote_user}}"
+  gather_facts: no
+  tasks:
+    - name: Upload dist package
+      synchronize:
+        src: "{{project_dir}}/frontends/$name_snake_case$_web/dist/"
+        dest: "{{dest_server_path}}/$name_snake_case$_admin_web"
+        checksum: yes
+        recursive: yes
+        delete: yes
+        # rsync_opts:
+        #   - "--exclude=.env"
+    - name: set owner
+      file:
+        path: "{{dest_server_path}}/$name_snake_case$_admin_web"
+        state: directory
+        recurse: yes
+        owner: www-data
+        group: www-data
+    - name: Create service
+      template:
+        src: $name_snake_case$_admin_web.service.j2
+        dest: "/etc/systemd/system/$name_snake_case$_admin_web.service"
+    - name: Make sure service running
+      systemd:
+        state: restarted
+        name: $name_snake_case$_admin_web
+        daemon_reload: yes
+

@@ -145,6 +145,13 @@ Contoh cara menjalankan:
     $ flutter pub get
     $ flutter run
 
+Build Mobile App (apk)
+-------------------------
+
+Untuk build apk cukup ketikkan:
+
+    $ make build-apk
+
 <!-- <% endif %> -->
 
 **CATATAN**: Kamu bisa menggunakan npm maupun yarn, tapi direkomendasikan menggunakan yarn.

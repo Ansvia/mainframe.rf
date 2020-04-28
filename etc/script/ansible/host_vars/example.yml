@@ -1,0 +1,6 @@
+---
+DATABASE_URL: postgresql://postgres@localhost/$name_snake_case$?sslmode=disable
+DATABASE_TEST_URL: postgresql://localhost/$name_snake_case$_test?sslmode=disable
+  
+FCM_SERVER_KEY: xxxx
+

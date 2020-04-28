@@ -1,0 +1,19 @@
+[Unit]
+Description=$name_pascal_case$ Service
+After=network.target
+StartLimitBurst=5
+StartLimitIntervalSec=0
+
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=www-data
+Environment="DATABASE_URL={{DATABASE_URL}}"
+Environment="FCM_SERVER_KEY={{FCM_SERVER_KEY}}"
+Environment="GEOLOCATOR_API_KEY={{GEOLOCATOR_API_KEY}}"
+ExecStart=/usr/local/bin/$name_snake_case$_server
+
+[Install]
+WantedBy=multi-user.target
