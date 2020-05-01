@@ -1,36 +1,54 @@
 <template>
   <div>
     <div class="ui grid">
-      <div class="ten wide column">
-        <div v-if="searchable" class="ui icon input">
+      <div class="sixteen wide column">
+        <div v-if="searchable" :disabled="loading" class="ui icon input">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Pencarian..."
             v-on:keyup.13="doSearch"
             ref="inputSearch"
             v-on:keyup="checkHasText"
           />
 
-          <a href="javascript://" v-show="hasText" @click="resetSearch" class="search reset"><i class="search remove icon" ></i></a>
+          <a href="javascript://" v-show="hasText" @click="resetSearch" class="search reset">
+            <i class="search remove icon"></i>
+          </a>
 
           <i v-if="!hasText" class="search icon"></i>
         </div>
 
-        <slot name="bar">
-          <div class="ui mini statistic">
-            <div class="value">{{items.length}}</div>
-            <div class="label">Total</div>
-          </div>
-        </slot>
+        <div v-if="withTotal" class="ui mini statistic">
+          <div class="value">{{count}}</div>
+          <div class="label">Total</div>
+        </div>
+
+        <slot name="bar"></slot>
 
         <div>
           <slot name="bellow-search"></slot>
         </div>
 
-        <table class="ui celled table">
+        <div v-if="loading" class="ui active centered inline text loader"> Loading Data...</div>
+
+        <table v-if="!loading" class="ui celled unstackable striped table">
           <thead>
             <tr>
-              <th v-for="col in columns" v-bind:key="col">{{col}}</th>
+              <th v-for="col in columns" v-bind:key="col">
+                {{col}}
+                <div v-if="columnsInfo != null" class="column-info" v-show="columnsTipShow[col] == true">
+                  <p><i class="ui info circle icon"></i> {{columnsInfo[col]}}</p>
+                </div>
+                <small style="display: inline;"
+                  v-if="columnsInfo != null && columnsInfo[col] != null"
+                  class="ui badge"
+                  :title="columnsInfo[col]"
+                  @mouseover="$set(columnsTipShow, col, true)"
+                  @mouseleave="$set(columnsTipShow, col, false)"
+                >
+                  <i class="ui question circle outline icon"></i>
+                </small>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -54,12 +72,12 @@
 </template>
 
 <script>
-import notifMixin from "@/mixins/notifMixin"
-
 const initialState = {
   items: [],
   count: 0,
-  hasText: false
+  hasText: false,
+  columnsTipShow: {},
+  loading: true
 };
 export default {
   name: "AnsTable",
@@ -67,6 +85,7 @@ export default {
     dataSourceUrl: String,
     addParams: String,
     columns: Array,
+    columnsInfo: {type: Object, default: () => {}},
     searchable: Boolean,
     withActionButton: Boolean,
     mapItemFunc: {
@@ -78,15 +97,14 @@ export default {
     apiScopeBuilder: {
       type: Function,
       default: a => {
-        return a.$$name_snake_case$.api().privateApi
+        return a.$$name_snake_case$.api().publicApi;
       }
-    }
+    },
+    withTotal: { type: Boolean, default: true }
   },
-  mixins:[notifMixin],
   data() {
     return initialState;
   },
-  mounted() {},
   methods: {
     checkHasText() {
       this.hasText = this.$refs.inputSearch.value.length > 0;
@@ -97,25 +115,32 @@ export default {
       this.doSearch();
       this.$refs.inputSearch.focus();
     },
+    search(query){
+      this.$refs.inputSearch.value = query;
+      this.doSearch();
+    },
     doSearch() {
+      this.loading = true;
+
+      let query = this.$refs.inputSearch.value;
+
       var url =
         this.dataSourceUrl +
-        `?query=${this.$refs.inputSearch.value}&offset=${this.offset}&limit=${this.limit}`;
+        `?query=${query}&offset=${this.offset}&limit=${this.limit}`;
+
       if (this.addParams != null) {
         url = url + "&" + this.addParams;
       }
       this.apiScopeBuilder(this)
         .get(url)
         .then(resp => {
+          this.loading = false;
           if (resp.data.code == 0) {
             this.items = resp.data.result.entries.map(this.mapItemFunc);
             this.count = resp.data.result.count;
           } else {
-            this.showError(resp.data.description);
+            this.showError("Cannot get data from remote server");
           }
-        })
-        .catch(_ => {
-          this.showError("Cannot get data from server");
         });
     },
     showDetail(item) {
@@ -127,6 +152,7 @@ export default {
     this.offset = 0;
     var self = this;
     var url;
+
     if (this.searchable && this.query) {
       url =
         this.dataSourceUrl +
@@ -134,18 +160,23 @@ export default {
         this.query +
         `&offset=0&limit=${this.limit}`;
     } else {
-      url = this.dataSourceUrl + "?offset=0&limit=10";
+      url = this.dataSourceUrl + `?offset=0&limit=${this.limit}`;
     }
+
     if (this.addParams != null) {
       url = url + "&" + this.addParams;
     }
+
     if (this.withActionButton) {
       this.columns.push("Action");
     }
+
     this.apiScopeBuilder(this)
       .get(url)
       .then(resp => {
+        this.loading = false;
         self.items = resp.data.result.entries.map(this.mapItemFunc);
+        this.count = resp.data.result.count;
       });
   }
 };
@@ -168,4 +199,12 @@ a.search.reset {
   opacity: 0.5;
   cursor: pointer;
 }
+.column-info {
+  // display: none;
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #cacaca;
+}
 </style>
+
