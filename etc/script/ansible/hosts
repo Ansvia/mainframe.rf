@@ -2,5 +2,5 @@
 [api]
 api1 ansible_host=127.0.0.1 ansible_user=root ansible_ssh_port=22 owner=www-data
 
-[admin_web]
-admin_web1 ansible_host=127.0.0.1 ansible_user=root ansible_ssh_port=22 owner=www-data
+[web]
+web1 ansible_host=127.0.0.1 ansible_user=root ansible_ssh_port=22 owner=www-data
