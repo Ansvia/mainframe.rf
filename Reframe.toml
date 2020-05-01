@@ -52,6 +52,9 @@ password_crypt_algo = { ask = "Password crypto algo?", default="bcrypt", options
 with_eventstream = { ask = "With Eventstream?", default="true" }
 
 [[param]]
+with_emailer = { ask = "With Emailer?", default="true" }
+
+[[param]]
 with_protobuf = { ask = "With Protobuf support?", default="false" }
 
 [[param]]
@@ -71,6 +74,10 @@ if = "with_flutter"
 [[present]]
 path = "src/protos"
 if = "with_protobuf"
+
+[[present]]
+path = "src/emailer.rs"
+if = "with_emailer"
 
 [[post_generate]]
 make_executable="frontends/$name_snake_case$_mobile/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh"

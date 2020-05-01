@@ -71,6 +71,9 @@ pub mod token;
 pub mod util;
 mod valid;
 pub mod web;
+// <% if param.with_emailer %>
+mod emailer;
+// <% endif %>
 
 // <% if param.with_event_stream %>
 pub mod eventstream;
