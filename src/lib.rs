@@ -70,7 +70,7 @@ mod sqlutil;
 pub mod token;
 pub mod util;
 mod valid;
-pub mod web;
+
 // <% if param.with_emailer %>
 mod emailer;
 // <% endif %>
