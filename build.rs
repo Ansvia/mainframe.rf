@@ -45,14 +45,21 @@ fn main() {
     // protocol buffer code generator ends
     // <% endif %>
 
-    let output = process::Command::new("git")
-        .arg("rev-parse")
-        .arg("HEAD")
-        .output()
-        .expect("Cannot get git_rev");
+    let output = process::Command::new("git").arg("rev-parse").arg("HEAD").output();
 
-    let git_rev = String::from_utf8_lossy(&output.stdout);
-    let git_rev = git_rev.trim();
+    let mut git_rev:String = if let Ok(output) = output {
+        String::from_utf8_lossy(&output.stdout).to_string()
+    } else {
+        "".to_string()
+    };
+    git_rev = git_rev.trim().to_string();
+
+    if git_rev.is_empty() {
+        // get from file
+        if let Ok(_git_rev) = fs::read_to_string("GIT_REV") {
+            git_rev = _git_rev.trim().to_string();
+        }
+    }
 
     // <% if param.with_protobuf %>
     println!("cargo:rerun-if-changed={}", "src/protos/$name_snake_case$.proto");
