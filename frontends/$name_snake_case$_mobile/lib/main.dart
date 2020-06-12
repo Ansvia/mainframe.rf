@@ -10,29 +10,29 @@ import 'package:$name_snake_case$_mobile/blocs/tab/tab_bloc.dart';
 import 'package:$name_snake_case$_mobile/screens/home.dart';
 import 'package:$name_snake_case$_mobile/screens/login/login.dart';
 import 'package:$name_snake_case$_mobile/screens/splash/splash_page.dart';
-import 'package:$name_snake_case$_mobile/user_repository/user_repository.dart';
+import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_repository/$param.service_name_snake_case$_repository.dart';
 import 'blocs/notif/notif.dart';
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   
-  final UserRepository userRepository = UserRepository();
+  final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository = $param.service_name_pascal_case$Repository();
 
-  ApiClient.userRepository = userRepository;
+  ApiClient.$param.service_name_camel_case$Repository = $param.service_name_camel_case$Repository;
 
   runApp(BlocProvider(
     create: (ctx) {
-      return $name_pascal_case$Bloc(userRepository: userRepository)
+      return $name_pascal_case$Bloc($param.service_name_camel_case$Repository: $param.service_name_camel_case$Repository)
         ..add(StartupEvent());
     },
-    child: $name_pascal_case$App(userRepository: userRepository),
+    child: $name_pascal_case$App($param.service_name_camel_case$Repository: $param.service_name_camel_case$Repository),
   ));
 }
 
 class $name_pascal_case$App extends StatelessWidget {
-  final UserRepository userRepository;
+  final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository;
 
-  $name_pascal_case$App({Key key, @required this.userRepository}) : super(key: key);
+  $name_pascal_case$App({Key key, @required this.$param.service_name_camel_case$Repository}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -57,7 +57,7 @@ class $name_pascal_case$App extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<$name_pascal_case$Bloc>(
-              create: (context) => $name_pascal_case$Bloc(userRepository: userRepository),
+              create: (context) => $name_pascal_case$Bloc($param.service_name_camel_case$Repository: $param.service_name_camel_case$Repository),
             ),
             BlocProvider<TabBloc>(
               create: (context) => TabBloc(),
@@ -81,7 +81,7 @@ class $name_pascal_case$App extends StatelessWidget {
             }
           },
           child: LoginPage(
-            userRepository: userRepository,
+            $param.service_name_camel_case$Repository: $param.service_name_camel_case$Repository,
           ),
         );
       }
