@@ -4,11 +4,11 @@ import 'package:meta/meta.dart';
 import 'package:$name_snake_case$_mobile/api/api_client.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_event.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_state.dart';
-import 'package:$name_snake_case$_mobile/user_repository/user_repository.dart';
+import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_repository/$param.service_name_snake_case$_repository.dart';
 
 class $name_pascal_case$Bloc extends Bloc<$name_pascal_case$Event, $name_pascal_case$State> {
-  final UserRepository userRepository;
-  $name_pascal_case$Bloc({@required this.userRepository}) : assert(userRepository != null);
+  final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository;
+  $name_pascal_case$Bloc({@required this.$param.service_name_camel_case$Repository}) : assert($param.service_name_camel_case$Repository != null);
 
   @override
   $name_pascal_case$State get initialState => $name_pascal_case$Loading();
@@ -27,12 +27,12 @@ class $name_pascal_case$Bloc extends Bloc<$name_pascal_case$Event, $name_pascal_
 
   Stream<$name_pascal_case$State> _mapLogin$name_pascal_case$ToState(LoggedIn event) async* {
     yield AuthenticationLoading();
-    await userRepository.persistToken(event.token);
+    await $param.service_name_camel_case$Repository.persistToken(event.token);
     yield AuthenticationAuthenticated();
   }
 
   Stream<$name_pascal_case$State> _mapStartupToState(StartupEvent event) async* {
-    final bool hasToken = await userRepository.hasToken();
+    final bool hasToken = await $param.service_name_camel_case$Repository.hasToken();
 
     if (hasToken) {
       yield AuthenticationAuthenticated();
@@ -43,7 +43,7 @@ class $name_pascal_case$Bloc extends Bloc<$name_pascal_case$Event, $name_pascal_
 
   Stream<$name_pascal_case$State> _mapLoggedOutToState(LoggedOut event) async* {
     yield AuthenticationLoading();
-    await userRepository.deleteToken();
+    await $param.service_name_camel_case$Repository.deleteToken();
     ApiResource.accessToken = "";
     yield AuthenticationUnauthenticated();
   }

@@ -8,7 +8,7 @@ import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_cas
 import 'package:$name_snake_case$_mobile/screens/login/login.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository $param.service_name_camel_case$Repository;
+  final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository;
   final $name_pascal_case$Bloc $name_camel_case$Bloc;
 
   LoginBloc({
