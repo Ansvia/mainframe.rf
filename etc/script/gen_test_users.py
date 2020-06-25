@@ -3,7 +3,7 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "libs", "$name_snake_case$-client-py"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "libs", "$name_kebab_case$-client-py"))
 
 import $name_snake_case$
 
