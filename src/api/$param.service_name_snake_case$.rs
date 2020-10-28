@@ -140,6 +140,11 @@ impl PublicApi {
         let conn = state.db();
         let schema = $param.service_name_pascal_case$Dao::new(&conn);
         let $param.service_name_snake_case$ = schema.activate_registered_$param.service_name_snake_case$(query.token)?;
+
+        if util::is_password_weak(&query.password) {
+            param_error("Password is too weak")?;
+        }
+
         schema.set_password($param.service_name_snake_case$.id, &query.password)?;
         Ok($param.service_name_snake_case$.into())
     }
@@ -162,6 +167,10 @@ impl PublicApi {
 
         if query.new_password != query.verif_new_password {
             param_error("Password verification didn't match")?;
+        }
+
+        if util::is_password_weak(&query.new_password) {
+            param_error("Password is too weak")?;
         }
 
         let auth_dao = auth::AuthDao::new(&conn);

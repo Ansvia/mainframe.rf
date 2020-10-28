@@ -153,6 +153,10 @@ impl PublicApi {
 
         match (query.token, query.password) {
             (Some(token), Some(password)) => {
+                if util::is_password_weak(&password) {
+                    param_error("Password is too weak")?;
+                }
+
                 dao.verify_reset_password(admin.id, &token)?;
                 dao.set_password(admin.id, &password)?;
                 dao.remove_reset_password(admin.id)?;

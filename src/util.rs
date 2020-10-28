@@ -4,6 +4,7 @@
 use chrono::{NaiveDateTime, Utc};
 use rand::{self, distributions::Alphanumeric, Rng};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use zxcvbn::zxcvbn;
 
 /// Mendapatkan waktu saat ini dalam format milidetik sejak UNIX EPOCH.
 pub fn current_time_millis() -> u64 {
@@ -42,4 +43,15 @@ pub fn random_number_f64() -> f64 {
     let mut rng = rand::thread_rng();
     //     rng.gen_range(0, 100) as f64
     f64::from(rng.gen_range(0, 100))
+}
+
+/// Check if the password is too weak.
+/// Overall strength score from 0-4.
+/// Any score less than 3 should be considered too weak.
+pub fn is_password_weak(password: &str) -> bool {
+    if let Ok(estimate) = zxcvbn(password, &[]) {
+        estimate.score() < 3
+    } else {
+        true
+    }
 }
