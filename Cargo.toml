@@ -20,6 +20,7 @@ log = "0.4"
 env_logger = "0.6"
 lazy_static = "1.2"
 rsnowflake = "0.1"
+zxcvbn = "2"
 
 # <% if param.with_event_stream %>
 event-stream = "0.1.1"
