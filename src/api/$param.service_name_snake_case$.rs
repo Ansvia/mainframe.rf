@@ -15,6 +15,7 @@ use crate::{
     auth,
     error::{Error, ErrorCode},
     prelude::*,
+    util,
 };
 
 /// Definisi query untuk mendaftarkan akun baru via rest API.

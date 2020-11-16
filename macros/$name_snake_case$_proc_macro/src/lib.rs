@@ -71,9 +71,9 @@ enum DocElem {
 }
 
 lazy_static! {
-    static ref CURRENT_DOCS_PUBLIC: Arc<Mutex<Vec<DocElem>>> = { Arc::new(Mutex::new(load_file("public"))) };
+    static ref CURRENT_DOCS_PUBLIC: Arc<Mutex<Vec<DocElem>>> = Arc::new(Mutex::new(load_file("public")));
     static ref CURRENT_DOCS_PRIVATE: Arc<Mutex<Vec<DocElem>>> =
-        { Arc::new(Mutex::new(load_file("private"))) };
+        Arc::new(Mutex::new(load_file("private")));
 }
 
 fn create_file(scope: &str) -> File {
