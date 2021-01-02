@@ -8,10 +8,7 @@ import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_reposit
 
 class $name_pascal_case$Bloc extends Bloc<$name_pascal_case$Event, $name_pascal_case$State> {
   final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository;
-  $name_pascal_case$Bloc({@required this.$param.service_name_camel_case$Repository}) : assert($param.service_name_camel_case$Repository != null);
-
-  @override
-  $name_pascal_case$State get initialState => $name_pascal_case$Loading();
+  $name_pascal_case$Bloc({@required this.$param.service_name_camel_case$Repository}) : assert($param.service_name_camel_case$Repository != null), super($name_pascal_case$Loading());
 
   @override
   Stream<$name_pascal_case$State> mapEventToState($name_pascal_case$Event event) async* {

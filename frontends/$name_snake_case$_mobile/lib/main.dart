@@ -14,7 +14,7 @@ import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_reposit
 import 'blocs/notif/notif.dart';
 
 void main() {
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  Bloc.observer = SimpleBlocObserver();
   
   final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository = $param.service_name_pascal_case$Repository();
 

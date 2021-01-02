@@ -24,19 +24,19 @@ class TabSelector extends StatelessWidget {
         IconData icon;
         Key key;
         String title;
-        if (tab == AppTab.timeline){
+        if (tab == AppTab.timeline) {
           icon = Icons.rss_feed;
           key = $name_pascal_case$Keys.timelineTab;
           title = "Timeline";
-        }else if (tab == AppTab.notif){
+        } else if (tab == AppTab.notif) {
           icon = Icons.notifications;
           key = $name_pascal_case$Keys.notifTab;
           title = "Notif";
-        }else if (tab == AppTab.todo){
+        } else if (tab == AppTab.todo) {
           icon = Icons.list;
           key = $name_pascal_case$Keys.todoTab;
           title = "Todo";
-        }else{
+        } else {
           icon = Icons.dashboard;
           key = $name_pascal_case$Keys.dashboardTab;
           title = "Menu";
@@ -46,7 +46,7 @@ class TabSelector extends StatelessWidget {
             icon,
             key: key,
           ),
-          title: Text(title),
+          label: title,
         );
       }).toList(),
     );

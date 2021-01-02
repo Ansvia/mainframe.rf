@@ -4,7 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/html_parser.dart';
+import 'package:flutter_html/style.dart';
 
 final textUtils = TextUtils();
 
@@ -15,7 +16,6 @@ enum FormatHtmlKind {
 }
 
 class TextUtils {
-
   static final _onlyWordsEndsRe = RegExp(r"[^\s\w]+$");
   static final _longSpaceRe = new RegExp(r"\s\s*");
 
@@ -31,8 +31,6 @@ class TextUtils {
       return text;
     }
   }
-
-
 
   bool validateName(String value) {
     RegExp regExp = RegExp(
@@ -76,7 +74,7 @@ class TextUtils {
 
   String toTitle(String value) {
     if (value.length < 80) return value;
-    return '${value.substring(0,80)}...';
+    return '${value.substring(0, 80)}...';
   }
 
   String toPhoneNumber(String value) {
@@ -91,41 +89,72 @@ class TextUtils {
 
   Html formatToHtml(String value,
       {FormatHtmlKind kind = FormatHtmlKind.CONTENT}) {
-    TextStyle textStyle = TextStyle(fontFamily: 'Lato',);
+    TextStyle textStyle = TextStyle(
+      fontFamily: 'Lato',
+    );
     switch (kind) {
       case FormatHtmlKind.TITLE:
-        textStyle = TextStyle(fontFamily: 'Lato',color: Colors.black87, fontSize: 15.0);
+        textStyle = TextStyle(
+            fontFamily: 'Lato', color: Colors.black87, fontSize: 15.0);
         break;
       case FormatHtmlKind.CONTENT:
-        textStyle = TextStyle(fontFamily: 'Lato',
-            color: Colors.black45, fontSize: 13.0, fontWeight: FontWeight.w400);
+        textStyle = TextStyle(
+            fontFamily: 'Lato',
+            color: Colors.black45,
+            fontSize: 13.0,
+            fontWeight: FontWeight.w400);
         break;
       case FormatHtmlKind.SUB_HEADING:
-        textStyle = TextStyle(fontFamily: 'Lato',
-            color: Colors.black45, fontSize: 13.0, fontWeight: FontWeight.w400);
+        textStyle = TextStyle(
+            fontFamily: 'Lato',
+            color: Colors.black45,
+            fontSize: 13.0,
+            fontWeight: FontWeight.w400);
         break;
       default:
-        textStyle = TextStyle(fontFamily: 'Lato',color: Colors.black45, fontSize: 13.0);
+        textStyle = TextStyle(
+            fontFamily: 'Lato', color: Colors.black45, fontSize: 13.0);
     }
 
     return Html(
       data: value,
-      defaultTextStyle: textStyle,
-      linkStyle: const TextStyle(fontFamily: 'Lato',
-        color: Colors.redAccent,
-        decorationColor: Colors.redAccent,
-        decoration: TextDecoration.underline,
-      ),
+      style: {
+        "html": Style(
+          backgroundColor: Colors.black12,
+          // color: Colors.white,
+        ),
+        "h1": Style(
+          textAlign: TextAlign.center,
+          fontFamily: 'Lato',
+        ),
+        "table": Style(
+          backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+        ),
+        "tr": Style(
+          border: Border(bottom: BorderSide(color: Colors.grey)),
+        ),
+        "th": Style(
+          padding: EdgeInsets.all(6),
+          backgroundColor: Colors.grey,
+        ),
+        "td": Style(
+          padding: EdgeInsets.all(6),
+        ),
+        "var": Style(fontFamily: 'serif'),
+      },
       onLinkTap: (url) {
         print("Opening $url...");
       },
-      customRender: (node, children) {
-        if (node is dom.Element) {
-          switch (node.localName) {
-            case "custom_tag":
-              return Column(children: children);
-          }
-        }
+      customRender: {
+        "flutter": (RenderContext context, Widget child, attributes, _) {
+          return FlutterLogo(
+            style: (attributes['horizontal'] != null)
+                ? FlutterLogoStyle.horizontal
+                : FlutterLogoStyle.markOnly,
+            textColor: context.style.color,
+            size: context.style.fontSize.size * 5,
+          );
+        },
       },
     );
   }
