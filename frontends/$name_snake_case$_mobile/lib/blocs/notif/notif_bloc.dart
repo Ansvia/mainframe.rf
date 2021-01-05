@@ -11,17 +11,13 @@ class NotifBloc extends Bloc<NotifEvent, NotifState> {
   final $name_pascal_case$Bloc $name_snake_case$Bloc;
   StreamSubscription _$name_snake_case$Subs;
 
-  NotifBloc({@required this.$name_snake_case$Bloc}){
+  NotifBloc({@required this.$name_snake_case$Bloc}) : super(NotifListLoading()) {
     _$name_snake_case$Subs = $name_snake_case$Bloc.listen((state){
       if (state is AuthenticationAuthenticated){
         add(LoadNotif());
       }
     });
   }
-
-
-  @override
-  NotifState get initialState => NotifListLoading();
 
   @override
   Stream<NotifState> mapEventToState(NotifEvent event) async* {

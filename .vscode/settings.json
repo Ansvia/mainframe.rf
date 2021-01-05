@@ -3,5 +3,6 @@
     "editor.tabSize": 2,
     "editor.detectIndentation": true,
     "python.pythonPath": "/usr/local/bin/python",
-    "python.formatting.provider": "y$name_snake_case$"
+    "python.formatting.provider": "y$name_snake_case$",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

@@ -15,10 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     @required this.$param.service_name_camel_case$Repository,
     @required this.$name_camel_case$Bloc,
   })  : assert($param.service_name_camel_case$Repository != null),
-        assert($name_camel_case$Bloc != null);
-
-  @override
-  LoginState get initialState => LoginInitial();
+        assert($name_camel_case$Bloc != null), super(LoginInitial());
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
