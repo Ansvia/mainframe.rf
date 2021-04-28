@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:$name_snake_case$_mobile/api/api_client.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_bloc.dart';
 import 'package:$name_snake_case$_mobile/blocs/$name_snake_case$/$name_snake_case$_event.dart';
@@ -13,8 +14,9 @@ import 'package:$name_snake_case$_mobile/screens/splash/splash_page.dart';
 import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_repository/$param.service_name_snake_case$_repository.dart';
 import 'blocs/notif/notif.dart';
 
-void main() {
+void main() async {
   Bloc.observer = SimpleBlocObserver();
+  await DotEnv.load(fileName: ".env");
   
   final $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository = $param.service_name_pascal_case$Repository();
 
