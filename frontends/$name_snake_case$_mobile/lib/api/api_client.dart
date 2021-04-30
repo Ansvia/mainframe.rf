@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:$name_snake_case$_mobile/core/error.dart';
 import 'package:$name_snake_case$_mobile/$param.service_name_snake_case$_repository/$param.service_name_snake_case$_repository.dart';
 
@@ -22,9 +23,9 @@ class ApiClient {
   static $param.service_name_pascal_case$Repository $param.service_name_camel_case$Repository;
 
   ApiResource private() =>
-      new ApiResource("http://localhost:9090/api", $param.service_name_camel_case$Repository);
+      new ApiResource("${env['BASE_URL_PRIVATE']}", $param.service_name_camel_case$Repository);
   ApiResource public() =>
-      new ApiResource("http://localhost:8080/api", $param.service_name_camel_case$Repository);
+      new ApiResource("${env['BASE_URL_PUBLIC']}", $param.service_name_camel_case$Repository);
 
   factory ApiClient() => _singleton;
 
@@ -57,7 +58,8 @@ class ApiResource {
     await ensureAccessToken();
     try {
       print("wanna to dispatch api at ${this.baseUrl + apiPath}");
-      return client.post(this.baseUrl + apiPath,
+      final uri = Uri.parse(this.baseUrl + apiPath);
+      return client.post(uri,
           headers: buildHeaders(), body: json.encode(body));
     } on SocketException catch (e) {
       print("SocketException. $e");
@@ -80,7 +82,8 @@ class ApiResource {
     var client = new http.Client();
     await ensureAccessToken();
     try {
-      return client.get(this.baseUrl + apiPath, headers: buildHeaders()).then((resp){
+      final uri = Uri.parse(this.baseUrl + apiPath);
+      return client.get(uri, headers: buildHeaders()).then((resp){
         print("[GET $apiPath] resp: ${resp.body}");
         return resp;
       });
