@@ -9,3 +9,6 @@ CREATE INDEX idx_access_tokens_$param.service_name_snake_case$_id ON access_toke
     ($param.service_name_snake_case$_id)
 );
 
+CREATE UNIQUE INDEX idx_access_tokens_token ON access_tokens (
+    (token)
+);
