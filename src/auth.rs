@@ -47,12 +47,15 @@ impl<'a> AuthDao<'a> {
     }
 
     /// Mendapatkan akun dari akses token.
-    pub fn get_$param.service_name_snake_case$_from_access_token(&self, access_token: &str) -> Result<$param.service_name_pascal_case$> {
-        use crate::schema::$param.service_name_snake_case$s::dsl::$param.service_name_snake_case$s;
+    pub fn get_$param.service_name_snake_case$_from_access_token(&self, access_token: &str) -> Result<$param.service_name_pascal_case$> {        
+        use crate::schema::$param.service_name_snake_case$s::dsl::{self as dsl_u, $param.service_name_snake_case$s};
+        use crate::schema::access_tokens::dsl::{self as dsl_at, access_tokens};
 
-        // @TODO(robin): ini masih bisa diimprove dengan hanya menggunakan sekali call ke DB
-        self.get_access_token(access_token)
-            .map(|token| $param.service_name_snake_case$s.find(token.$param.service_name_snake_case$_id).first(self.db).map_err(From::from))?
+        let (at, $param.service_name_snake_case$):(AccessToken, $param.service_name_pascal_case$) = access_tokens.inner_join($param.service_name_snake_case$s)
+            .filter(dsl_at::token.eq(access_token))
+            .first(self.db)?;
+
+        Ok($param.service_name_snake_case$)
     }
 
     /// Mendapatkan akses token object dari string token.
